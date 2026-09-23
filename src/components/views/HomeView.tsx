@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData';
 import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
-import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross } from 'lucide-react';
+import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll } from 'lucide-react';
 
 interface HomeViewProps {
   onSelectTab: (tab: string) => void;
@@ -309,96 +309,134 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         </div>
       </section>
 
-      {/* Destaque Especial: Teólogos de Todas as Denominações & Livros Cristocêntricos Renomados */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {/* Destaque Especial: Teólogos, Livros Cristocêntricos & Profetas da Bíblia */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Card 1: Teólogos de Todas as Denominações */}
         <div
           onClick={() => onSelectTab('teologos')}
-          className="group cursor-pointer rounded-3xl p-6 sm:p-7 bg-gradient-to-br from-amber-900/20 via-stone-900/10 to-amber-950/20 dark:from-stone-900 dark:via-stone-900 dark:to-amber-950/40 border border-amber-600/30 hover:border-amber-500 shadow-md hover:shadow-xl transition-all space-y-4"
+          className="group cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-amber-900/20 via-stone-900/10 to-amber-950/20 dark:from-stone-900 dark:via-stone-900 dark:to-amber-950/40 border border-amber-600/30 hover:border-amber-500 shadow-md hover:shadow-xl transition-all space-y-4 flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <div className="w-13 h-13 rounded-2xl bg-amber-700 text-white flex items-center justify-center shadow-md shadow-amber-950/30 group-hover:scale-110 transition-transform">
-              <Users className="w-6 h-6" />
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-2xl bg-amber-700 text-white flex items-center justify-center shadow-md shadow-amber-950/30 group-hover:scale-110 transition-transform">
+                <Users className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300/40">
+                16 Mestres
+              </span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300/40">
-              Todas as Denominações
-            </span>
+
+            <div>
+              <h3 className="font-serif font-bold text-lg sm:text-xl text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                Grandes Teólogos
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                Biografias e citações: <strong>Wesley</strong>, <strong>Spurgeon</strong>, <strong>Calvino</strong>, <strong>Lutero</strong>, <strong>C.S. Lewis</strong>, <strong>Bonhoeffer</strong>, <strong>Pr. Dorival Beppu</strong> e os Pais da Igreja.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-1 pt-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Wesleyanos
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Batistas
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Reformados
+              </span>
+            </div>
           </div>
 
-          <div>
-            <h3 className="font-serif font-bold text-xl sm:text-2xl text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
-              Grandes Teólogos Renomados
-            </h3>
-            <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
-              Explore a biografia, citações e obras dos maiores mestres: <strong>John Wesley</strong>, <strong>Charles Spurgeon</strong>, <strong>João Calvino</strong>, <strong>Martinho Lutero</strong>, <strong>C.S. Lewis</strong>, <strong>Dietrich Bonhoeffer</strong>, <strong>Pr. Dorival Beppu (IMW)</strong> e os <strong>Pais da Igreja</strong>.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Metodistas & Wesleyanos
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Batistas
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Presbiterianos & Reformados
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Luteranos
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Pentecostais
-            </span>
-          </div>
-
-          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1.5 transition-transform pt-2">
+          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1.5 transition-transform pt-2 border-t border-stone-200/50 dark:border-stone-800/50">
             <span>Conhecer todos os teólogos</span>
-            <ArrowRight className="w-4 h-4 ml-1.5" />
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
           </div>
         </div>
 
         {/* Card 2: Livros Teológicos Cristocêntricos Renomados */}
         <div
           onClick={() => onSelectTab('obras-cristocentricas')}
-          className="group cursor-pointer rounded-3xl p-6 sm:p-7 bg-gradient-to-br from-rose-900/10 via-stone-900/10 to-amber-900/20 dark:from-stone-900 dark:via-stone-900 dark:to-rose-950/40 border border-rose-500/30 hover:border-amber-500 shadow-md hover:shadow-xl transition-all space-y-4"
+          className="group cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-rose-900/10 via-stone-900/10 to-amber-900/20 dark:from-stone-900 dark:via-stone-900 dark:to-rose-950/40 border border-rose-500/30 hover:border-amber-500 shadow-md hover:shadow-xl transition-all space-y-4 flex flex-col justify-between"
         >
-          <div className="flex items-center justify-between">
-            <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-rose-700 to-amber-800 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
-              <Cross className="w-6 h-6 stroke-[2.2]" />
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-700 to-amber-800 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
+                <Cross className="w-6 h-6 stroke-[2.2]" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300 border border-rose-300/40">
+                12 Clássicos
+              </span>
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300 border border-rose-300/40">
-              Autores Cristocêntricos
-            </span>
+
+            <div>
+              <h3 className="font-serif font-bold text-lg sm:text-xl text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                Obras Cristocêntricas
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                As maiores obras da fé: <em>Cristianismo Puro e Simples</em>, <em>A Cruz de Cristo</em>, <em>O Peregrino</em>, <em>O Conhecimento do Santo</em> e <em>O Tesouro de Davi</em>.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-1 pt-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Cristologia
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Santidade
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Sistemática
+              </span>
+            </div>
           </div>
 
-          <div>
-            <h3 className="font-serif font-bold text-xl sm:text-2xl text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
-              Livros Teológicos Renomados
-            </h3>
-            <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
-              O compêndio das maiores obras da história cristã: <em>Cristianismo Puro e Simples</em> (Lewis), <em>A Cruz de Cristo</em> (Stott), <em>O Conhecimento do Santo</em> (Tozer), <em>O Peregrino</em> (Bunyan), <em>Perfeição Cristã</em> (Wesley) e <em>O Tesouro de Davi</em> (Spurgeon).
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Apologética
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Expiação & Cruz
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Santidade Bíblica
-            </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
-              Teologia Sistemática
-            </span>
-          </div>
-
-          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1.5 transition-transform pt-2">
+          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1.5 transition-transform pt-2 border-t border-stone-200/50 dark:border-stone-800/50">
             <span>Acessar acervo das obras</span>
-            <ArrowRight className="w-4 h-4 ml-1.5" />
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+          </div>
+        </div>
+
+        {/* Card 3: Profetas Maiores e Menores (História Completa & Sofrimentos) */}
+        <div
+          onClick={() => onSelectTab('profetas')}
+          className="group cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-amber-700/15 via-orange-950/10 to-stone-900 dark:from-stone-900 dark:via-stone-900 dark:to-amber-900/40 border border-amber-500/40 hover:border-amber-400 shadow-md hover:shadow-xl transition-all space-y-4 flex flex-col justify-between"
+        >
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-600 to-orange-700 text-white flex items-center justify-center shadow-md shadow-amber-950/30 group-hover:scale-110 transition-transform">
+                <Scroll className="w-6 h-6" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-400/40">
+                17 Profetas
+              </span>
+            </div>
+
+            <div>
+              <h3 className="font-serif font-bold text-lg sm:text-xl text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                Profetas Maiores e Menores
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                A história completa de <strong>Isaías</strong>, <strong>Jeremias</strong>, <strong>Daniel</strong>, <strong>Ezequiel</strong> e dos <strong>12 Profetas Menores</strong>: seus sofrimentos, martírios e profecias de Cristo.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-1 pt-1">
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Pré-Exílio
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Cativeiro Babilônico
+              </span>
+              <span className="text-[9px] px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                Pós-Exílio
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1.5 transition-transform pt-2 border-t border-stone-200/50 dark:border-stone-800/50">
+            <span>Explorar os 17 profetas</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
           </div>
         </div>
       </section>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll } from 'lucide-react';
 
 interface BottomNavigationProps {
   currentTab: string;
@@ -18,6 +18,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
   ];
 
   const moreTabs = [
+    { id: 'profetas', label: 'Profetas Maiores e Menores', icon: Scroll },
     { id: 'teologos', label: 'Grandes Teólogos (Todas Denominações)', icon: Sparkles },
     { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas Renomadas', icon: Library },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },

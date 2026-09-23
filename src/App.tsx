@@ -14,6 +14,7 @@ import { UploadLibraryView } from './components/views/UploadLibraryView';
 import { VideosView } from './components/views/VideosView';
 import { TheologiansView } from './components/views/TheologiansView';
 import { ChristocentricBooksView } from './components/views/ChristocentricBooksView';
+import { ProphetsView } from './components/views/ProphetsView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { ShepherdSplashScreen } from './components/common/ShepherdSplashScreen';
 import { AuthModal } from './components/auth/AuthModal';
@@ -96,6 +97,8 @@ export const App: React.FC = () => {
         return <UploadLibraryView key={`uploads-${sessionVersion}`} />;
       case 'videos':
         return <VideosView key={`videos-${sessionVersion}`} />;
+      case 'profetas':
+        return <ProphetsView key={`profetas-${sessionVersion}`} />;
       case 'teologos':
         return <TheologiansView key={`teologos-${sessionVersion}`} />;
       case 'obras-cristocentricas':
