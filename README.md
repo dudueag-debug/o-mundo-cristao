@@ -2,6 +2,8 @@
 
 Aplicativo Cristão completo focado no aprofundamento bíblico, histórico e devocional.
 
+🌐 **Acesse online:** [https://o-mundo-cristao.vercel.app](https://o-mundo-cristao.vercel.app)
+
 ---
 
 ## 🌟 Funcionalidades Principais
