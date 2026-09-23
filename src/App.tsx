@@ -116,6 +116,30 @@ export const App: React.FC = () => {
         {renderCurrentView()}
       </main>
 
+      {/* Rodapé Oficial com Créditos do Criador */}
+      <footer className="border-t border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900/60 py-8 px-4 text-center transition-colors">
+        <div className="max-w-3xl mx-auto space-y-2">
+          <div className="flex items-center justify-center gap-2">
+            <span className="font-serif font-bold text-stone-900 dark:text-stone-100 text-sm">
+              O Mundo Cristão
+            </span>
+            <span className="text-stone-400">•</span>
+            <span className="text-xs text-amber-700 dark:text-amber-400 font-semibold">
+              Igreja Metodista Wesleyana
+            </span>
+          </div>
+          <p className="text-xs text-stone-600 dark:text-stone-400">
+            Criado e idealizado por <strong className="text-stone-900 dark:text-stone-100">Eduardo</strong> para a edificação do Reino de Deus.
+          </p>
+          <p className="text-xs text-stone-500 dark:text-stone-400">
+            Contato e suporte: <a href="mailto:dudusemog@gmail.com" className="text-amber-700 dark:text-amber-400 hover:underline font-semibold">dudusemog@gmail.com</a>
+          </p>
+          <p className="text-[11px] text-stone-400 italic pt-1">
+            "O mundo é a nossa paróquia!" — John Wesley
+          </p>
+        </div>
+      </footer>
+
       {/* Navegação Mobile Inferior */}
       <BottomNavigation
         currentTab={currentTab}

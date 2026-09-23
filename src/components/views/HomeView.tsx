@@ -413,6 +413,39 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
           — John Wesley
         </span>
       </section>
+
+      {/* Seção: Sobre o Criador do Aplicativo */}
+      <section className="rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-500/10 via-stone-100 to-amber-600/10 dark:from-stone-900 dark:via-stone-900 dark:to-stone-900 border border-amber-500/20 max-w-3xl mx-auto shadow-sm">
+        <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-600 to-amber-800 text-white flex items-center justify-center font-serif text-2xl font-bold shadow-md shrink-0 ring-4 ring-amber-500/20">
+            E
+          </div>
+          <div className="space-y-1.5 flex-1">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h3 className="font-serif font-bold text-lg text-stone-900 dark:text-stone-100">
+                Criado por Eduardo
+              </h3>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+                Idealizador do Projeto
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+              O aplicativo <strong>O Mundo Cristão</strong> nasceu do desejo sincero de abençoar vidas com a Palavra de Deus, resgatar a riqueza histórica das igrejas e proclamar as verdades bíblicas da tradição metodista wesleyana.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs">
+              <a
+                href="mailto:dudusemog@gmail.com"
+                className="inline-flex items-center gap-1.5 text-amber-700 dark:text-amber-400 hover:underline font-semibold bg-amber-100/60 dark:bg-amber-950/60 px-3 py-1.5 rounded-xl border border-amber-500/30"
+              >
+                <span>✉️ dudusemog@gmail.com</span>
+              </a>
+              <span className="text-stone-400">
+                Igreja Metodista Wesleyana • "O mundo é a nossa paróquia"
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
