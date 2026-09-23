@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Sparkles, Flame, ScrollText, BookOpen, HeartHandshake, Music } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music } from 'lucide-react';
 
 interface DesktopNavProps {
   currentTab: string;
@@ -9,12 +9,15 @@ interface DesktopNavProps {
 export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab }) => {
   const navItems = [
     { id: 'home', label: 'Início', icon: Home },
+    { id: 'biblia', label: 'Bíblia Completa (66)', icon: BookOpen },
+    { id: 'livros', label: 'Livros Teológicos', icon: Library },
+    { id: 'uploads', label: 'Meus Uploads & PDFs', icon: UploadCloud },
+    { id: 'videos', label: 'Vídeos Cristãos', icon: Video },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },
-    { id: 'historia', label: 'História das Igrejas & IMW', icon: Flame },
-    { id: 'sermoes', label: 'Esboços de Pregação', icon: ScrollText },
-    { id: 'biblia', label: 'Bíblia Sagrada', icon: BookOpen },
-    { id: 'oracao', label: 'Diário de Oração', icon: HeartHandshake },
-    { id: 'hinos', label: 'Hinário & Harpa', icon: Music },
+    { id: 'historia', label: 'História & IMW', icon: Flame },
+    { id: 'sermoes', label: 'Esboços', icon: ScrollText },
+    { id: 'oracao', label: 'Oração', icon: HeartHandshake },
+    { id: 'hinos', label: 'Hinário', icon: Music },
   ];
 
   return (
@@ -28,13 +31,13 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab 
               <button
                 key={item.id}
                 onClick={() => onSelectTab(item.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
                   isActive
-                    ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200 shadow-sm'
+                    ? 'bg-amber-100 text-amber-900 dark:bg-amber-950/80 dark:text-amber-200 shadow-sm ring-1 ring-amber-500/30'
                     : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-200/50 dark:hover:bg-stone-800/50'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-amber-700 dark:text-amber-400' : 'text-stone-500'}`} />
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-700 dark:text-amber-400' : 'text-stone-500'}`} />
                 <span>{item.label}</span>
               </button>
             );

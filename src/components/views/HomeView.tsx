@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData';
+import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
 import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple } from 'lucide-react';
 
 interface HomeViewProps {
@@ -35,6 +36,9 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
 
   return (
     <div className="space-y-8 pb-12">
+      {/* Card Destaque: Momento com o Pai (Estilo Café com Deus Pai) */}
+      <MomentoComOPaiCard />
+
       {/* Hero: Versículo e Devocional do Dia */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-900 via-stone-900 to-amber-950 text-white shadow-xl shadow-amber-950/20 p-6 sm:p-8 border border-amber-800/30">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -212,6 +216,97 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
             </div>
           </div>
         )}
+      </section>
+
+      {/* Novos Recursos: Bíblia Completa, Livros, Uploads e Vídeos */}
+      <section className="space-y-4">
+        <div>
+          <h2 className="font-serif font-bold text-xl text-stone-900 dark:text-stone-100 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-amber-600" />
+            <span>Biblioteca & Módulos de Estudo</span>
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
+            Acesse as Escrituras completas, livros clássicos, envie seus próprios PDFs e assista a vídeos edificantes.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card: Bíblia Completa */}
+          <div
+            onClick={() => onSelectTab('biblia')}
+            className="group cursor-pointer p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 to-amber-600/5 dark:from-amber-950/40 dark:to-stone-900 border border-amber-500/30 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-amber-600 text-white flex items-center justify-center mb-3 group-hover:scale-110 transition-transform shadow-md">
+              <BookOpen className="w-6 h-6" />
+            </div>
+            <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400">
+              Bíblia Sagrada Completa
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 mt-1 mb-3">
+              Todos os 66 livros (Gênesis a Apocalipse) com seletor de versões ARC, ARA, NVI e KJA.
+            </p>
+            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Abrir Bíblia <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+
+          {/* Card: Livros Teológicos */}
+          <div
+            onClick={() => onSelectTab('livros')}
+            className="group cursor-pointer p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <BookMarked className="w-6 h-6 text-amber-700 dark:text-amber-400" />
+            </div>
+            <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400">
+              Livros Teológicos
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 mt-1 mb-3">
+              Obras de John Wesley, Armínio, Lutero e Doutrinas da IMW em formato e-reader.
+            </p>
+            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Ver Estante <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+
+          {/* Card: Upload de PDFs */}
+          <div
+            onClick={() => onSelectTab('uploads')}
+            className="group cursor-pointer p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Download className="w-6 h-6" />
+            </div>
+            <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400">
+              Upload de Livros & PDFs
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 mt-1 mb-3">
+              Envie seus próprios arquivos PDF e documentos de estudo para ler dentro do app.
+            </p>
+            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Enviar Arquivos <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+
+          {/* Card: Vídeos Cristãos */}
+          <div
+            onClick={() => onSelectTab('videos')}
+            className="group cursor-pointer p-5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all"
+          >
+            <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <Sun className="w-6 h-6 text-rose-600 dark:text-rose-400" />
+            </div>
+            <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400">
+              Vídeos & Mensagens
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 mt-1 mb-3">
+              Documentários, pregações, estudos e opção de adicionar seus vídeos do YouTube.
+            </p>
+            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Assistir Vídeos <ArrowRight className="w-3.5 h-3.5" />
+            </span>
+          </div>
+        </div>
       </section>
 
       {/* Os 4 Pilares Centrais do App */}

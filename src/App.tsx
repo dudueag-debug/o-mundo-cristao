@@ -9,6 +9,9 @@ import { SermonsView } from './components/views/SermonsView';
 import { BibleView } from './components/views/BibleView';
 import { PrayersView } from './components/views/PrayersView';
 import { HymnsView } from './components/views/HymnsView';
+import { TheologyBooksView } from './components/views/TheologyBooksView';
+import { UploadLibraryView } from './components/views/UploadLibraryView';
+import { VideosView } from './components/views/VideosView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { storageService } from './services/storageService';
 
@@ -63,14 +66,20 @@ export const App: React.FC = () => {
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
           />
         );
+      case 'biblia':
+        return <BibleView />;
+      case 'livros':
+        return <TheologyBooksView />;
+      case 'uploads':
+        return <UploadLibraryView />;
+      case 'videos':
+        return <VideosView />;
       case 'teologia':
         return <WesleyanTheologyView />;
       case 'historia':
         return <ChurchHistoryView />;
       case 'sermoes':
         return <SermonsView />;
-      case 'biblia':
-        return <BibleView />;
       case 'oracao':
         return <PrayersView />;
       case 'hinos':
