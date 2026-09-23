@@ -156,6 +156,22 @@ O aplicativo **O Mundo Cristão** foi estruturado e desenvolvido com sucesso no 
   - Badge visual destacando vídeos do aparelho vs vídeos do YouTube.
   - Opção de excluir o vídeo do aparelho a qualquer momento.
 
+### 17. Card & Módulo Completo: Profetas Maiores e Menores da Bíblia (17 Profetas)
+- **Card Explicativo Didático**:
+  - Esclarece de forma bíblica e acessível que a divisão em "Maiores" e "Menores" refere-se exclusivamente ao **tamanho dos rolos/livros** e não à autoridade espiritual.
+- **Os 5 Livros / 4 Profetas Maiores**:
+  - **Isaías**: "Yahweh é Salvação", o Servo Sofredor (Is 53), nascimento virginal do Emanuel e martírio sob Manassés.
+  - **Jeremias**: "Yahweh Exalta", a Nova Aliança escrita no coração, perseguições, o poço de lama e lágrimas sobre Jerusalém.
+  - **Lamentações de Jeremias**: Elegias fúnebres acrósticas sobre a queda de Jerusalém e a renovação diária da fidelidade de Deus.
+  - **Ezequiel**: "Deus Fortalece", visões das rodas de fogo, vale dos ossos secos e o coração novo de carne.
+  - **Daniel**: "Deus é meu Juiz", integridade no banquete, a fornalha dos 3 jovens, a cova dos leões e o Filho do Homem nas nuvens.
+- **Os 12 Profetas Menores**:
+  - **Oseias** (amor redentor por Gômer), **Joel** (praga de gafanhotos e derramamento do Espírito Santo), **Amós** (justiça como águas e tenda caída de Davi), **Obadias** (queda do orgulho de Edom), **Jonas** (ventre do grande peixe e compaixão por Nínive), **Miqueias** (o nascimento em Belém e a prática da justiça), **Naum** (juízo de Nínive e refúgio no dia da angústia), **Habacuque** (o justo viverá pela fé e alegria na figueira que não floresce), **Sofonias** (o cântico de amor de Deus no meio do povo), **Ageu** (reconstrução do templo e o Desejado das Nações), **Zacarias** (o Rei humilde no jumentinho, as 30 moedas e o traspassado), **Malaquias** (fidelidade no altar e o Sol da Justiça com cura nas asas).
+- **Recursos da Tela**:
+  - Filtros por classificação (*Todos*, *Profetas Maiores*, *Profetas Menores*) e época (*Pré-Exílio*, *Exílio*, *Pós-Exílio*).
+  - Busca instantânea por nome, significado do nome ou reis contemporâneos.
+  - Modal profundo com a história completa de vida e vocação, o que aconteceu com ele (sofrimentos e martírios), mensagem central, conexões com Jesus Cristo e botão de cópia rápida do versículo de ouro.
+
 ---
 
 ## 🌐 Publicação Online na Vercel (Produção)
