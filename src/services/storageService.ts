@@ -1,4 +1,5 @@
 import { SermonOutline } from '../data/sermonOutlines';
+import { authService } from './authService';
 
 export interface PrayerItem {
   id: string;
@@ -12,10 +13,7 @@ export interface PrayerItem {
   prayCount: number;
 }
 
-const STORAGE_KEYS = {
-  PRAYERS: 'omc_prayers_v1',
-  CUSTOM_SERMONS: 'omc_custom_sermons_v1',
-  FAVORITES: 'omc_favorites_v1',
+const GLOBAL_KEYS = {
   THEME: 'omc_theme_v1'
 };
 
@@ -43,11 +41,20 @@ const DEFAULT_PRAYERS: PrayerItem[] = [
 ];
 
 export const storageService = {
+  // Retorna o prefixo do usuário atual para isolamento estrito de dados
+  getUserStorageKey(baseKey: string): string {
+    const user = authService.getCurrentUser();
+    const userPrefix = user ? `user_${user.id}` : 'guest';
+    return `omc_${userPrefix}_${baseKey}`;
+  },
+
   getPrayers(): PrayerItem[] {
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.PRAYERS);
+      const key = this.getUserStorageKey('prayers_v1');
+      const data = localStorage.getItem(key);
       if (!data) {
-        localStorage.setItem(STORAGE_KEYS.PRAYERS, JSON.stringify(DEFAULT_PRAYERS));
+        // Se for primeira vez, inicializa com exemplos
+        localStorage.setItem(key, JSON.stringify(DEFAULT_PRAYERS));
         return DEFAULT_PRAYERS;
       }
       return JSON.parse(data);
@@ -57,12 +64,14 @@ export const storageService = {
   },
 
   savePrayers(prayers: PrayerItem[]): void {
-    localStorage.setItem(STORAGE_KEYS.PRAYERS, JSON.stringify(prayers));
+    const key = this.getUserStorageKey('prayers_v1');
+    localStorage.setItem(key, JSON.stringify(prayers));
   },
 
   getCustomSermons(): SermonOutline[] {
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.CUSTOM_SERMONS);
+      const key = this.getUserStorageKey('custom_sermons_v1');
+      const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -70,15 +79,30 @@ export const storageService = {
   },
 
   saveCustomSermons(sermons: SermonOutline[]): void {
-    localStorage.setItem(STORAGE_KEYS.CUSTOM_SERMONS, JSON.stringify(sermons));
+    const key = this.getUserStorageKey('custom_sermons_v1');
+    localStorage.setItem(key, JSON.stringify(sermons));
+  },
+
+  getUserNotes(docOrKeyId: string): string {
+    try {
+      const key = this.getUserStorageKey(`notes_${docOrKeyId}`);
+      return localStorage.getItem(key) || '';
+    } catch {
+      return '';
+    }
+  },
+
+  saveUserNotes(docOrKeyId: string, notes: string): void {
+    const key = this.getUserStorageKey(`notes_${docOrKeyId}`);
+    localStorage.setItem(key, notes);
   },
 
   getTheme(): 'light' | 'dark' {
-    return (localStorage.getItem(STORAGE_KEYS.THEME) as 'light' | 'dark') || 'light';
+    return (localStorage.getItem(GLOBAL_KEYS.THEME) as 'light' | 'dark') || 'light';
   },
 
   setTheme(theme: 'light' | 'dark'): void {
-    localStorage.setItem(STORAGE_KEYS.THEME, theme);
+    localStorage.setItem(GLOBAL_KEYS.THEME, theme);
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {

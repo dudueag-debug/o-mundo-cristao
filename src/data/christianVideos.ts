@@ -1,6 +1,10 @@
 export interface ChristianVideo {
   id: string;
-  youtubeId: string;
+  youtubeId?: string;
+  sourceType?: 'youtube' | 'local';
+  localFileId?: string;
+  localFileName?: string;
+  localFileSize?: string;
   title: string;
   speakerOrAuthor: string;
   category: 'pregacoes' | 'teologia' | 'historia-imw' | 'louvores';

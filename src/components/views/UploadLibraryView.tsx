@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UploadCloud, FileText, Trash2, BookOpen, Eye, Plus, Check, FileCheck, Search, Clock, HardDrive, Edit3, X } from 'lucide-react';
+import { storageService } from '../../services/storageService';
 
 export interface UserUploadedDocument {
   id: string;
@@ -10,8 +11,6 @@ export interface UserUploadedDocument {
   content?: string; // Text content or data URL
   notes?: string;
 }
-
-const STORAGE_KEY_UPLOADS = 'omc_user_uploads_v1';
 
 const DEFAULT_DOCUMENTS: UserUploadedDocument[] = [
   {
@@ -68,12 +67,13 @@ export const UploadLibraryView: React.FC = () => {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY_UPLOADS);
+      const storageKey = storageService.getUserStorageKey('user_uploads_v1');
+      const saved = localStorage.getItem(storageKey);
       if (saved) {
         setDocuments(JSON.parse(saved));
       } else {
         setDocuments(DEFAULT_DOCUMENTS);
-        localStorage.setItem(STORAGE_KEY_UPLOADS, JSON.stringify(DEFAULT_DOCUMENTS));
+        localStorage.setItem(storageKey, JSON.stringify(DEFAULT_DOCUMENTS));
       }
     } catch {
       setDocuments(DEFAULT_DOCUMENTS);
@@ -82,7 +82,8 @@ export const UploadLibraryView: React.FC = () => {
 
   const saveDocuments = (updated: UserUploadedDocument[]) => {
     setDocuments(updated);
-    localStorage.setItem(STORAGE_KEY_UPLOADS, JSON.stringify(updated));
+    const storageKey = storageService.getUserStorageKey('user_uploads_v1');
+    localStorage.setItem(storageKey, JSON.stringify(updated));
   };
 
   const handleFileUpload = (files: FileList | null) => {

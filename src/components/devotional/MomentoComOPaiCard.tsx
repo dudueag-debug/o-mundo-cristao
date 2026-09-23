@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MOMENTO_COM_O_PAI_LIST, MomentoComOPaiDevocional } from '../../data/momentoComOPaiData';
 import { Coffee, KeyRound, Heart, Share2, Check, Sparkles, BookOpen, Clock, ChevronRight, MessageSquareHeart, Bookmark } from 'lucide-react';
+import { storageService } from '../../services/storageService';
 
 export const MomentoComOPaiCard: React.FC = () => {
   const [selectedDayIdx, setSelectedDayIdx] = useState<number>(0);
@@ -10,7 +11,7 @@ export const MomentoComOPaiCard: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
   const devotional: MomentoComOPaiDevocional = MOMENTO_COM_O_PAI_LIST[selectedDayIdx] || MOMENTO_COM_O_PAI_LIST[0];
-  const storageNoteKey = `omc_mcp_note_${devotional.id}`;
+  const storageNoteKey = storageService.getUserStorageKey(`mcp_note_${devotional.id}`);
 
   useEffect(() => {
     try {
