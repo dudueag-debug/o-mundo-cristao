@@ -12,6 +12,8 @@ import { HymnsView } from './components/views/HymnsView';
 import { TheologyBooksView } from './components/views/TheologyBooksView';
 import { UploadLibraryView } from './components/views/UploadLibraryView';
 import { VideosView } from './components/views/VideosView';
+import { TheologiansView } from './components/views/TheologiansView';
+import { ChristocentricBooksView } from './components/views/ChristocentricBooksView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { storageService } from './services/storageService';
 
@@ -74,6 +76,10 @@ export const App: React.FC = () => {
         return <UploadLibraryView />;
       case 'videos':
         return <VideosView />;
+      case 'teologos':
+        return <TheologiansView />;
+      case 'obras-cristocentricas':
+        return <ChristocentricBooksView />;
       case 'teologia':
         return <WesleyanTheologyView />;
       case 'historia':

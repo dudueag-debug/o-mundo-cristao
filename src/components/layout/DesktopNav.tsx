@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross } from 'lucide-react';
 
 interface DesktopNavProps {
   currentTab: string;
@@ -9,10 +9,12 @@ interface DesktopNavProps {
 export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab }) => {
   const navItems = [
     { id: 'home', label: 'Início', icon: Home },
-    { id: 'biblia', label: 'Bíblia Completa (66)', icon: BookOpen },
-    { id: 'livros', label: 'Livros Teológicos', icon: Library },
-    { id: 'uploads', label: 'Meus Uploads & PDFs', icon: UploadCloud },
-    { id: 'videos', label: 'Vídeos Cristãos', icon: Video },
+    { id: 'teologos', label: 'Grandes Teólogos', icon: Users },
+    { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas', icon: Cross },
+    { id: 'biblia', label: 'Bíblia (66)', icon: BookOpen },
+    { id: 'livros', label: 'E-Reader', icon: Library },
+    { id: 'uploads', label: 'Meus PDFs', icon: UploadCloud },
+    { id: 'videos', label: 'Vídeos', icon: Video },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },
     { id: 'historia', label: 'História & IMW', icon: Flame },
     { id: 'sermoes', label: 'Esboços', icon: ScrollText },

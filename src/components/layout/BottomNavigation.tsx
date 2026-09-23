@@ -18,6 +18,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
   ];
 
   const moreTabs = [
+    { id: 'teologos', label: 'Grandes Teólogos (Todas Denominações)', icon: Sparkles },
+    { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas Renomadas', icon: Library },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },
     { id: 'historia', label: 'História das Igrejas & IMW', icon: Flame },
     { id: 'sermoes', label: 'Esboços de Pregação', icon: ScrollText },
