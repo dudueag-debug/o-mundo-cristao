@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData';
 import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
-import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll } from 'lucide-react';
+import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot } from 'lucide-react';
 
 interface HomeViewProps {
   onSelectTab: (tab: string) => void;
@@ -216,6 +216,40 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
             </div>
           </div>
         )}
+      </section>
+
+      {/* Banner / Card Destaque: Gemini IA Teológico */}
+      <section
+        onClick={() => onSelectTab('gemini-ia')}
+        className="group cursor-pointer rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 text-white shadow-xl hover:shadow-2xl transition-all relative overflow-hidden"
+      >
+        <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="space-y-2 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold uppercase tracking-wider text-amber-100 border border-white/20">
+              <Bot className="w-3.5 h-3.5" />
+              <span>Novo Módulo • Inteligência Teológica Pastoral</span>
+            </div>
+            <h2 className="font-serif font-bold text-2xl sm:text-3xl text-white">
+              Estude a Bíblia & Teologia com o Gemini IA
+            </h2>
+            <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
+              Tire dúvidas teológicas, analise termos no hebraico e grego, prepare esboços de sermão e compreenda a doutrina da graça wesleyana com auxílio da IA.
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">📜 Exegese & Contexto</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">🔍 Hebraico & Grego</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">🔥 Teologia Wesleyana</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">📖 Gerador de Sermões</span>
+            </div>
+          </div>
+          <div className="shrink-0 flex items-center">
+            <span className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-amber-900 font-bold text-xs sm:text-sm shadow-lg group-hover:scale-105 transition-transform">
+              <span>Abrir Gemini IA</span>
+              <ArrowRight className="w-4 h-4" />
+            </span>
+          </div>
+        </div>
       </section>
 
       {/* Novos Recursos: Bíblia Completa, Livros, Uploads e Vídeos */}

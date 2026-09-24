@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { INITIAL_CHRISTIAN_VIDEOS, ChristianVideo } from '../../data/christianVideos';
 import { videoStorageService } from '../../services/videoStorageService';
 import { storageService } from '../../services/storageService';
-import { Play, Plus, Search, Video, Trash2, X, Sparkles, HardDrive, Smartphone, Monitor, Youtube, Film, Check, AlertCircle } from 'lucide-react';
+import { Play, Plus, Search, Video, Trash2, X, HardDrive, Smartphone, Youtube, Film, Check, ExternalLink } from 'lucide-react';
 
 export const VideosView: React.FC = () => {
   const [videos, setVideos] = useState<ChristianVideo[]>([]);
@@ -30,12 +30,12 @@ export const VideosView: React.FC = () => {
       const custom: ChristianVideo[] = saved ? JSON.parse(saved) : [];
       const combined = [...custom, ...INITIAL_CHRISTIAN_VIDEOS];
       setVideos(combined);
-      if (combined.length > 0 && !activeVideo) {
+      if (combined.length > 0) {
         setActiveVideo(combined[0]);
       }
     } catch {
       setVideos(INITIAL_CHRISTIAN_VIDEOS);
-      if (INITIAL_CHRISTIAN_VIDEOS.length > 0 && !activeVideo) {
+      if (INITIAL_CHRISTIAN_VIDEOS.length > 0) {
         setActiveVideo(INITIAL_CHRISTIAN_VIDEOS[0]);
       }
     }
@@ -77,9 +77,15 @@ export const VideosView: React.FC = () => {
   }, [activeVideo]);
 
   const extractYoutubeId = (url: string): string => {
+    const trimmed = url.trim();
+    // Suporte a youtube.com/shorts/ID
+    const shortsMatch = trimmed.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/);
+    if (shortsMatch) return shortsMatch[1];
+
+    // Suporte padrão
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : url;
+    const match = trimmed.match(regExp);
+    return match && match[2].length === 11 ? match[2] : trimmed;
   };
 
   const handleAddVideo = async (e: React.FormEvent) => {
@@ -185,9 +191,9 @@ export const VideosView: React.FC = () => {
 
   const categories = [
     { id: 'all', label: 'Todos os Vídeos' },
+    { id: 'teologia', label: 'História & Teologia Wesleyana' },
+    { id: 'historia-imw', label: 'História da IMW & Mover' },
     { id: 'pregacoes', label: 'Pregações & Mensagens' },
-    { id: 'teologia', label: 'Estudos & Teologia' },
-    { id: 'historia-imw', label: 'História da IMW & Documentários' },
     { id: 'louvores', label: 'Louvores & Hinos' },
   ];
 
@@ -205,13 +211,13 @@ export const VideosView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-4">
         <div>
           <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-semibold text-xs uppercase tracking-widest mb-1">
-            <Film className="w-4 h-4" /> Videoteca & Mídia Pessoal
+            <Film className="w-4 h-4" /> Videoteca & Mídia Cristã
           </div>
           <h1 className="font-serif font-bold text-2xl sm:text-3xl text-stone-900 dark:text-stone-100">
-            Vídeos & Mensagens Cristãs
+            Vídeos & Mensagens Edificantes
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-2xl">
-            Assista a documentários históricos, estudos wesleyanos ou carregue seus próprios vídeos do PC e celular com privacidade total.
+            Assista a documentários sobre John Wesley, avivamentos históricos da Igreja Metodista Wesleyana ou reproduza seus próprios vídeos do PC e celular sem anúncios intrusivos.
           </p>
         </div>
 
@@ -254,7 +260,7 @@ export const VideosView: React.FC = () => {
               )
             ) : (
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${activeVideo.youtubeId}?autoplay=0&rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${activeVideo.youtubeId}?autoplay=0&rel=0&modestbranding=1`}
                 title={activeVideo.title}
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -265,7 +271,7 @@ export const VideosView: React.FC = () => {
 
           <div className="p-6 sm:p-8 space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
                   {activeVideo.category}
                 </span>
@@ -275,9 +281,19 @@ export const VideosView: React.FC = () => {
                     <HardDrive className="w-3 h-3" /> Vídeo do Seu Aparelho (Offline)
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-red-100 text-red-900 dark:bg-red-950 dark:text-red-300">
-                    <Youtube className="w-3 h-3" /> Transmissão do YouTube
-                  </span>
+                  <>
+                    <span className="inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-red-100 text-red-900 dark:bg-red-950 dark:text-red-300">
+                      <Youtube className="w-3 h-3" /> Transmissão do YouTube
+                    </span>
+                    <a
+                      href={`https://www.youtube.com/watch?v=${activeVideo.youtubeId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] text-amber-700 dark:text-amber-400 hover:underline font-semibold ml-1"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" /> Abrir no YouTube
+                    </a>
+                  </>
                 )}
               </div>
 
@@ -375,6 +391,7 @@ export const VideosView: React.FC = () => {
                     alt={video.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
                     onError={(e) => {
+                      // Fallback visual elegante caso a imagem falhe
                       (e.target as HTMLElement).style.display = 'none';
                     }}
                   />
@@ -395,9 +412,13 @@ export const VideosView: React.FC = () => {
               <div className="p-4 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider">
                   <span className="text-amber-700 dark:text-amber-400">{video.category}</span>
-                  {isLocal && (
+                  {isLocal ? (
                     <span className="text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                       <HardDrive className="w-3 h-3" /> Local
+                    </span>
+                  ) : (
+                    <span className="text-red-700 dark:text-red-400 flex items-center gap-1">
+                      <Youtube className="w-3 h-3" /> YouTube
                     </span>
                   )}
                 </div>
@@ -513,7 +534,7 @@ export const VideosView: React.FC = () => {
                     required={modalSourceTab === 'youtube'}
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
-                    placeholder="https://www.youtube.com/watch?v=..."
+                    placeholder="https://www.youtube.com/watch?v=... ou https://youtu.be/..."
                     className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
@@ -556,16 +577,16 @@ export const VideosView: React.FC = () => {
                     onChange={(e) => setVideoCategory(e.target.value as any)}
                     className="w-full px-3 py-2 text-xs rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   >
-                    <option value="pregacoes">Pregações & Mensagens</option>
-                    <option value="teologia">Estudos & Teologia</option>
+                    <option value="teologia">História & Teologia Wesleyana</option>
                     <option value="historia-imw">História da IMW</option>
+                    <option value="pregacoes">Pregações & Mensagens</option>
                     <option value="louvores">Louvores & Hinos</option>
                   </select>
                 </div>
               </div>
 
               <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-800/40 text-[11px] text-stone-600 dark:text-stone-300">
-                🔒 <strong>Privacidade Garantida:</strong> Este vídeo fica armazenado estritamente na sua conta. Ninguém mais poderá vê-lo.
+                🔒 <strong>Privacidade Garantida:</strong> Seus vídeos pessoais ficam armazenados estritamente na sua conta privada.
               </div>
 
               <div className="flex justify-end gap-2 pt-2">

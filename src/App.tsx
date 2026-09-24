@@ -15,6 +15,7 @@ import { VideosView } from './components/views/VideosView';
 import { TheologiansView } from './components/views/TheologiansView';
 import { ChristocentricBooksView } from './components/views/ChristocentricBooksView';
 import { ProphetsView } from './components/views/ProphetsView';
+import { GeminiStudyView } from './components/views/GeminiStudyView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { ShepherdSplashScreen } from './components/common/ShepherdSplashScreen';
 import { AuthModal } from './components/auth/AuthModal';
@@ -78,6 +79,13 @@ export const App: React.FC = () => {
     }
   };
 
+  const [geminiInitialPrompt, setGeminiInitialPrompt] = useState<string>('');
+
+  const handleStudyWithGemini = (prompt: string) => {
+    setGeminiInitialPrompt(prompt);
+    setCurrentTab('gemini-ia');
+  };
+
   const renderCurrentView = () => {
     // Key com sessionVersion garante que os componentes recarreguem limpos ao alternar de conta
     switch (currentTab) {
@@ -89,8 +97,21 @@ export const App: React.FC = () => {
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
           />
         );
+      case 'gemini-ia':
+        return (
+          <GeminiStudyView
+            key={`gemini-${sessionVersion}`}
+            initialQuery={geminiInitialPrompt}
+            onNavigateToBible={() => setCurrentTab('biblia')}
+          />
+        );
       case 'biblia':
-        return <BibleView key={`biblia-${sessionVersion}`} />;
+        return (
+          <BibleView
+            key={`biblia-${sessionVersion}`}
+            onStudyWithGemini={handleStudyWithGemini}
+          />
+        );
       case 'livros':
         return <TheologyBooksView key={`livros-${sessionVersion}`} />;
       case 'uploads':

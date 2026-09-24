@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot } from 'lucide-react';
 
 interface BottomNavigationProps {
   currentTab: string;
@@ -11,16 +11,17 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
 
   const mainTabs = [
     { id: 'home', label: 'Início', icon: Home },
+    { id: 'gemini-ia', label: 'Gemini IA', icon: Bot },
     { id: 'biblia', label: 'Bíblia', icon: BookOpen },
-    { id: 'livros', label: 'Livros', icon: Library },
-    { id: 'uploads', label: 'Uploads', icon: UploadCloud },
+    { id: 'uploads', label: 'Meus PDFs', icon: UploadCloud },
     { id: 'videos', label: 'Vídeos', icon: Video },
   ];
 
   const moreTabs = [
+    { id: 'livros', label: 'E-Reader Teológico', icon: Library },
     { id: 'profetas', label: 'Profetas Maiores e Menores', icon: Scroll },
-    { id: 'teologos', label: 'Grandes Teólogos (Todas Denominações)', icon: Sparkles },
-    { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas Renomadas', icon: Library },
+    { id: 'teologos', label: 'Grandes Teólogos', icon: Sparkles },
+    { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas', icon: Library },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },
     { id: 'historia', label: 'História das Igrejas & IMW', icon: Flame },
     { id: 'sermoes', label: 'Esboços de Pregação', icon: ScrollText },
@@ -104,9 +105,9 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
           <button
             onClick={() => setIsMoreMenuOpen(true)}
             className={`flex flex-col items-center justify-center py-1 transition-colors relative ${
-              moreTabs.some(t => t.id === currentTab)
+              moreTabs.some((t) => t.id === currentTab)
                 ? 'text-amber-700 dark:text-amber-400 font-semibold'
-                : 'text-stone-500 dark:text-stone-400'
+                : 'text-stone-500 dark:text-stone-400 hover:text-stone-700'
             }`}
           >
             <MoreHorizontal className="w-5 h-5 mb-0.5" />

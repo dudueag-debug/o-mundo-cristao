@@ -15,48 +15,57 @@ export interface ChristianVideo {
 
 export const INITIAL_CHRISTIAN_VIDEOS: ChristianVideo[] = [
   {
-    id: 'vid-1',
-    youtubeId: 'Ww5yS9wG2p8',
-    title: 'A Vida de John Wesley e o Avivamento na Inglaterra',
-    speakerOrAuthor: 'Documentário Histórico',
+    id: 'vid-wesley-doc',
+    youtubeId: 'WLBSFGC6jWs',
+    title: 'A História de John Wesley - Documentário Histórico Oficial',
+    speakerOrAuthor: 'Documentário Histórico e Biográfico',
     category: 'teologia',
     duration: '52 min',
-    description: 'Documentário aprofundado narrando a infância em Epworth, os dias em Oxford, a conversão na Rua Aldersgate e o avivamento metodista que transformou a Grã-Bretanha.'
+    description: 'Documentário aprofundado narrando a infância em Epworth, os dias do Clube Santo em Oxford, o navio para a Geórgia, a conversão na Rua Aldersgate e o grande avivamento metodista que transformou a Grã-Bretanha e o mundo.'
   },
   {
-    id: 'vid-2',
-    youtubeId: 'b_HkR_k34_c',
-    title: 'A Glória da Graça Preveniente e Santificadora',
-    speakerOrAuthor: 'Estudo Teológico Wesleyano',
+    id: 'vid-wesley-filme',
+    youtubeId: 'ShgD7zo-WSI',
+    title: 'Wesley: Um Coração Transformado Pode Mudar o Mundo (Filme Completo)',
+    speakerOrAuthor: 'Filme Cristão Biográfico',
     category: 'teologia',
-    duration: '38 min',
-    description: 'Compreenda a visão armínio-wesleyana sobre a graça de Deus: como o Espírito Santo atrai o pecador e capacita a Igreja a viver em santidade prática.'
+    duration: '1h 57 min',
+    description: 'A marcante produção cinematográfica baseada nos diários reais de John Wesley. Uma obra imperdível para entender a busca de Wesley pela paz com Deus, a experiência do coração aquecido e a santidade bíblica.'
   },
   {
-    id: 'vid-3',
-    youtubeId: '6qG6uS8P6f4',
-    title: 'História e Memória da Igreja Metodista Wesleyana (1967)',
-    speakerOrAuthor: 'Voz Wesleyana & Pioneiros',
+    id: 'vid-quatro-homens',
+    youtubeId: 'udXqftWZ6PY',
+    title: 'Quatro Homens, Quatro Séculos: A Vida e o Avivamento de John Wesley',
+    speakerOrAuthor: 'Série Histórica da Fé Cristã',
+    category: 'teologia',
+    duration: '42 min',
+    description: 'Um estudo fascinante sobre como Deus levantou homens como John Wesley em épocas de frieza espiritual para incendiar a Igreja através da pregação do Evangelho aos pobres e da graça santificadora.'
+  },
+  {
+    id: 'vid-imw-podcast',
+    youtubeId: 'pf9sO1vbhkI',
+    title: 'Podcast Vocação, Vida e Missão - Igreja Metodista Wesleyana',
+    speakerOrAuthor: 'Igreja Metodista Wesleyana Oficial',
     category: 'historia-imw',
-    duration: '45 min',
-    description: 'A trajetória de fé iniciada em 5 de janeiro de 1967 em Nova Friburgo/RJ: o derramamento do Espírito Santo, os pastores pioneiros e a expansão missionária nacional.'
+    duration: '48 min',
+    description: 'Episódio especial sobre a identidade, a vocação pastoral e os desafios missionários da Igreja Metodista Wesleyana, destacando o legado pentecostal iniciado em 1967 em Nova Friburgo.'
   },
   {
-    id: 'vid-4',
-    youtubeId: '2m6V4L9oU_c',
-    title: 'O Poder da Oração que Prevalece e o Fogo de Deus',
-    speakerOrAuthor: 'Pregação Inspiradora',
+    id: 'vid-imw-familia',
+    youtubeId: 'TqLBlXSC3Pk',
+    title: 'Família Wesleyana: História, Mover de Deus e Acolhimento',
+    speakerOrAuthor: 'Voz Wesleyana & Comunhão',
+    category: 'historia-imw',
+    duration: '35 min',
+    description: 'Uma mensagem pastoral calorosa sobre a comunhão, a doutrina da santidade e o amor fraterno que caracterizam a membresia e liderança da Igreja Metodista Wesleyana.'
+  },
+  {
+    id: 'vid-wesley-animacao',
+    youtubeId: 'bQeaRc91Q0g',
+    title: 'John Wesley: Um Coração Aquecido pelo Amor de Deus',
+    speakerOrAuthor: 'História Cristã Ilustrada',
     category: 'pregacoes',
-    duration: '41 min',
-    description: 'Uma mensagem contundente sobre o altar de oração, a oração de intercessão e a busca incessante pela glória de Deus na vida da família e do ministério.'
-  },
-  {
-    id: 'vid-5',
-    youtubeId: 'a7b_k9W3j8M',
-    title: 'Hinos Históricos da Fé Cristã & Harpa ao Vivo',
-    speakerOrAuthor: 'Adoração Congregacional',
-    category: 'louvores',
-    duration: '29 min',
-    description: 'Coletânea especial de hinos clássicos de Charles Wesley e da Harpa Cristã entoados com instrumentos acústicos e unção congregacional.'
+    duration: '28 min',
+    description: 'Narrativa didática e inspiradora sobre o poder da fé operante pelo amor. Ideal para compartilhar com jovens, adolescentes e classes de Escola Bíblica Dominical.'
   }
 ];
