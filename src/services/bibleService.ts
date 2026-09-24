@@ -1,19 +1,25 @@
 import { ALL_BIBLE_BOOKS, BibleBookInfo } from '../data/fullBibleIndex';
 
-export type BibleVersionId = 'ARC' | 'ARA' | 'NVI' | 'KJA';
+export type BibleVersionId = 'ARC' | 'ARA' | 'NVI' | 'KJA' | 'ACF' | 'NVT' | 'NAA' | 'STRONG';
 
 export interface BibleVersion {
   id: BibleVersionId;
   name: string;
   fullName: string;
+  description: string;
 }
 
 export const BIBLE_VERSIONS: BibleVersion[] = [
-  { id: 'ARC', name: 'ARC', fullName: 'Almeida Revista e Corrigida' },
-  { id: 'ARA', name: 'ARA', fullName: 'Almeida Revista e Atualizada' },
-  { id: 'NVI', name: 'NVI', fullName: 'Nova Versão Internacional' },
-  { id: 'KJA', name: 'KJA', fullName: 'King James Atualizada' },
+  { id: 'ARC', name: 'ARC', fullName: 'Almeida Revista e Corrigida', description: 'Tradução clássica, solene e tradicional da igreja evangélica.' },
+  { id: 'ARA', name: 'ARA', fullName: 'Almeida Revista e Atualizada', description: 'Equilíbrio primoroso entre fidelidade textual e clareza contemporânea.' },
+  { id: 'NVI', name: 'NVI', fullName: 'Nova Versão Internacional', description: 'Fluidez, clareza e acessibilidade em linguagem moderna.' },
+  { id: 'KJA', name: 'KJA', fullName: 'King James Atualizada', description: 'A majestade e riqueza poética do texto clássico de King James.' },
+  { id: 'ACF', name: 'ACF', fullName: 'Almeida Corrigida Fiel', description: 'Baseada estritamente no Textus Receptus grego e massorético.' },
+  { id: 'NVT', name: 'NVT', fullName: 'Nova Versão Transformadora', description: 'Tradução pastoral de leitura dinâmica e profunda clareza.' },
+  { id: 'NAA', name: 'NAA', fullName: 'Nova Almeida Atualizada', description: 'A mais recente revisão da Sociedade Bíblica do Brasil.' },
+  { id: 'STRONG', name: 'STRONG', fullName: 'Bíblia de Estudo Strong (Interlinear)', description: 'Concordância com números Strong, hebraico e grego para exegese profunda.' },
 ];
+
 
 export interface VerseItem {
   number: number;
@@ -230,5 +236,27 @@ export const bibleService = {
     }
 
     return generatedVerses;
+  },
+
+  async getVerseAcrossVersions(
+    bookId: string,
+    chapter: number,
+    verseNum: number
+  ): Promise<{ version: BibleVersionId; versionName: string; text: string }[]> {
+    const targetVersions: BibleVersionId[] = ['ARC', 'ARA', 'NVI', 'KJA', 'ACF'];
+    const results = await Promise.all(
+      targetVersions.map(async (v) => {
+        const verses = await this.getChapterVerses(bookId, chapter, v);
+        const found = verses.find((item) => item.number === verseNum);
+        const verInfo = BIBLE_VERSIONS.find((bv) => bv.id === v);
+        return {
+          version: v,
+          versionName: verInfo?.fullName || v,
+          text: found ? found.text : 'Texto disponível no leitor contínuo.'
+        };
+      })
+    );
+    return results;
   }
 };
+

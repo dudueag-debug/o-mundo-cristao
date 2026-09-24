@@ -3,6 +3,7 @@ import { UploadCloud, FileText, Trash2, BookOpen, ExternalLink, Download, Plus, 
 import { storageService } from '../../services/storageService';
 import { documentStorageService } from '../../services/documentStorageService';
 import { geminiService } from '../../services/geminiService';
+import { KindleReaderModal } from '../common/KindleReaderModal';
 
 export interface UserUploadedDocument {
   id: string;
@@ -75,6 +76,8 @@ export const UploadLibraryView: React.FC = () => {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [summaryCopied, setSummaryCopied] = useState(false);
+  const [isKindleModalOpen, setIsKindleModalOpen] = useState(false);
+
 
   const handleGenerateAiSummary = async () => {
     if (!selectedDoc || isSummarizing) return;
@@ -444,6 +447,18 @@ export const UploadLibraryView: React.FC = () => {
                     <span>{isSummarizing ? 'Gerando Análise...' : 'Resumo com Gemini IA'}</span>
                   </button>
 
+                  {selectedDoc.content && (
+                    <button
+                      onClick={() => setIsKindleModalOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors shadow-sm"
+                      title="Abrir este documento no leitor estilo Kindle"
+                    >
+                      <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Ler no Kindle</span>
+                    </button>
+                  )}
+
+
                   {selectedDocUrl && (
                     <>
                       <a
@@ -667,6 +682,34 @@ export const UploadLibraryView: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Leitor Estilo Kindle para Documentos do Usuário */}
+      {isKindleModalOpen && selectedDoc && selectedDoc.content && (
+        <KindleReaderModal
+          isOpen={isKindleModalOpen}
+          onClose={() => setIsKindleModalOpen(false)}
+          title={selectedDoc.name}
+          subtitle="Documento da Biblioteca de Uploads"
+          authorOrRef="O Mundo Cristão"
+          totalPages={1}
+          currentPage={1}
+        >
+          <div className="space-y-6">
+            <div className="text-center pb-6 border-b border-current/10">
+              <h1 className="font-serif font-bold text-2xl sm:text-3xl mb-1">
+                {selectedDoc.name}
+              </h1>
+              <p className="text-xs opacity-70">
+                Enviado pelo Usuário • {selectedDoc.size}
+              </p>
+            </div>
+            <div className="whitespace-pre-wrap leading-relaxed text-sm sm:text-base">
+              {selectedDoc.content}
+            </div>
+          </div>
+        </KindleReaderModal>
+      )}
     </div>
   );
 };
+

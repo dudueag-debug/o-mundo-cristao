@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ALL_BIBLE_BOOKS, BibleBookInfo } from '../../data/fullBibleIndex';
 import { bibleService, BIBLE_VERSIONS, BibleVersionId, VerseItem } from '../../services/bibleService';
 import { bibleHighlightService, HIGHLIGHT_COLORS, HighlightColor, BibleHighlight } from '../../services/bibleHighlightService';
-import { BookOpen, Copy, Check, Type, Bookmark, ChevronDown, Search, ArrowLeft, ArrowRight, Sparkles, Palette, Trash2, X, BookmarkCheck } from 'lucide-react';
+import { findStrongNumberForWord, getStrongEntry, StrongEntry } from '../../data/strongConcordance';
+import { KindleReaderModal } from '../common/KindleReaderModal';
+import { BookOpen, Copy, Check, Type, Bookmark, ChevronDown, Search, ArrowLeft, ArrowRight, Sparkles, Palette, Trash2, X, BookmarkCheck, BookMarked, Columns2, HelpCircle } from 'lucide-react';
 
 interface BibleViewProps {
   onStudyWithGemini?: (prompt: string) => void;
@@ -17,6 +19,19 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
   const [copiedVerseNum, setCopiedVerseNum] = useState<number | null>(null);
 
+  // Leitor Estilo Kindle
+  const [isKindleModalOpen, setIsKindleModalOpen] = useState(false);
+
+  // Modo Concordância Strong
+  const [isStrongMode, setIsStrongMode] = useState(false);
+  const [selectedStrongEntry, setSelectedStrongEntry] = useState<StrongEntry | null>(null);
+
+  // Comparador de Versículos Paralelos
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+  const [compareVerseNumber, setCompareVerseNumber] = useState<number | null>(null);
+  const [compareVersionsData, setCompareVersionsData] = useState<{ version: BibleVersionId; versionName: string; text: string }[]>([]);
+  const [isComparingLoading, setIsComparingLoading] = useState(false);
+
   // Sistema de Marcação Colorida
   const [highlightsMap, setHighlightsMap] = useState<Record<string, HighlightColor>>({});
   const [activeVerseForMenu, setActiveVerseForMenu] = useState<{ number: number; text: string } | null>(null);
@@ -28,6 +43,7 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
   const [bookSearchQuery, setBookSearchQuery] = useState('');
   const [testamentFilter, setTestamentFilter] = useState<'ALL' | 'AT' | 'NT'>('ALL');
+
 
   useEffect(() => {
     loadChapter(selectedBook.id, selectedChapter, selectedVersion);
@@ -119,6 +135,51 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
     }
   };
 
+  const handleOpenCompareModal = async (verseNum: number) => {
+    setCompareVerseNumber(verseNum);
+    setIsCompareModalOpen(true);
+    setIsComparingLoading(true);
+    try {
+      const data = await bibleService.getVerseAcrossVersions(selectedBook.id, selectedChapter, verseNum);
+      setCompareVersionsData(data);
+    } catch (err) {
+      console.error('Erro ao comparar versículos', err);
+    } finally {
+      setIsComparingLoading(false);
+    }
+  };
+
+  const renderVerseWithStrong = (verseText: string) => {
+    if (!isStrongMode) return verseText;
+
+    const words = verseText.split(' ');
+    return words.map((word, idx) => {
+      const strongNum = findStrongNumberForWord(word);
+      if (!strongNum) {
+        return <span key={idx}>{word} </span>;
+      }
+      const entry = getStrongEntry(strongNum);
+      return (
+        <span key={idx} className="inline-block">
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              if (entry) setSelectedStrongEntry(entry);
+            }}
+            className="text-amber-800 dark:text-amber-300 font-semibold underline decoration-amber-500/50 decoration-dotted cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-950 px-1 py-0.5 rounded transition-colors"
+            title={`Strong ${strongNum} (${entry?.language}): ${entry?.transliteration} - ${entry?.shortDefinition}`}
+          >
+            {word}
+            <sup className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-bold ml-0.5">
+              {strongNum}
+            </sup>
+          </span>{' '}
+        </span>
+      );
+    });
+  };
+
+
   const filteredBooks = ALL_BIBLE_BOOKS.filter(b => {
     const matchesTestament = testamentFilter === 'ALL' || b.testament === testamentFilter;
     const matchesSearch = b.name.toLowerCase().includes(bookSearchQuery.toLowerCase()) ||
@@ -152,11 +213,35 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
           {/* Botão Selecionar Livro */}
           <button
             onClick={() => setIsBookModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs sm:text-sm font-semibold shadow-md shadow-amber-900/20 transition-all"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs sm:text-sm font-semibold shadow-md shadow-amber-900/20 transition-all"
           >
             <Bookmark className="w-4 h-4" />
             <span>{selectedBook.name} {selectedChapter}</span>
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
+          </button>
+
+          {/* Botão Leitor Kindle */}
+          <button
+            onClick={() => setIsKindleModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800/80 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors shadow-sm"
+            title="Abrir este capítulo no Modo Leitura Kindle (Temas Sépia/Dark, Bookerly e Paginação)"
+          >
+            <BookMarked className="w-3.5 h-3.5 text-amber-600" />
+            <span>Modo Kindle</span>
+          </button>
+
+          {/* Botão Modo Bíblia Strong */}
+          <button
+            onClick={() => setIsStrongMode(!isStrongMode)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl border transition-all ${
+              isStrongMode
+                ? 'bg-amber-600 text-white border-amber-600 shadow-md ring-2 ring-amber-400/50'
+                : 'bg-white dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-800 dark:text-stone-200 hover:border-amber-500'
+            }`}
+            title="Ativar palavras-chave interlineares com números de Strong em Hebraico e Grego"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span>Bíblia Strong {isStrongMode ? '(Ativa)' : ''}</span>
           </button>
 
           {/* Botão Meus Versículos Marcados */}
@@ -185,6 +270,7 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
               </option>
             ))}
           </select>
+
 
           {/* Controles de Fonte */}
           <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
@@ -289,7 +375,7 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
                       {v.number}
                     </span>
                     <p className="leading-relaxed flex-1 select-text">
-                      {v.text}
+                      {renderVerseWithStrong(v.text)}
                     </p>
                     <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 shrink-0 transition-opacity">
                       <button
@@ -346,12 +432,23 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
                       </div>
 
                       <div className="pt-2 border-t border-stone-100 dark:border-stone-700 flex flex-wrap items-center justify-between gap-2">
-                        <button
-                          onClick={() => handleCopyVerse(v.number, v.text)}
-                          className="inline-flex items-center gap-1 text-xs text-stone-600 dark:text-stone-300 hover:text-amber-700 font-semibold"
-                        >
-                          <Copy className="w-3.5 h-3.5" /> Copiar Versículo
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleCopyVerse(v.number, v.text)}
+                            className="inline-flex items-center gap-1 text-xs text-stone-600 dark:text-stone-300 hover:text-amber-700 font-semibold"
+                          >
+                            <Copy className="w-3.5 h-3.5" /> Copiar
+                          </button>
+
+                          <button
+                            onClick={() => handleOpenCompareModal(v.number)}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-stone-100 dark:bg-stone-700 hover:bg-stone-200 dark:hover:bg-stone-600 text-stone-800 dark:text-stone-200 text-xs font-semibold transition-colors"
+                            title="Comparar este versículo nas versões ARC, ARA, NVI, KJA e ACF"
+                          >
+                            <Columns2 className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Comparar Versões</span>
+                          </button>
+                        </div>
 
                         <button
                           onClick={() => handleSendToGemini(v.number, v.text)}
@@ -363,6 +460,7 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
                       </div>
                     </div>
                   )}
+
                 </div>
               );
             })}
@@ -592,6 +690,226 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
           </div>
         </div>
       )}
+      {/* Modal Leitor Kindle para a Bíblia */}
+      <KindleReaderModal
+        isOpen={isKindleModalOpen}
+        onClose={() => setIsKindleModalOpen(false)}
+        title={`${selectedBook.name} ${selectedChapter}`}
+        subtitle={`Bíblia Sagrada • Versão ${selectedVersion}`}
+        authorOrRef={`${selectedBook.category} • ${selectedBook.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}`}
+        totalPages={selectedBook.chaptersCount}
+        currentPage={selectedChapter}
+        onPageChange={(page) => setSelectedChapter(page)}
+      >
+        <div className="space-y-6">
+          <div className="text-center pb-6 border-b border-current/10">
+            <span className="text-xs uppercase font-bold tracking-widest opacity-70">
+              {selectedBook.name}
+            </span>
+            <h1 className="font-serif font-bold text-3xl sm:text-4xl mt-1">
+              Capítulo {selectedChapter}
+            </h1>
+            <p className="text-xs opacity-60 mt-1">
+              Tradução: {BIBLE_VERSIONS.find(v => v.id === selectedVersion)?.fullName}
+            </p>
+          </div>
+          <div className="space-y-4">
+            {verses.map((v) => (
+              <p key={v.number} className="text-justify leading-relaxed">
+                <sup className="font-bold text-amber-700 dark:text-amber-400 mr-2 text-xs">{v.number}</sup>
+                {renderVerseWithStrong(v.text)}
+              </p>
+            ))}
+          </div>
+        </div>
+      </KindleReaderModal>
+
+      {/* Modal / Card de Definição Exegética de Strong */}
+      {selectedStrongEntry && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl space-y-4 animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                  {selectedStrongEntry.number}
+                </span>
+                <span className="text-xs text-stone-500 font-semibold">
+                  Língua Original: {selectedStrongEntry.language}
+                </span>
+              </div>
+              <button
+                onClick={() => setSelectedStrongEntry(null)}
+                className="text-stone-400 hover:text-stone-600 text-sm font-bold p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="text-center py-2 space-y-1 bg-amber-50/50 dark:bg-stone-800/50 rounded-2xl p-4 border border-amber-200/50 dark:border-stone-700/50">
+              <div className="font-serif text-3xl sm:text-4xl text-amber-900 dark:text-amber-200 font-bold">
+                {selectedStrongEntry.original}
+              </div>
+              <div className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+                Transliteração: <span className="italic font-serif text-amber-700 dark:text-amber-400 font-bold">{selectedStrongEntry.transliteration}</span>
+              </div>
+              <div className="text-xs text-stone-500 font-mono">
+                Pronúncia fonética: [{selectedStrongEntry.pronunciation}] • {selectedStrongEntry.partOfSpeech}
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs sm:text-sm text-stone-700 dark:text-stone-300">
+              <div>
+                <strong className="block text-stone-900 dark:text-stone-100 mb-0.5">Definição Resumida:</strong>
+                <p>{selectedStrongEntry.shortDefinition}</p>
+              </div>
+
+              <div>
+                <strong className="block text-stone-900 dark:text-stone-100 mb-0.5">Etimologia & Significado Exegético:</strong>
+                <p className="leading-relaxed text-stone-600 dark:text-stone-400">{selectedStrongEntry.detailedDefinition}</p>
+              </div>
+
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/40 rounded-xl border border-amber-200/70 dark:border-amber-800/40">
+                <strong className="block text-amber-950 dark:text-amber-300 mb-0.5">Importância Teológica:</strong>
+                <p className="text-xs text-amber-900 dark:text-amber-200/90 italic">{selectedStrongEntry.theologicalSignificance}</p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between gap-2">
+              <button
+                onClick={() => {
+                  const prompt = `Faça uma análise exegética e teológica do termo bíblico "${selectedStrongEntry.original}" (${selectedStrongEntry.transliteration} - Strong ${selectedStrongEntry.number}), explicando seu uso nas Escrituras e aplicação pastoral wesleyana.`;
+                  if (onStudyWithGemini) {
+                    onStudyWithGemini(prompt);
+                  }
+                  setSelectedStrongEntry(null);
+                }}
+                className="flex-1 py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-md"
+              >
+                <Sparkles className="w-4 h-4 text-amber-200" />
+                <span>Estudar este Termo com Gemini IA</span>
+              </button>
+
+              <button
+                onClick={() => setSelectedStrongEntry(null)}
+                className="py-2 px-3 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-semibold"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal do Comparador de Versões Bíblicas Paralelas */}
+      {isCompareModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-stone-900 rounded-3xl p-6 sm:p-7 max-w-2xl w-full border border-stone-200 dark:border-stone-800 shadow-2xl space-y-4 max-h-[85vh] flex flex-col animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-stone-800">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Comparador de Traduções Bíblicas
+                </span>
+                <h3 className="font-serif font-bold text-lg sm:text-xl text-stone-900 dark:text-stone-100 flex items-center gap-2">
+                  <Columns2 className="w-5 h-5 text-amber-600" />
+                  <span>{selectedBook.name} {selectedChapter}:{compareVerseNumber}</span>
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsCompareModalOpen(false)}
+                className="text-stone-400 hover:text-stone-600 text-sm font-bold p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {isComparingLoading ? (
+                <div className="p-8 text-center text-stone-500 space-y-2">
+                  <BookOpen className="w-6 h-6 animate-pulse text-amber-600 mx-auto" />
+                  <p className="text-xs">Carregando versões comparativas...</p>
+                </div>
+              ) : (
+                compareVersionsData.map((item) => (
+                  <div
+                    key={item.version}
+                    className="p-3.5 rounded-2xl border border-stone-200 dark:border-stone-800 bg-stone-50/60 dark:bg-stone-800/40 space-y-1.5 hover:border-amber-500/50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-amber-800 dark:text-amber-400 font-mono">
+                        {item.version} — {item.versionName}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(`"${item.text}" — ${selectedBook.name} ${selectedChapter}:${compareVerseNumber} (${item.version})`);
+                          alert(`Versículo copiado na versão ${item.version}!`);
+                        }}
+                        className="text-[11px] font-semibold text-stone-500 hover:text-amber-700 flex items-center gap-1"
+                        title="Copiar nesta versão"
+                      >
+                        <Copy className="w-3 h-3" /> Copiar
+                      </button>
+                    </div>
+                    <p className="font-serif text-sm text-stone-800 dark:text-stone-200 leading-relaxed italic">
+                      "{item.text}"
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className="pt-3 border-t border-stone-100 dark:border-stone-800 flex justify-end">
+              <button
+                onClick={() => setIsCompareModalOpen(false)}
+                className="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold"
+              >
+                Fechar Comparador
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Leitor Kindle para Leitura Imersiva da Bíblia */}
+      {isKindleModalOpen && (
+        <KindleReaderModal
+          isOpen={isKindleModalOpen}
+          onClose={() => setIsKindleModalOpen(false)}
+          title={`${selectedBook.name} ${selectedChapter}`}
+          subtitle={`Versão ${selectedVersion} • ${selectedBook.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}`}
+          authorOrRef={`Bíblia Sagrada — ${selectedBook.chaptersCount} capítulos`}
+          currentPage={selectedChapter}
+          totalPages={selectedBook.chaptersCount}
+          onPageChange={(page) => {
+            setSelectedChapter(page);
+          }}
+        >
+          <div className="space-y-6">
+            <div className="text-center pb-6 border-b border-current/10">
+              <span className="text-xs uppercase font-bold tracking-widest opacity-70">
+                {selectedBook.testament === 'AT' ? 'Antigo Testamento' : 'Novo Testamento'}
+              </span>
+              <h1 className="font-serif font-bold text-2xl sm:text-3xl mt-2 mb-1">
+                {selectedBook.name} {selectedChapter}
+              </h1>
+              <p className="text-xs opacity-60">
+                Tradução: {selectedVersion} • {verses.length} versículos
+              </p>
+            </div>
+
+            <div className="space-y-4 leading-relaxed font-serif text-justify text-base sm:text-lg">
+              {verses.map((v) => (
+                <p key={v.number} className="indent-4 sm:indent-6">
+                  <sup className="font-sans font-bold text-[11px] opacity-60 mr-2 select-none">
+                    {v.number}
+                  </sup>
+                  {v.text}
+                </p>
+              ))}
+            </div>
+          </div>
+        </KindleReaderModal>
+      )}
     </div>
   );
 };
+

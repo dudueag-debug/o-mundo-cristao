@@ -1,15 +1,33 @@
 import React, { useState } from 'react';
 import { THEOLOGY_BOOKS, TheologyBook, BookChapter } from '../../data/theologyBooks';
-import { BookOpen, Search, ArrowLeft, ArrowRight, List, Type, Palette, Bookmark, Sparkles, ChevronRight, Check } from 'lucide-react';
+import { SYSTEMATIC_THEOLOGY_MODULES, SystematicTheologyModule, TheologyArticle } from '../../data/systematicTheology';
+import { KindleReaderModal } from '../common/KindleReaderModal';
+import {
+  BookOpen,
+  Search,
+  ArrowRight,
+  Sparkles,
+  ChevronRight,
+  Crown,
+  Cross,
+  Flame,
+  Compass,
+  Check,
+  BookMarked,
+  Scroll,
+  HelpCircle,
+  X
+} from 'lucide-react';
 
 export const TheologyBooksView: React.FC = () => {
+  const [viewMode, setViewMode] = useState<'livros' | 'sistematica'>('livros');
   const [selectedBook, setSelectedBook] = useState<TheologyBook | null>(null);
   const [currentChapterIndex, setCurrentChapterIndex] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isTocOpen, setIsTocOpen] = useState(false);
-  const [readTheme, setReadTheme] = useState<'light' | 'sepia' | 'dark'>('light');
-  const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
+
+  // Teologia Sistemática - Artigo Aberto
+  const [selectedArticle, setSelectedArticle] = useState<TheologyArticle | null>(null);
 
   const categories = [
     { id: 'all', label: 'Todas as Obras' },
@@ -17,6 +35,7 @@ export const TheologyBooksView: React.FC = () => {
     { id: 'Doutrina IMW', label: 'Doutrina IMW' },
     { id: 'Arminiana', label: 'Tradição Arminiana' },
     { id: 'Reforma', label: 'A Reforma Protestante' },
+    { id: 'Patrística', label: 'Patrística Cristã' },
   ];
 
   const filteredBooks = THEOLOGY_BOOKS.filter((b) => {
@@ -30,42 +49,63 @@ export const TheologyBooksView: React.FC = () => {
 
   const currentChapter: BookChapter | undefined = selectedBook?.chapters[currentChapterIndex];
 
-  const getThemeClasses = () => {
-    switch (readTheme) {
-      case 'sepia':
-        return 'bg-[#fbf0d9] text-[#433422] border-[#ebd4aa] selection:bg-[#ebd4aa]';
-      case 'dark':
-        return 'bg-stone-900 text-stone-100 border-stone-800 selection:bg-amber-900';
-      default:
-        return 'bg-white text-stone-900 border-stone-200 selection:bg-amber-200';
-    }
-  };
-
-  const getFontSizeClass = () => {
-    switch (fontSize) {
-      case 'sm': return 'text-sm leading-relaxed';
-      case 'lg': return 'text-xl leading-loose';
-      default: return 'text-base leading-relaxed';
+  const getModuleIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Crown': return <Crown className="w-5 h-5 text-amber-500" />;
+      case 'Cross': return <Cross className="w-5 h-5 text-rose-500" />;
+      case 'Flame': return <Flame className="w-5 h-5 text-amber-500" />;
+      case 'Compass': return <Compass className="w-5 h-5 text-sky-500" />;
+      default: return <Sparkles className="w-5 h-5 text-amber-500" />;
     }
   };
 
   return (
-    <div className="space-y-6 pb-12">
-      {/* Header Geral se estiver na estante */}
-      {!selectedBook ? (
-        <>
-          <div className="border-b border-stone-200 dark:border-stone-800 pb-4">
-            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-semibold text-xs uppercase tracking-widest mb-1">
-              <BookOpen className="w-4 h-4" /> Biblioteca Clássica de Estudo
-            </div>
-            <h1 className="font-serif font-bold text-2xl sm:text-3xl text-stone-900 dark:text-stone-100">
-              Livros & Tratados Teológicos
-            </h1>
-            <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-2xl">
-              Obras fundamentais completas para leitura, edificação e preparo doutrinário com leitor imersivo integrado.
-            </p>
+    <div className="space-y-6 pb-12 animate-fadeIn">
+      {/* Header Geral */}
+      <div className="border-b border-stone-200 dark:border-stone-800 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-semibold text-xs uppercase tracking-widest mb-1">
+            <BookOpen className="w-4 h-4" /> Grande Biblioteca & Doutrina
           </div>
+          <h1 className="font-serif font-bold text-2xl sm:text-3xl text-stone-900 dark:text-stone-100">
+            Teologia Bíblica & Obras Clássicas
+          </h1>
+          <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-2xl">
+            Tratados fundamentais com leitor no estilo Kindle e compêndio de Teologia Sistemática wesleyana.
+          </p>
+        </div>
 
+        {/* Alternador de Modo: Obras Clássicas vs Teologia Sistemática */}
+        <div className="flex items-center gap-1.5 bg-stone-100 dark:bg-stone-800 p-1.5 rounded-2xl border border-stone-200 dark:border-stone-700 shrink-0">
+          <button
+            onClick={() => setViewMode('livros')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+              viewMode === 'livros'
+                ? 'bg-amber-600 text-white shadow-md ring-2 ring-amber-400/50'
+                : 'text-stone-600 dark:text-stone-300 hover:text-stone-900'
+            }`}
+          >
+            <BookMarked className="w-3.5 h-3.5" />
+            <span>Obras Clássicas ({THEOLOGY_BOOKS.length})</span>
+          </button>
+
+          <button
+            onClick={() => setViewMode('sistematica')}
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+              viewMode === 'sistematica'
+                ? 'bg-amber-600 text-white shadow-md ring-2 ring-amber-400/50'
+                : 'text-stone-600 dark:text-stone-300 hover:text-stone-900'
+            }`}
+          >
+            <Scroll className="w-3.5 h-3.5" />
+            <span>Teologia Sistemática (7 Áreas)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* SEÇÃO 1: ESTANTE DE OBRAS CLÁSSICAS COM LEITOR KINDLE */}
+      {viewMode === 'livros' && (
+        <div className="space-y-4">
           {/* Busca e Categorias */}
           <div className="space-y-3">
             <div className="relative">
@@ -74,7 +114,7 @@ export const TheologyBooksView: React.FC = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por livro, John Wesley, Armínio, Lutero, IMW..."
+                placeholder="Buscar por livro, Spurgeon, Agostinho, John Wesley, Armínio, IMW..."
                 className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-stone-900 dark:text-stone-100 placeholder:text-stone-400"
               />
             </div>
@@ -96,7 +136,7 @@ export const TheologyBooksView: React.FC = () => {
             </div>
           </div>
 
-          {/* Estante de Livros */}
+          {/* Grid dos Livros */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
             {filteredBooks.map((book) => (
               <div
@@ -137,162 +177,189 @@ export const TheologyBooksView: React.FC = () => {
                       {book.chapters.length} {book.chapters.length === 1 ? 'capítulo' : 'capítulos'}
                     </span>
                     <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                      Abrir Livro <ArrowRight className="w-3.5 h-3.5" />
+                      Ler no Kindle <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-        </>
-      ) : (
-        /* Visualizador E-Reader do Livro Aberto */
-        <div className="space-y-4 animate-fadeIn">
-          {/* Barra Superior do E-Reader */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-stone-900 p-4 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-sm">
-            <button
-              onClick={() => setSelectedBook(null)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-700 dark:text-stone-300 text-xs font-semibold transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Voltar à Estante</span>
-            </button>
+        </div>
+      )}
 
-            <div className="flex items-center gap-2">
-              {/* Botão Sumário */}
-              <button
-                onClick={() => setIsTocOpen(!isTocOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-semibold border border-amber-200 dark:border-amber-800/40"
-              >
-                <List className="w-4 h-4" />
-                <span>Sumário</span>
-              </button>
-
-              {/* Tema de Leitura (Claro, Sépia, Noturno) */}
-              <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
-                <button
-                  onClick={() => setReadTheme('light')}
-                  className={`w-6 h-6 rounded-lg bg-white border border-stone-300 text-[10px] font-bold ${readTheme === 'light' ? 'ring-2 ring-amber-500' : ''}`}
-                  title="Modo Claro"
-                >
-                  C
-                </button>
-                <button
-                  onClick={() => setReadTheme('sepia')}
-                  className={`w-6 h-6 rounded-lg bg-[#fbf0d9] border border-[#d8be8d] text-[10px] font-bold text-[#5c4728] ${readTheme === 'sepia' ? 'ring-2 ring-amber-500' : ''}`}
-                  title="Modo Sépia / Pergaminho"
-                >
-                  S
-                </button>
-                <button
-                  onClick={() => setReadTheme('dark')}
-                  className={`w-6 h-6 rounded-lg bg-stone-900 border border-stone-700 text-[10px] font-bold text-white ${readTheme === 'dark' ? 'ring-2 ring-amber-500' : ''}`}
-                  title="Modo Escuro"
-                >
-                  E
-                </button>
-              </div>
-
-              {/* Ajuste de Tamanho de Fonte */}
-              <div className="flex items-center gap-1 bg-stone-100 dark:bg-stone-800 p-1 rounded-xl">
-                <button
-                  onClick={() => setFontSize('sm')}
-                  className={`px-2 py-0.5 text-xs font-bold rounded ${fontSize === 'sm' ? 'bg-white dark:bg-stone-700 shadow-sm' : 'text-stone-400'}`}
-                >
-                  A-
-                </button>
-                <button
-                  onClick={() => setFontSize('md')}
-                  className={`px-2 py-0.5 text-xs font-bold rounded ${fontSize === 'md' ? 'bg-white dark:bg-stone-700 shadow-sm' : 'text-stone-400'}`}
-                >
-                  A
-                </button>
-                <button
-                  onClick={() => setFontSize('lg')}
-                  className={`px-2 py-0.5 text-xs font-bold rounded ${fontSize === 'lg' ? 'bg-white dark:bg-stone-700 shadow-sm' : 'text-stone-400'}`}
-                >
-                  A+
-                </button>
-              </div>
+      {/* SEÇÃO 2: TEOLOGIA SISTEMÁTICA COMPLETA */}
+      {viewMode === 'sistematica' && (
+        <div className="space-y-6">
+          <div className="bg-amber-50/60 dark:bg-stone-900/60 p-5 rounded-2xl border border-amber-200/60 dark:border-stone-800 flex items-center justify-between">
+            <div>
+              <h2 className="font-serif font-bold text-lg text-stone-900 dark:text-stone-100">
+                Compêndio de Doutrinas & Teologia Sistemática
+              </h2>
+              <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5">
+                Exposição bíblica das principais doutrinas da fé cristã sob o prisma armínio-wesleyano.
+              </p>
             </div>
           </div>
 
-          {/* Sumário Dropdown se aberto */}
-          {isTocOpen && (
-            <div className="bg-white dark:bg-stone-900 p-4 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-lg space-y-2 animate-fadeIn">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400 mb-2">
-                Sumário do Livro ({selectedBook.chapters.length} capítulos)
-              </h4>
-              <div className="space-y-1">
-                {selectedBook.chapters.map((ch, idx) => (
-                  <button
-                    key={ch.id}
-                    onClick={() => {
-                      setCurrentChapterIndex(idx);
-                      setIsTocOpen(false);
-                    }}
-                    className={`w-full text-left p-2.5 rounded-xl text-xs sm:text-sm font-medium flex items-center justify-between transition-colors ${
-                      idx === currentChapterIndex
-                        ? 'bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200 font-bold'
-                        : 'hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300'
-                    }`}
-                  >
-                    <span>{ch.number}. {ch.title}</span>
-                    {idx === currentChapterIndex && <Check className="w-4 h-4 text-amber-700" />}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {SYSTEMATIC_THEOLOGY_MODULES.map((mod) => (
+              <div
+                key={mod.id}
+                className="rounded-3xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 space-y-4 hover:border-amber-500/50 shadow-sm hover:shadow-lg transition-all"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/80 flex items-center justify-center">
+                      {getModuleIcon(mod.iconName)}
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                        {mod.category}
+                      </span>
+                      <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100">
+                        {mod.title}
+                      </h3>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300">
+                    {mod.badge}
+                  </span>
+                </div>
 
-          {/* Página do Livro */}
-          <article className={`p-8 sm:p-12 rounded-3xl border shadow-md transition-colors ${getThemeClasses()}`}>
-            <header className="text-center max-w-2xl mx-auto border-b border-current/10 pb-6 mb-8">
+                <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+                  {mod.subtitle}
+                </p>
+
+                <div className="space-y-2 pt-2 border-t border-stone-100 dark:border-stone-800">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block">
+                    Artigos Doutrinários:
+                  </span>
+                  {mod.articles.map((art) => (
+                    <div
+                      key={art.id}
+                      onClick={() => setSelectedArticle(art)}
+                      className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/50 hover:bg-amber-50 dark:hover:bg-amber-950/40 border border-stone-200/60 dark:border-stone-700/60 cursor-pointer flex items-center justify-between group transition-colors"
+                    >
+                      <div>
+                        <h4 className="font-serif font-bold text-xs sm:text-sm text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                          {art.title}
+                        </h4>
+                        <div className="flex gap-1.5 mt-1">
+                          {art.scriptureReferences.map((ref, rIdx) => (
+                            <span key={rIdx} className="text-[10px] text-amber-700 dark:text-amber-400 font-mono">
+                              {ref}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* LEITOR KINDLE MODAL PARA QUALQUER LIVRO TEOLÓGICO CLICADO */}
+      {selectedBook && (
+        <KindleReaderModal
+          isOpen={!!selectedBook}
+          onClose={() => setSelectedBook(null)}
+          title={selectedBook.title}
+          subtitle={`Capítulo ${currentChapterIndex + 1}: ${currentChapter?.title}`}
+          authorOrRef={`Por ${selectedBook.author} (${selectedBook.year})`}
+          totalPages={selectedBook.chapters.length}
+          currentPage={currentChapterIndex + 1}
+          onPageChange={(page) => setCurrentChapterIndex(page - 1)}
+        >
+          <div className="space-y-6">
+            <div className="text-center pb-6 border-b border-current/10">
               <span className="text-xs uppercase font-bold tracking-widest opacity-70">
                 {selectedBook.title} • Por {selectedBook.author}
               </span>
-              <h2 className="font-serif font-bold text-2xl sm:text-3xl mt-2 mb-1">
+              <h1 className="font-serif font-bold text-2xl sm:text-3xl mt-2 mb-1">
                 {currentChapter?.title}
-              </h2>
-              <span className="text-xs opacity-60">
+              </h1>
+              <p className="text-xs opacity-60">
                 Capítulo {currentChapter?.number} de {selectedBook.chapters.length}
-              </span>
-            </header>
+              </p>
+            </div>
 
-            {/* Parágrafos da Obra */}
-            <div className={`space-y-6 max-w-3xl mx-auto font-serif ${getFontSizeClass()} text-justify leading-relaxed`}>
+            <div className="space-y-5 text-justify leading-relaxed">
               {currentChapter?.content.map((p, idx) => (
                 <p key={idx} className="indent-6">
                   {p}
                 </p>
               ))}
             </div>
+          </div>
+        </KindleReaderModal>
+      )}
 
-            {/* Rodapé de Navegação */}
-            <footer className="flex items-center justify-between max-w-3xl mx-auto pt-8 mt-12 border-t border-current/10">
+      {/* MODAL DE LEITURA DETALHADA DE ARTIGO DE TEOLOGIA SISTEMÁTICA */}
+      {selectedArticle && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-5 shadow-2xl animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-200 dark:border-stone-800">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  Doutrina Sistemática
+                </span>
+                <h3 className="font-serif font-bold text-xl text-stone-900 dark:text-stone-100">
+                  {selectedArticle.title}
+                </h3>
+              </div>
               <button
-                onClick={() => setCurrentChapterIndex(currentChapterIndex - 1)}
-                disabled={currentChapterIndex <= 0}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-black/5 dark:bg-white/5 hover:bg-black/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                onClick={() => setSelectedArticle(null)}
+                className="p-1.5 rounded-lg bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 text-stone-600 dark:text-stone-300 font-bold"
               >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Capítulo Anterior</span>
+                ✕
               </button>
+            </div>
 
-              <span className="text-xs font-bold opacity-60">
-                {currentChapterIndex + 1} de {selectedBook.chapters.length}
-              </span>
+            {/* Referências Bíblicas */}
+            <div className="flex flex-wrap gap-2">
+              <span className="text-xs font-bold text-stone-500">Fundamentação Bíblica:</span>
+              {selectedArticle.scriptureReferences.map((ref, idx) => (
+                <span key={idx} className="text-xs font-mono font-bold px-2 py-0.5 rounded-lg bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                  {ref}
+                </span>
+              ))}
+            </div>
 
+            <div className="space-y-4 text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+              <div className="p-4 bg-stone-50 dark:bg-stone-800 rounded-2xl">
+                <strong className="block text-stone-900 dark:text-stone-100 mb-1 font-serif text-sm">Resumo da Doutrina:</strong>
+                <p>{selectedArticle.summary}</p>
+              </div>
+
+              <div>
+                <strong className="block text-stone-900 dark:text-stone-100 mb-1 font-serif text-sm">Perspectiva Histórica e Patrística:</strong>
+                <p>{selectedArticle.historicalView}</p>
+              </div>
+
+              <div className="p-4 bg-amber-50 dark:bg-amber-950/40 rounded-2xl border border-amber-200/70 dark:border-amber-800/40">
+                <strong className="block text-amber-900 dark:text-amber-300 mb-1 font-serif text-sm">Enfoque Wesleyano & Santidade:</strong>
+                <p className="italic text-amber-950 dark:text-amber-200">{selectedArticle.wesleyanPerspective}</p>
+              </div>
+
+              <div>
+                <strong className="block text-stone-900 dark:text-stone-100 mb-1 font-serif text-sm">Aplicação Pastoral e Prática:</strong>
+                <p>{selectedArticle.pastoralApplication}</p>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-stone-200 dark:border-stone-800 flex justify-end">
               <button
-                onClick={() => setCurrentChapterIndex(currentChapterIndex + 1)}
-                disabled={currentChapterIndex >= selectedBook.chapters.length - 1}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-black/5 dark:bg-white/5 hover:bg-black/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                onClick={() => setSelectedArticle(null)}
+                className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors"
               >
-                <span>Próximo Capítulo</span>
-                <ArrowRight className="w-4 h-4" />
+                Concluir Leitura
               </button>
-            </footer>
-          </article>
+            </div>
+          </div>
         </div>
       )}
     </div>

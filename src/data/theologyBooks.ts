@@ -184,5 +184,95 @@ export const THEOLOGY_BOOKS: TheologyBook[] = [
         ]
       }
     ]
+  },
+  {
+    id: 'tesouro-de-davi-spurgeon',
+    title: 'O Tesouro de Davi: O Senhor é Meu Pastor',
+    subtitle: 'Comentário devocional e teológico nos Salmos da confiança',
+    author: 'Charles H. Spurgeon',
+    year: '1885',
+    category: 'Reforma',
+    coverBg: 'from-emerald-800 to-stone-950',
+    description: 'A maior obra de Spurgeon, considerada a joia da literatura devocional, expondo versículo a versículo o refrigério da alma sob o pastoreio do Bom Pastor.',
+    chapters: [
+      {
+        id: 'spurg-1',
+        number: 1,
+        title: 'Salmo 23: A Certeza Inabalável do Cuidado Divino',
+        content: [
+          '"O Senhor é o meu pastor; nada me faltará." Observem bem: o cristão não diz "O Senhor é o pastor do mundo", mas "o MEU pastor". Se Ele é meu, nenhuma necessidade real da minha alma ficará desatendida.',
+          'Ele me faz repousar em pastos verdejantes. Não é apenas caminhar apressado, é descansar! A ovelha nunca deita enquanto tem fome ou medo. Jesus nos alimenta com a Sua Palavra até que nossa alma encontre santa quietude.',
+          'Leva-me para junto das águas de descanso. Não águas turbulentas que assustam a ovelha frágil, mas ribeiros serenos da graça perdoadora.',
+          'Ainda que eu ande pelo vale da sombra da morte, não temerei mal nenhum: notem que é um "vale de sombra", não de substância mortal. A cruz de Cristo tirou a substância da morte, deixando aos salvos apenas a sua sombra passageira!'
+        ]
+      },
+      {
+        id: 'spurg-2',
+        number: 2,
+        title: 'Salmo 91: O Abrigo do Onipotente contra o Medo',
+        content: [
+          '"O que habita no esconderijo do Altíssimo e descansa à sombra do Onipotente diz ao Senhor: Meu refúgio e meu baluarte". A fé verdadeira não faz visitas ocasionais a Deus; ela HABITA em Sua presença.',
+          'Não temas o terror noturno nem a seta que voa de dia. O coração ancorado no amor do Pai sabe que nenhum dardo do maligno pode ultrapassar o escudo da verdade divina sem a permissão do Soberano.',
+          'Caiam mil ao teu lado e dez mil à tua direita; tu não serás atingido. Deus é o escudo invisível de Seus pequeninos.'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'confissoes-agostinho',
+    title: 'Confissões: O Coração Inquieto Encontra a Graça',
+    subtitle: 'A busca pela verdade, o arrependimento e a vitória do amor de Deus',
+    author: 'Santo Agostinho de Hipona',
+    year: '397 d.C.',
+    category: 'Patrística',
+    coverBg: 'from-indigo-900 to-stone-950',
+    description: 'Um dos maiores clássicos espirituais de todos os tempos. O relato comovente da jornada de Agostinho das trevas intelectuais e morais para a luz radiante de Cristo.',
+    chapters: [
+      {
+        id: 'agost-1',
+        number: 1,
+        title: 'Tu nos Criaste para Ti, ó Deus',
+        content: [
+          '"Grande és Tu, Senhor, e mui digno de louvor. Grande é o Teu poder e a Tua sabedoria não tem limites."',
+          'Tu nos criaste para Ti, e o nosso coração vive inquieto enquanto não repousar em Ti.',
+          'Quem me concederá repousar em Ti? Quem me dará que venhas ao meu coração e o inebries, para que eu esqueça as minhas mazelas e me abrace a Ti, meu único e verdadeiro Bem?',
+          'Tarde Te amei, ó Beleza tão antiga e tão nova, tarde Te amei! Eis que estavas dentro de mim e eu Te buscava fora, deformado nas belas formas das coisas por Ti criadas. Chamaste-me com um grande brado e rompeste a minha surdez; brilhaste e dissipaste a minha cegueira!'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'oracao-constante-wesley',
+    title: 'Oração Constante & O Uso Sábio das Riquezas',
+    subtitle: 'Sermões práticos sobre a disciplina espiritual e a mordomia cristã',
+    author: 'John Wesley',
+    year: '1780',
+    category: 'Wesleyana',
+    coverBg: 'from-amber-800 to-stone-950',
+    description: 'As famosas instruções de Wesley sobre orar sem cessar e os três mandamentos econômicos do Reino: "Ganhe tudo o que puder, poupe tudo o que puder, doe tudo o que puder".',
+    chapters: [
+      {
+        id: 'wes-or-1',
+        number: 1,
+        title: 'Orai sem Cessar: O Fôlego da Vida Cristã',
+        content: [
+          'A oração é o fôlego da alma. Assim como a vida biológica não sobrevive sem inspirar e expirar ar puro continuamente, a vida espiritual definha sem comunhão ininterrupta com o Céu.',
+          'Orar sem cessar não significa passar vinte e quatro horas do dia de joelhos em um templo, mas manter o coração continuamente erguido para Deus em qualquer lugar: na oficina, no caminho, nas refeições e no leito.',
+          'Deus nada faz na terra, para a redenção dos homens, a não ser em resposta à oração fervorosa de Seus filhos.'
+        ]
+      },
+      {
+        id: 'wes-or-2',
+        number: 2,
+        title: 'O Uso do Dinheiro no Reino de Deus',
+        content: [
+          'O dinheiro é um excelente servo, embora seja um péssimo mestre. O cristão deve observar três princípios dourados:',
+          '1. Ganhe tudo o que puder: com trabalho honesto, integridade total, sem ferir seu corpo, mente ou a alma do próximo.',
+          '2. Poupe tudo o que puder: livre-se do luxo vão, dos gastos tolos e do exibicionismo mundano.',
+          '3. Doe tudo o que puder: tudo o que excede as necessidades sóbrias de sustento pertence aos pobres, aos doentes e à expansão do Reino de Deus nas nações.'
+        ]
+      }
+    ]
   }
 ];
+

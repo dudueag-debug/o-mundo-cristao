@@ -99,6 +99,7 @@ export const App: React.FC = () => {
             key={`home-${sessionVersion}`}
             onSelectTab={setCurrentTab}
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
+            onStudyWithGemini={handleStudyWithGemini}
           />
         );
       case 'gemini-ia':

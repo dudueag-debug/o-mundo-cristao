@@ -44,7 +44,8 @@ export const GeminiStudyView: React.FC<GeminiStudyViewProps> = ({ initialQuery }
       category: category || 'livre'
     };
 
-    const newHistory = [...messages, userMsg];
+    const currentHistory = geminiService.getChatHistory();
+    const newHistory = [...currentHistory, userMsg];
     setMessages(newHistory);
     geminiService.saveChatHistory(newHistory);
     setInputText('');

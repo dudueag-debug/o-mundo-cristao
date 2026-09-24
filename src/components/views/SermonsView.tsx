@@ -13,6 +13,7 @@ export const SermonsView: React.FC = () => {
 
   // Formulário de novo esboço
   const [newTitle, setNewTitle] = useState('');
+  const [newCategory, setNewCategory] = useState<'graca' | 'avivamento' | 'familia' | 'santidade' | 'santaceia' | 'missoes'>('avivamento');
   const [newTheme, setNewTheme] = useState('');
   const [newScripture, setNewScripture] = useState('');
   const [newBigIdea, setNewBigIdea] = useState('');
@@ -40,7 +41,7 @@ export const SermonsView: React.FC = () => {
     const newOutline: SermonOutline = {
       id: `custom-${Date.now()}`,
       title: newTitle,
-      category: 'avivamento',
+      category: newCategory,
       theme: newTheme || 'Mensagem Geral',
       scriptureText: newScripture,
       bigIdea: newBigIdea,
@@ -164,6 +165,30 @@ export const SermonsView: React.FC = () => {
             placeholder="Buscar por tema, texto bíblico (ex: Romanos 8, Josué, Lucas)..."
             className="w-full pl-10 pr-4 py-2 text-sm rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 transition-colors"
           />
+        </div>
+
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {[
+            { id: 'all', label: 'Todos os Esboços' },
+            { id: 'graca', label: 'Graça & Salvação' },
+            { id: 'avivamento', label: 'Avivamento & Poder' },
+            { id: 'santidade', label: 'Santidade & Vida' },
+            { id: 'familia', label: 'Família & Lar' },
+            { id: 'santaceia', label: 'Santa Ceia' },
+            { id: 'missoes', label: 'Missões & Evangelismo' },
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
+                selectedCategory === cat.id
+                  ? 'bg-amber-700 text-white shadow-sm ring-1 ring-amber-500/50'
+                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -385,7 +410,7 @@ export const SermonsView: React.FC = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
                     Texto Bíblico Principal *
@@ -410,6 +435,23 @@ export const SermonsView: React.FC = () => {
                     placeholder="Ex: Oração e Fé"
                     className="w-full px-3.5 py-2 text-sm rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
+                </div>
+                <div>
+                  <label className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
+                    Categoria
+                  </label>
+                  <select
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value as any)}
+                    className="w-full px-3 py-2 text-sm rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    <option value="graca">Graça & Salvação</option>
+                    <option value="avivamento">Avivamento & Poder</option>
+                    <option value="santidade">Santidade & Vida</option>
+                    <option value="familia">Família & Lar</option>
+                    <option value="santaceia">Santa Ceia</option>
+                    <option value="missoes">Missões & Evangelismo</option>
+                  </select>
                 </div>
               </div>
 

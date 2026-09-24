@@ -143,5 +143,69 @@ export const INITIAL_SERMON_OUTLINES: SermonOutline[] = [
     ],
     illustration: 'Em 1904, durante o avivamento do País de Gales liderado pelo jovem Evan Roberts, os cavalos das minas de carvão ficaram desorientados porque os mineradores recém-convertidos deixaram de falar palavrões e de ser cruéis. Quando o Espírito Santo desce, a atmosfera de toda uma cidade é transformada pelo Evangelho!',
     conclusion: 'Abra seu coração neste momento. Clame com a Igreja: "Enche-nos, Espírito Santo! Batiza com fogo, renova os dons e inflama a nossa vida com a Tua presença!".'
+  },
+  {
+    id: 'esb-mais-que-vencedores',
+    title: 'Mais que Vencedores em Cristo Jesus',
+    category: 'graca',
+    theme: 'Segurança Eterna, Vitória na Tribulação e Amor Inabalável de Deus',
+    scriptureText: 'Romanos 8:31-39',
+    bigIdea: 'Nenhuma força, angústia, perigo ou acusação tem o poder de nos afastar do amor de Deus que está selado na cruz de Cristo.',
+    introduction: 'O apóstolo Paulo conclui o capítulo 8 de Romanos como um advogado celestial que desafia todo o universo a apresentar qualquer acusação válida contra os filhos da graça.',
+    points: [
+      {
+        title: 'I. A Soberana Defesa Divina',
+        scripture: 'Romanos 8:31 ("Se Deus é por nós, quem será contra nós?")',
+        explanation: 'Deus não poupou a Seu próprio Filho, mas por todos nós O entregou. Se o maior dom já nos foi concedido no Calvário, como não nos dará com Ele graciosamente todas as coisas necessárias para nossa salvação?',
+        application: 'Pare de tremer diante das oposições humanas ou circunstanciais. O Supremo Juiz do Universo já declarou você perdoado e justificado.'
+      },
+      {
+        title: 'II. A Superioridade da Vitória do Crente',
+        scripture: 'Romanos 8:37 ("Em todas estas coisas, porém, somos mais que vencedores...")',
+        explanation: 'Paulo não diz "somos vencedores DEPOIS destas coisas", mas "EM todas estas coisas". O crente não vence escapando das provas, mas sendo sustentado pelo amor divino através delas.',
+        application: 'A tribulação não é sinal de abandono divino; é o solo fértil onde a graça superabunda e molda o nosso caráter à semelhança de Jesus.'
+      },
+      {
+        title: 'III. A Inseparabilidade do Amor Eterno',
+        scripture: 'Romanos 8:38-39 ("Nem a morte, nem a vida, nem potestades...")',
+        explanation: 'O amor de Deus não é um sentimento frágil que oscila com o nosso desempenho; é uma aliança eterna selada com o sangue imaculado do Cordeiro.',
+        application: 'Descanse nesta verdade inegociável: você está seguro na palma da mão de Deus!'
+      }
+    ],
+    illustration: 'Durante uma terrível tempestade em alto-mar, um menino brincava tranquilo no convés. Um passageiro aterrorizado perguntou: "Menino, você não teme este mar bravo?". A criança sorriu e respondeu: "Não senhor; o meu pai é quem está no comando do leme!". Se o nosso Pai celestial governa o leme da história, nada pode nos naufragar!',
+    conclusion: 'Aproxime-se do altar do Senhor. Deixe o medo e o peso da culpa para trás. Levante a cabeça e declare com fé: "Eu sou mais que vencedor por meio dAquele que me amou!".'
+  },
+  {
+    id: 'esb-cura-da-alma',
+    title: 'A Cura da Alma e a Plenitude do Perdão',
+    category: 'santidade',
+    theme: 'Cura Interior, Gratidão Diária e Renovação Espiritual',
+
+    scriptureText: 'Salmo 103:1-5; Isaías 53:4-5',
+    bigIdea: 'A adoração sincera lembra à nossa alma todos os benefícios da cruz: perdão pleno de transgressões e restauração contínua das nossas forças.',
+    introduction: 'Quantas vezes a nossa alma é tentada pelo desânimo, esquecendo-se da fidelidade com que Deus nos tem sustentado dia após dia? Davi pregava para si mesmo: "Bendize, ó minha alma, ao Senhor, e não te esqueças de nem um só de seus benefícios!".',
+    points: [
+      {
+        title: 'I. Ele é Quem Perdoa Todas as Tuas Iniquidades',
+        scripture: 'Salmo 103:3a; 1 João 1:9',
+        explanation: 'O maior remédio para a alma humana é o cancelamento definitivo da dívida do pecado. Onde abunda o pecado, superabunda a graça justificadora.',
+        application: 'Não carregue mais a culpa do que Cristo já cravou e cancelou na cruz. Receba hoje o alívio do perdão completo.'
+      },
+      {
+        title: 'II. Ele é Quem Sara Todas as Tuas Enfermidades',
+        scripture: 'Salmo 103:3b; Tiago 5:14-16',
+        explanation: 'Deus se importa tanto com o nosso coração machucado pelas feridas da vida quanto com a nossa saúde física. O bálsamo de Gileade cura a amargura e restaura a alegria.',
+        application: 'Entregue as mágoas do passado aos pés de Jesus. O perdão cura quem o libera!'
+      },
+      {
+        title: 'III. Ele Farta de Bens a Tua Velhice e Renova a Tua Força',
+        scripture: 'Salmo 103:5; Isaías 40:29-31',
+        explanation: 'Assim como a águia passa por renovação periódica de suas penas e bico para voar em grandes altitudes, o Espírito Santo sopra vigor santo sobre os cansados e exaustos.',
+        application: 'Espere no Senhor! Você não terminará desfalecido; novas forças estão sendo derramadas sobre você agora.'
+      }
+    ],
+    illustration: 'Em uma das cartas de John Wesley a um jovem pregador exausto, ele escreveu: "Irmão, descanse quando for necessário, mas nunca deixe o desânimo falar mais alto que as promessas do Salmo 103. O Senhor que nos chamou é o mesmo que nos renova as asas a cada manhã!".',
+    conclusion: 'Abra seus lábios e bendiga ao Senhor! Lembre-se de Sua fidelidade, receba Seu abraço restaurador e voe alto nas promessas do Todo-Poderoso.'
   }
 ];
+
