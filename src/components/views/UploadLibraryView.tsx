@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { UploadCloud, FileText, Trash2, BookOpen, ExternalLink, Download, Plus, Check, Search, HardDrive, Edit3, FileCheck, AlertCircle, RefreshCw } from 'lucide-react';
+import { UploadCloud, FileText, Trash2, BookOpen, ExternalLink, Download, Plus, Check, Search, HardDrive, Edit3, FileCheck, AlertCircle, RefreshCw, Sparkles, Copy, Bot } from 'lucide-react';
 import { storageService } from '../../services/storageService';
 import { documentStorageService } from '../../services/documentStorageService';
+import { geminiService } from '../../services/geminiService';
 
 export interface UserUploadedDocument {
   id: string;
@@ -71,6 +72,22 @@ export const UploadLibraryView: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState('');
   const [editingNotes, setEditingNotes] = useState(false);
   const [currentNotes, setCurrentNotes] = useState('');
+  const [isSummarizing, setIsSummarizing] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [summaryCopied, setSummaryCopied] = useState(false);
+
+  const handleGenerateAiSummary = async () => {
+    if (!selectedDoc || isSummarizing) return;
+    setIsSummarizing(true);
+    try {
+      const summary = await geminiService.generateBookSummary(selectedDoc.name, selectedDoc.content);
+      setAiSummary(summary);
+    } catch (err: any) {
+      alert('Erro ao gerar resumo teológico: ' + (err.message || 'Falha ao processar'));
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
 
   // Carrega documentos do usuário com compatibilidade
   useEffect(() => {
@@ -117,6 +134,8 @@ export const UploadLibraryView: React.FC = () => {
   // Quando o documento selecionado muda, busca a URL do arquivo no IndexedDB se for binário
   useEffect(() => {
     let isMounted = true;
+    setAiSummary(null);
+    setSummaryCopied(false);
 
     async function loadDocUrl() {
       if (!selectedDoc) {
@@ -414,18 +433,28 @@ export const UploadLibraryView: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={handleGenerateAiSummary}
+                    disabled={isSummarizing}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-sm transition-all disabled:opacity-50"
+                    title="Gerar resumo teológico e síntese da obra com Gemini IA"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>{isSummarizing ? 'Gerando Análise...' : 'Resumo com Gemini IA'}</span>
+                  </button>
+
                   {selectedDocUrl && (
                     <>
                       <a
                         href={selectedDocUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-700 hover:bg-amber-800 text-white shadow-sm transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 transition-colors"
                         title="Abrir em nova aba com zoom e controles nativos"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Abrir Leitor Completo</span>
+                        <span>Tela Cheia</span>
                       </a>
 
                       <a
@@ -492,6 +521,86 @@ export const UploadLibraryView: React.FC = () => {
               ) : (
                 <div className="bg-stone-50 dark:bg-stone-800/60 p-6 rounded-2xl border border-stone-200/70 dark:border-stone-700/60 font-serif text-sm leading-relaxed whitespace-pre-wrap text-stone-800 dark:text-stone-200 max-h-[500px] overflow-y-auto">
                   {selectedDoc.content || 'Nenhum conteúdo legível em texto disponível para este arquivo.'}
+                </div>
+              )}
+
+              {/* Card de Resumo Gemini IA */}
+              {aiSummary && (
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-amber-600/5 to-amber-700/10 border border-amber-500/30 dark:border-amber-500/20 shadow-sm space-y-3 animate-fadeIn">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-500/20 pb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-xl bg-amber-600 text-white flex items-center justify-center shadow-sm">
+                        <Sparkles className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <h4 className="font-serif font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                          Resumo Teológico & Síntese da Obra
+                          <span className="text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">
+                            Gemini IA
+                          </span>
+                        </h4>
+                        <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                          Estrutura canônica, tese central, divisão de capítulos e aplicação prática
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          if (aiSummary) {
+                            navigator.clipboard.writeText(aiSummary);
+                            setSummaryCopied(true);
+                            setTimeout(() => setSummaryCopied(false), 2500);
+                          }
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-50 transition-colors shadow-xs"
+                        title="Copiar resumo completo"
+                      >
+                        {summaryCopied ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-emerald-600">Copiado!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copiar</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (!aiSummary || !selectedDoc) return;
+                          const updatedText = selectedDoc.notes 
+                            ? `${selectedDoc.notes}\n\n--- RESUMO IA ---\n${aiSummary}`
+                            : `--- RESUMO IA ---\n${aiSummary}`;
+                          const updatedDocs = documents.map(d => d.id === selectedDoc.id ? { ...d, notes: updatedText } : d);
+                          saveDocuments(updatedDocs);
+                          setSelectedDoc({ ...selectedDoc, notes: updatedText });
+                          setCurrentNotes(updatedText);
+                        }}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white transition-colors shadow-xs"
+                        title="Salvar este resumo diretamente nas suas notas deste livro"
+                      >
+                        <FileCheck className="w-3.5 h-3.5" />
+                        <span>Salvar nas Notas</span>
+                      </button>
+
+                      <button
+                        onClick={() => setAiSummary(null)}
+                        className="p-1 rounded-lg text-stone-400 hover:text-stone-600 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                        title="Fechar painel de resumo"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="bg-white/80 dark:bg-stone-900/80 p-4 rounded-xl border border-stone-200/60 dark:border-stone-800/80 font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-stone-800 dark:text-stone-200 max-h-[400px] overflow-y-auto">
+                    {aiSummary}
+                  </div>
                 </div>
               )}
 

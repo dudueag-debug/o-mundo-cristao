@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData';
 import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
-import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot } from 'lucide-react';
+import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Languages, Compass, Shield } from 'lucide-react';
 
 interface HomeViewProps {
   onSelectTab: (tab: string) => void;
@@ -339,6 +339,141 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
             <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
               Assistir Vídeos <ArrowRight className="w-3.5 h-3.5" />
             </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Seção Principal: Enciclopédia & Grandes Módulos Canônicos */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-stone-200 dark:border-stone-800 pb-3">
+          <div>
+            <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-1">
+              <Sparkles className="w-3.5 h-3.5" /> Teologia Bíblica, História & Geografia Sagrada
+            </div>
+            <h2 className="font-serif font-bold text-xl sm:text-2xl text-stone-900 dark:text-stone-100 flex items-center gap-2">
+              <span>Enciclopédia Canônica & História da Fé</span>
+            </h2>
+          </div>
+          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-md">
+            Módulos teologicamente comprovados com línguas originais (hebraico/aramaico/grego), concílios e biografias completas.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card: Origem de Todas as Igrejas */}
+          <div
+            onClick={() => onSelectTab('denominacoes')}
+            className="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-amber-500/10 via-amber-600/5 to-stone-50 dark:from-stone-900 dark:to-amber-950/30 border border-amber-500/30 hover:border-amber-500 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-amber-700 text-white flex items-center justify-center shadow-md shadow-amber-950/20 group-hover:scale-110 transition-transform">
+                  <Church className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 border border-amber-300/40">
+                  Concílios & Origens
+                </span>
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                  Origens de Todas as Igrejas
+                </h3>
+                <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  Como surgiram e se consolidaram a <strong>Igreja Católica Romana</strong>, <strong>Assembleia de Deus</strong>, <strong>Batistas</strong>, <strong>Presbiterianos</strong>, <strong>Metodistas/IMW</strong> e <strong>Luteranos</strong>.
+                </p>
+              </div>
+            </div>
+            <div className="pt-3 border-t border-stone-200/60 dark:border-stone-800/60 mt-4 flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform">
+              <span>Ver história completa</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </div>
+          </div>
+
+          {/* Card: Heróis da Fé */}
+          <div
+            onClick={() => onSelectTab('herois-da-fe')}
+            className="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-amber-600/10 via-orange-600/5 to-stone-50 dark:from-stone-900 dark:to-orange-950/30 border border-orange-500/30 hover:border-amber-500 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-orange-700 text-white flex items-center justify-center shadow-md shadow-orange-950/20 group-hover:scale-110 transition-transform">
+                  <Award className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-900 dark:bg-orange-950 dark:text-orange-300 border border-orange-300/40">
+                  Hebreus 11
+                </span>
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                  Heróis da Fé
+                </h3>
+                <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  A galeria canônica: <strong>Abel</strong>, <strong>Enoque</strong>, <strong>Noé</strong>, <strong>Abraão</strong>, <strong>Sara</strong>, <strong>José</strong>, <strong>Moisés</strong>, <strong>Raabe</strong>, <strong>Daniel</strong> e <strong>Estêvão</strong>.
+                </p>
+              </div>
+            </div>
+            <div className="pt-3 border-t border-stone-200/60 dark:border-stone-800/60 mt-4 flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform">
+              <span>Explorar galeria de fé</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </div>
+          </div>
+
+          {/* Card: Lugares Sagrados de Jesus & Profetas */}
+          <div
+            onClick={() => onSelectTab('lugares-sagrados')}
+            className="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-emerald-600/10 via-teal-600/5 to-stone-50 dark:from-stone-900 dark:to-emerald-950/30 border border-emerald-500/30 hover:border-emerald-500 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-700 text-white flex items-center justify-center shadow-md shadow-emerald-950/20 group-hover:scale-110 transition-transform">
+                  <MapPin className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300/40">
+                  Línguas Nativas
+                </span>
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                  Lugares que Jesus Visitou
+                </h3>
+                <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  Belém (בֵּית לֶחֶם), Nazaré, Cafarnaum, Getsêmani, Gólgota, Monte Carmelo e Sinai: nomes originais, significados e geografia.
+                </p>
+              </div>
+            </div>
+            <div className="pt-3 border-t border-stone-200/60 dark:border-stone-800/60 mt-4 flex items-center text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:translate-x-1 transition-transform">
+              <span>Viajar pela geografia</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </div>
+          </div>
+
+          {/* Card: Personagens Bíblicos */}
+          <div
+            onClick={() => onSelectTab('personagens')}
+            className="group cursor-pointer p-5 rounded-3xl bg-gradient-to-br from-indigo-600/10 via-blue-600/5 to-stone-50 dark:from-stone-900 dark:to-indigo-950/30 border border-indigo-500/30 hover:border-indigo-500 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between"
+          >
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-700 text-white flex items-center justify-center shadow-md shadow-indigo-950/20 group-hover:scale-110 transition-transform">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300 border border-indigo-300/40">
+                  Nacionalidade & Nome
+                </span>
+              </div>
+              <div>
+                <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors">
+                  Personagens da Bíblia
+                </h3>
+                <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                  Grafia em hebraico/grego, etimologia do nome, tribo/nacionalidade, biografia canônica e significado tipológico em Cristo.
+                </p>
+              </div>
+            </div>
+            <div className="pt-3 border-t border-stone-200/60 dark:border-stone-800/60 mt-4 flex items-center text-xs font-semibold text-indigo-700 dark:text-indigo-400 group-hover:translate-x-1 transition-transform">
+              <span>Abrir enciclopédia</span>
+              <ArrowRight className="w-3.5 h-3.5 ml-1" />
+            </div>
           </div>
         </div>
       </section>

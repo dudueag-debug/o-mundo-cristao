@@ -15,6 +15,10 @@ import { VideosView } from './components/views/VideosView';
 import { TheologiansView } from './components/views/TheologiansView';
 import { ChristocentricBooksView } from './components/views/ChristocentricBooksView';
 import { ProphetsView } from './components/views/ProphetsView';
+import { DenominationsView } from './components/views/DenominationsView';
+import { HeroesOfFaithView } from './components/views/HeroesOfFaithView';
+import { BiblicalGeographyView } from './components/views/BiblicalGeographyView';
+import { BiblicalCharactersView } from './components/views/BiblicalCharactersView';
 import { GeminiStudyView } from './components/views/GeminiStudyView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { ShepherdSplashScreen } from './components/common/ShepherdSplashScreen';
@@ -122,6 +126,14 @@ export const App: React.FC = () => {
         return <ProphetsView key={`profetas-${sessionVersion}`} />;
       case 'teologos':
         return <TheologiansView key={`teologos-${sessionVersion}`} />;
+      case 'denominacoes':
+        return <DenominationsView key={`denominacoes-${sessionVersion}`} />;
+      case 'herois-da-fe':
+        return <HeroesOfFaithView key={`herois-${sessionVersion}`} />;
+      case 'lugares-sagrados':
+        return <BiblicalGeographyView key={`lugares-${sessionVersion}`} />;
+      case 'personagens':
+        return <BiblicalCharactersView key={`personagens-${sessionVersion}`} />;
       case 'obras-cristocentricas':
         return <ChristocentricBooksView key={`obras-${sessionVersion}`} />;
       case 'teologia':

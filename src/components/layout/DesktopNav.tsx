@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck } from 'lucide-react';
 
 interface DesktopNavProps {
   currentTab: string;
@@ -10,6 +10,10 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab 
   const navItems = [
     { id: 'home', label: 'Início', icon: Home },
     { id: 'gemini-ia', label: 'Gemini IA', icon: Bot },
+    { id: 'denominacoes', label: 'Igrejas & História', icon: Church },
+    { id: 'herois-da-fe', label: 'Heróis da Fé', icon: Award },
+    { id: 'lugares-sagrados', label: 'Lugares Sagrados', icon: MapPin },
+    { id: 'personagens', label: 'Personagens Bíblicos', icon: UserCheck },
     { id: 'profetas', label: 'Profetas', icon: Scroll },
     { id: 'teologos', label: 'Grandes Teólogos', icon: Users },
     { id: 'obras-cristocentricas', label: 'Obras Cristocêntricas', icon: Cross },

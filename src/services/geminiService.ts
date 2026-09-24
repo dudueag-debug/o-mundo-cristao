@@ -61,6 +61,29 @@ Você pode escolher um dos botões rápidos abaixo ou digitar qualquer pergunta 
     localStorage.removeItem(STORAGE_CHAT_HISTORY);
   }
 
+  async generateBookSummary(bookTitle: string, excerptOrContent?: string): Promise<string> {
+    const prompt = `Faça uma resenha e resumo teológico completo, estruturado e aprofundado da obra/livro: "${bookTitle}".
+${excerptOrContent ? `Conteúdo/Trecho da obra: ${excerptOrContent.slice(0, 1500)}` : ''}
+
+Por favor, organize a análise com:
+### 📖 Síntese e Tese Central da Obra
+(Explique o propósito teológico do autor e a mensagem central)
+
+#### 🏛️ Principais Capítulos e Argumentos Teológicos
+(Resuma os grandes tópicos e capítulos abordados)
+
+#### 📜 Fundamentos Bíblicos e Doutrinários
+(Mencione as passagens bíblicas centrais)
+
+#### 💡 Aplicações Práticas para a Vida Cristã e Púlpito
+(Como esta obra transforma a vida do discípulo, o ministério e o púlpito)
+
+#### 💬 Citações e Pensamentos Marcantes
+(Frases ou insights de grande impacto)`;
+
+    return this.askGemini(prompt, 'exegese');
+  }
+
   async askGemini(prompt: string, contextCategory?: GeminiMessage['category']): Promise<string> {
     const apiKey = this.getApiKey();
 

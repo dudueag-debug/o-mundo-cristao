@@ -172,6 +172,32 @@ export const TheologiansView: React.FC = () => {
               </p>
             </div>
 
+            {/* Trajetória & Contexto Histórico */}
+            {selectedTheologian.biographyAndContext && (
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-1.5 flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  Trajetória Vocacional & Contexto Histórico
+                </h4>
+                <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed bg-stone-50 dark:bg-stone-800/60 p-4 rounded-2xl border border-stone-200/60 dark:border-stone-800">
+                  {selectedTheologian.biographyAndContext}
+                </p>
+              </div>
+            )}
+
+            {/* Lutas Históricas, Provações & Perseguições */}
+            {selectedTheologian.historicalStruggles && (
+              <div className="p-4 rounded-2xl bg-amber-900/10 dark:bg-stone-800/80 border border-amber-500/30 space-y-1.5">
+                <span className="text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-amber-600" />
+                  Lutas Históricas, Provações & Defesa da Fé
+                </span>
+                <p className="text-xs sm:text-sm text-stone-800 dark:text-stone-200 leading-relaxed">
+                  {selectedTheologian.historicalStruggles}
+                </p>
+              </div>
+            )}
+
             {/* Contribuição Histórica & Teológica */}
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1.5">

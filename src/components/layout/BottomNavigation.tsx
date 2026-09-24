@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot, Church, Award, MapPin, UserCheck } from 'lucide-react';
 
 interface BottomNavigationProps {
   currentTab: string;
@@ -18,6 +18,10 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
   ];
 
   const moreTabs = [
+    { id: 'denominacoes', label: 'Igrejas & Origens', icon: Church },
+    { id: 'herois-da-fe', label: 'Heróis da Fé', icon: Award },
+    { id: 'lugares-sagrados', label: 'Lugares Sagrados', icon: MapPin },
+    { id: 'personagens', label: 'Personagens Bíblicos', icon: UserCheck },
     { id: 'livros', label: 'E-Reader Teológico', icon: Library },
     { id: 'profetas', label: 'Profetas Maiores e Menores', icon: Scroll },
     { id: 'teologos', label: 'Grandes Teólogos', icon: Sparkles },
