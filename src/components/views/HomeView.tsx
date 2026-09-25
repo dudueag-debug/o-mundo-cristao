@@ -272,11 +272,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
             </div>
 
             <h2 className="font-serif font-bold text-2xl sm:text-3xl text-white">
-              Bíblia Sagrada com Concordância Strong & Leitor Kindle
+              Bíblia Sagrada com Concordância Strong & Leitor Cristão
             </h2>
 
             <p className="text-xs sm:text-sm text-stone-200 leading-relaxed">
-              Consulte as Escrituras com termos originais em hebraico e grego (Bíblia Strong), compare traduções lado a lado (ARC, ARA, NVI, KJA, ACF, NVT, NAA) e leia no modo Kindle sem distrações.
+              Consulte as Escrituras com termos originais em hebraico e grego (Bíblia Strong), compare traduções lado a lado (ARC, ARA, NVI, KJA, ACF, NVT, NAA) e leia no Leitor Cristão sem distrações.
             </p>
 
             <div className="flex flex-wrap gap-2 pt-1">
@@ -284,7 +284,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
                 ✨ Concordância de Strong Interlinear
               </span>
               <span className="px-2.5 py-1 rounded-lg bg-black/30 text-[11px] font-mono text-amber-300 border border-white/10">
-                📖 Leitor Kindle (Sépia, Dark, Bookerly)
+                📖 Leitor Cristão (Sépia, Dark, Bookerly)
               </span>
               <span className="px-2.5 py-1 rounded-lg bg-black/30 text-[11px] font-mono text-amber-300 border border-white/10">
                 🔍 Comparador de Versões Paralelas

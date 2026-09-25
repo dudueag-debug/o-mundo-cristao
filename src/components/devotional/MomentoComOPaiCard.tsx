@@ -194,14 +194,14 @@ export const MomentoComOPaiCard: React.FC = () => {
                 )}
               </button>
 
-              {/* Botão Ler no Kindle */}
+              {/* Botão Leitor Cristão */}
               <button
                 onClick={() => setIsKindleOpen(true)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-950/60 hover:bg-amber-900/80 text-amber-200 hover:text-amber-100 text-xs font-semibold border border-amber-700/50 shadow-sm transition-all"
-                title="Abrir no leitor de livros estilo Kindle"
+                title="Abrir no Leitor Cristão (Leitura Imersiva)"
               >
                 <BookOpen className="w-3.5 h-3.5 text-amber-300" />
-                <span className="hidden sm:inline">Modo</span> Kindle
+                <span>Leitor Cristão</span>
               </button>
 
               {/* Botão Compartilhar */}

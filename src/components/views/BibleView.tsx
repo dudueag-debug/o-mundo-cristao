@@ -220,14 +220,14 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
             <ChevronDown className="w-3.5 h-3.5 opacity-80" />
           </button>
 
-          {/* Botão Leitor Kindle */}
+          {/* Botão Leitor Cristão */}
           <button
             onClick={() => setIsKindleModalOpen(true)}
             className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800/80 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors shadow-sm"
-            title="Abrir este capítulo no Modo Leitura Kindle (Temas Sépia/Dark, Bookerly e Paginação)"
+            title="Abrir este capítulo no Leitor Cristão (Temas Sépia/Dark, Bookerly e Paginação)"
           >
             <BookMarked className="w-3.5 h-3.5 text-amber-600" />
-            <span>Modo Kindle</span>
+            <span>Leitor Cristão</span>
           </button>
 
           {/* Botão Modo Bíblia Strong */}

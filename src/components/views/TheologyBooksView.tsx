@@ -71,7 +71,7 @@ export const TheologyBooksView: React.FC = () => {
             Teologia Bíblica & Obras Clássicas
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-2xl">
-            Tratados fundamentais com leitor no estilo Kindle e compêndio de Teologia Sistemática wesleyana.
+            Tratados fundamentais no Leitor Cristão e compêndio de Teologia Sistemática wesleyana.
           </p>
         </div>
 
@@ -177,7 +177,7 @@ export const TheologyBooksView: React.FC = () => {
                       {book.chapters.length} {book.chapters.length === 1 ? 'capítulo' : 'capítulos'}
                     </span>
                     <span className="font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                      Ler no Kindle <ArrowRight className="w-3.5 h-3.5" />
+                      Leitor Cristão <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
                 </div>

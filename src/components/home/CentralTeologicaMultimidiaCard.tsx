@@ -137,7 +137,7 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
               Biblioteca Teológica, Mídias & Esboços
             </h2>
             <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-2xl">
-              Leia livros clássicos no modo Kindle, envie seus PDFs, assista e compartilhe vídeos edificantes e consulte esboços homiléticos em um só lugar.
+              Leia livros clássicos no Leitor Cristão, envie seus PDFs, assista e compartilhe vídeos edificantes e consulte esboços homiléticos em um só lugar.
             </p>
           </div>
 
@@ -166,7 +166,7 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
             }`}
           >
             <BookMarked className="w-4 h-4" />
-            <span>Livros Teológicos (Kindle)</span>
+            <span>Livros Teológicos (Leitor Cristão)</span>
           </button>
 
           <button
@@ -216,10 +216,10 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
               <div>
                 <h3 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100 flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-amber-600" />
-                  <span>Obras Teológicas em Modo Kindle</span>
+                  <span>Obras Teológicas no Leitor Cristão</span>
                 </h3>
                 <p className="text-xs text-stone-500 dark:text-stone-400">
-                  Clique em "Ler no Kindle" para abrir qualquer obra em tela imersiva com temas sépia, noturno e fontes ajustáveis.
+                  Clique em "Leitor Cristão" para abrir qualquer obra em tela imersiva com temas sépia, noturno e fontes ajustáveis.
                 </p>
               </div>
               <button
@@ -266,7 +266,7 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
                       }}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm transition-transform active:scale-95"
                     >
-                      <span>Ler no Kindle</span>
+                      <span>Leitor Cristão</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>

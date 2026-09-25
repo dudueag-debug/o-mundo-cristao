@@ -178,7 +178,7 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-              title="Fechar Leitor Kindle"
+              title="Fechar Leitor Cristão"
             >
               <X className="w-5 h-5" />
             </button>
@@ -204,23 +204,23 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
               {isBookmarked ? <BookmarkCheck className="w-4 h-4 fill-amber-500" /> : <Bookmark className="w-4 h-4" />}
             </button>
 
-            {/* Menu de Configuração de Tipografia Kindle (Aa) */}
+            {/* Menu de Configuração de Tipografia (Aa) */}
             <div className="relative">
               <button
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                 className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg font-serif font-bold text-xs border border-current/20 hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
-                title="Ajustar Tipografia e Temas Kindle"
+                title="Ajustar Tipografia e Temas do Leitor Cristão"
               >
                 <span>Aa</span>
                 <SlidersHorizontal className="w-3.5 h-3.5 opacity-70" />
               </button>
 
-              {/* Popover de Configurações Kindle */}
+              {/* Popover de Configurações */}
               {isSettingsOpen && (
                 <div className={`absolute right-0 top-full mt-2 w-72 sm:w-80 p-4 rounded-2xl border shadow-2xl z-50 text-xs space-y-4 animate-fadeIn ${getThemeBarClasses()}`}>
                   <div className="flex items-center justify-between pb-2 border-b border-current/10 font-bold">
                     <span className="flex items-center gap-1.5 uppercase tracking-wider text-[11px]">
-                      <Settings className="w-3.5 h-3.5" /> Ajustes de Leitura Kindle
+                      <Settings className="w-3.5 h-3.5" /> Ajustes do Leitor Cristão
                     </span>
                     <button onClick={() => setIsSettingsOpen(false)} className="opacity-60 hover:opacity-100">
                       <X className="w-4 h-4" />
@@ -326,13 +326,13 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
                         onClick={() => handleSetMode('page')}
                         className={`py-1.5 rounded-lg border text-xs font-semibold ${pageMode === 'page' ? 'bg-amber-500/20 border-amber-500 text-amber-900 dark:text-amber-300' : 'border-current/10 opacity-70'}`}
                       >
-                        📖 Páginas Kindle
+                        📖 Modo Livro (Páginas)
                       </button>
                       <button
                         onClick={() => handleSetMode('scroll')}
                         className={`py-1.5 rounded-lg border text-xs font-semibold ${pageMode === 'scroll' ? 'bg-amber-500/20 border-amber-500 text-amber-900 dark:text-amber-300' : 'border-current/10 opacity-70'}`}
                       >
-                        📜 Rolo Contínuo
+                        📜 Rolagem Contínua
                       </button>
                     </div>
                   </div>
@@ -357,7 +357,7 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
         <button
           onClick={() => setIsFocusMode(false)}
           className="fixed top-3 right-3 z-50 p-2 rounded-full bg-black/40 text-white/80 hover:text-white hover:bg-black/70 backdrop-blur-md transition-all shadow-lg"
-          title="Restaurar Barras do Kindle"
+          title="Restaurar Barras do Leitor Cristão"
         >
           <Minimize2 className="w-4 h-4" />
         </button>
@@ -409,7 +409,7 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
               <span className="opacity-75">{progressPercent}% concluído</span>
             </>
           ) : (
-            <span className="font-semibold">Modo Leitura Kindle</span>
+            <span className="font-semibold">Leitor Cristão • O Mundo Cristão</span>
           )}
         </div>
 
@@ -454,3 +454,8 @@ export const KindleReaderModal: React.FC<KindleReaderProps> = ({
     </div>
   );
 };
+
+// Aliases para nome proprietário do aplicativo
+export const LeitorCristaoModal = KindleReaderModal;
+export const ChristianReaderModal = KindleReaderModal;
+

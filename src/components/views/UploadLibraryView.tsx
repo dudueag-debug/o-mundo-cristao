@@ -451,10 +451,10 @@ export const UploadLibraryView: React.FC = () => {
                     <button
                       onClick={() => setIsKindleModalOpen(true)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 hover:bg-amber-100 transition-colors shadow-sm"
-                      title="Abrir este documento no leitor estilo Kindle"
+                      title="Abrir este documento no Leitor Cristão (Leitura Imersiva)"
                     >
                       <BookOpen className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Ler no Kindle</span>
+                      <span>Leitor Cristão</span>
                     </button>
                   )}
 
