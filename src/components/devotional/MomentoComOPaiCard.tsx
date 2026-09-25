@@ -22,7 +22,8 @@ import {
   Maximize2,
   X,
   Scroll,
-  ChevronRight
+  ChevronRight,
+  ExternalLink
 } from 'lucide-react';
 import { storageService } from '../../services/storageService';
 import { KindleReaderModal } from '../common/KindleReaderModal';
@@ -360,44 +361,77 @@ export const MomentoComOPaiCard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Botão de Assistir Vídeo */}
-              <button
-                onClick={() => setIsVideoOpen(!isVideoOpen)}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-600 hover:to-amber-800 text-white font-semibold text-xs sm:text-sm shadow-md shadow-amber-950/60 border border-amber-500/40 transition-all"
-              >
-                <Play className="w-4 h-4 fill-white" />
-                <span>{isVideoOpen ? 'Fechar Vídeo Animado' : 'Assistir à História Animada'}</span>
-              </button>
+              {/* Botões de Ação do Vídeo */}
+              <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
+                <button
+                  onClick={() => setIsVideoOpen(!isVideoOpen)}
+                  className="w-full flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-700 to-amber-900 hover:from-amber-600 hover:to-amber-800 text-white font-semibold text-xs sm:text-sm shadow-md shadow-amber-950/60 border border-amber-500/40 transition-all"
+                >
+                  <Play className="w-4 h-4 fill-white" />
+                  <span>{isVideoOpen ? 'Fechar Vídeo' : 'Assistir à História Animada'}</span>
+                </button>
+
+                <a
+                  href={`https://www.youtube.com/watch?v=${devotional.video.youtubeId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-amber-200 hover:text-white text-xs font-semibold border border-white/10 transition-all shrink-0"
+                  title="Abrir no YouTube em nova aba"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>YouTube</span>
+                </a>
+              </div>
             </div>
           </div>
 
           {/* Player do Vídeo Incorporado (quando aberto) */}
           {isVideoOpen && (
-            <div className="relative rounded-2xl overflow-hidden border border-amber-500/40 bg-black shadow-2xl p-2 sm:p-4 space-y-3 animate-fadeIn">
-              <div className="flex items-center justify-between text-xs text-amber-200 px-1">
-                <span className="font-semibold flex items-center gap-1.5">
-                  <Video className="w-4 h-4 text-amber-400" />
-                  {devotional.video.title} ({devotional.video.sourceName})
+            <div className="relative rounded-2xl overflow-hidden border border-amber-500/40 bg-black shadow-2xl p-3 sm:p-5 space-y-3 animate-fadeIn">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-amber-200 px-1 border-b border-white/10 pb-2">
+                <span className="font-semibold flex items-center gap-1.5 truncate max-w-md">
+                  <Video className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="truncate">{devotional.video.title}</span>
+                  <span className="text-[10px] text-amber-400/80 font-mono">({devotional.video.sourceName})</span>
                 </span>
-                <button
-                  onClick={() => setIsVideoOpen(false)}
-                  className="p-1 rounded-lg hover:bg-white/10 text-amber-300 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`https://www.youtube.com/watch?v=${devotional.video.youtubeId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-600/30 hover:bg-red-600/50 text-red-200 text-[11px] font-semibold border border-red-500/40 transition-colors"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Ver no YouTube</span>
+                  </a>
+                  <button
+                    onClick={() => setIsVideoOpen(false)}
+                    className="p-1 rounded-lg hover:bg-white/10 text-amber-300 transition-colors"
+                    title="Fechar player"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-white/10">
+
+              <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-white/10 bg-stone-950">
                 <iframe
                   src={devotional.video.embedUrl}
                   title={devotional.video.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                   className="w-full h-full"
                 />
               </div>
-              <p className="text-xs text-amber-200/80 px-1 italic">
-                {devotional.video.summary}
-              </p>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1 text-[11px] text-amber-200/80">
+                <p className="italic">
+                  {devotional.video.summary}
+                </p>
+                <p className="text-[10px] text-stone-400 shrink-0">
+                  Dica: Se o vídeo não iniciar devido a bloqueadores de anúncios, use o botão "Ver no YouTube".
+                </p>
+              </div>
             </div>
           )}
 

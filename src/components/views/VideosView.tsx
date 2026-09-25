@@ -77,12 +77,28 @@ export const VideosView: React.FC = () => {
   }, [activeVideo]);
 
   const extractYoutubeId = (url: string): string => {
+    if (!url) return '';
     const trimmed = url.trim();
+    // Se já for o ID puro de 11 caracteres
+    if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+
     // Suporte a youtube.com/shorts/ID
     const shortsMatch = trimmed.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/);
     if (shortsMatch) return shortsMatch[1];
 
-    // Suporte padrão
+    // Suporte a youtu.be/ID
+    const youtuBeMatch = trimmed.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (youtuBeMatch) return youtuBeMatch[1];
+
+    // Suporte a embed/ID
+    const embedMatch = trimmed.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
+    if (embedMatch) return embedMatch[1];
+
+    // Suporte padrão com query param v=
+    const vParamMatch = trimmed.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (vParamMatch) return vParamMatch[1];
+
+    // Suporte genérico por regex
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = trimmed.match(regExp);
     return match && match[2].length === 11 ? match[2] : trimmed;

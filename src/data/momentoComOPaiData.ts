@@ -34,6 +34,7 @@ export interface MomentoComOPaiDevocional {
     biblicalLocation: string;
   };
   video: {
+    youtubeId: string;
     embedUrl: string;
     title: string;
     duration: string;
@@ -83,10 +84,11 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Jardim do Sepulcro, arredores das muralhas de Jerusalém'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/3dE-SV0t5V8',
-      title: 'O Evangelho da Ressurreição: A Vida que Vence a Morte',
-      duration: '5:40 min',
-      summary: 'Animação teológica bíblica retratando como a ressurreição corporal de Jesus inaugura a nova criação e transforma o medo humano em ousadia de fé.',
+      youtubeId: 'tSjPIVXtHsg',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/tSjPIVXtHsg?rel=0&modestbranding=1',
+      title: 'Lucas 24: A Ressurreição de Jesus',
+      duration: '5:05 min',
+      summary: 'Animação teológica oficial retratando como a ressurreição corporal de Jesus inaugura a nova criação e transforma o medo humano em ousadia de fé.',
       sourceName: 'The Bible Project (Português)'
     },
     linguisticRoots: {
@@ -153,9 +155,10 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Pastagens verdes e vales nas encostas da Galiléia'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/z-5_q36Qc3I',
-      title: 'O Jugo Leve e o Descanso da Alma em Mateus',
-      duration: '4:55 min',
+      youtubeId: 'VskOdIySJQI',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/VskOdIySJQI?rel=0&modestbranding=1',
+      title: 'Mateus 1-13: O Jugo Leve e o Descanso da Alma',
+      duration: '5:15 min',
       summary: 'Uma explicação visual profunda sobre como a mansidão e humildade de Jesus transformam a rotina de trabalho e libertam o coração do esgotamento emocional.',
       sourceName: 'The Bible Project (Português)'
     },
@@ -223,8 +226,9 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Mar da Galiléia (Lago de Genesaré), Israel'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/P-qI211A4Zk',
-      title: 'O Mar da Galiléia e a Autoridade de Jesus sobre a Natureza',
+      youtubeId: '7d359aPNpPQ',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/7d359aPNpPQ?rel=0&modestbranding=1',
+      title: 'O Evangelho de Marcos: Jesus e o Mar da Galiléia',
       duration: '5:12 min',
       summary: 'Explore a narrativa do Evangelho de Marcos quando Jesus manifesta Sua divindade ordenando que os ventos e as ondas do mar calem a sua fúria.',
       sourceName: 'The Bible Project (Português)'
@@ -293,10 +297,11 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Estrada de retorno para a propriedade paterna na Judéia'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/VlI6kQ5uP6Q',
-      title: 'A Parábola do Amor Extravagante do Pai',
+      youtubeId: 'UeUAAAs7hec',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/UeUAAAs7hec?rel=0&modestbranding=1',
+      title: 'Lucas 10-24: O Amor Extravagante do Pai',
       duration: '5:35 min',
-      summary: 'Uma jornada emocionante pela teologia do capítulo 15 de Lucas, demonstrando que a celebração do céu é o regresso do filho ao lar da graça.',
+      summary: 'Uma jornada emocionante pela teologia do Evangelho de Lucas e a parábola do Filho Pródigo, demonstrando a celebração da graça.',
       sourceName: 'The Bible Project (Português)'
     },
     linguisticRoots: {
@@ -363,8 +368,9 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Planície de Dura, antiga Babilônia (atual Iraque)'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/1O0K4_lYn7Q',
-      title: 'Daniel e a Fidelidade dos Jovens na Babilônia',
+      youtubeId: 'pfsmbv0L0bo',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/pfsmbv0L0bo?rel=0&modestbranding=1',
+      title: 'Daniel: A Fidelidade dos Jovens na Fornalha',
       duration: '6:15 min',
       summary: 'Entenda como o livro de Daniel revela a soberania inabalável de Deus acima de todos os impérios terrenos e a proteção aos Seus fiéis na hora da prova.',
       sourceName: 'The Bible Project (Português)'
@@ -433,8 +439,9 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Monte Horebe / Sinai, Península do Sinai'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/0gq0xPzK2X4',
-      title: 'Elias, o Deserto e a Voz Mansa de Deus',
+      youtubeId: '6R5wFQWFDL4',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/6R5wFQWFDL4?rel=0&modestbranding=1',
+      title: '1-2 Reis: Elias e a Voz Mansa de Deus',
       duration: '5:48 min',
       summary: 'Uma reflexão animada profunda sobre saúde emocional, restauração pastoral e como Deus cuida dos Seus servos nos momentos de deserto e crise.',
       sourceName: 'The Bible Project (Português)'
@@ -503,8 +510,9 @@ export const MOMENTO_COM_O_PAI_LIST: MomentoComOPaiDevocional[] = [
       biblicalLocation: 'Paisagem contemplativa das colinas e fontes de Ein Gedi no Mar Morto'
     },
     video: {
-      embedUrl: 'https://www.youtube.com/embed/PFTLZZTWzFY',
-      title: 'O Shabat: O Descanso Sagrado e a Redenção do Tempo',
+      youtubeId: 'WwokgNSOWuI',
+      embedUrl: 'https://www.youtube-nocookie.com/embed/WwokgNSOWuI?rel=0&modestbranding=1',
+      title: 'Sábado: O Descanso Sagrado e a Redenção do Tempo',
       duration: '5:20 min',
       summary: 'Descubra a teologia milenar do descanso bíblico: como o Shabat aponta para a libertação final e para a segurança eterna em Deus.',
       sourceName: 'The Bible Project (Português)'

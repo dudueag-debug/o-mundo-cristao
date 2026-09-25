@@ -115,7 +115,7 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
 
   const getYoutubeEmbedUrl = (video: ChristianVideo) => {
     if (video.youtubeId) {
-      return `https://www.youtube-nocookie.com/embed/${video.youtubeId}`;
+      return `https://www.youtube-nocookie.com/embed/${video.youtubeId}?rel=0&modestbranding=1`;
     }
     return '';
   };
@@ -404,14 +404,27 @@ export const CentralTeologicaMultimidiaCard: React.FC<CentralCardProps> = ({ onS
                     src={getYoutubeEmbedUrl(activeVideo)}
                     title={activeVideo.title}
                     className="w-full h-full border-0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   />
                 </div>
-                <div>
-                  <h4 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100">
-                    {activeVideo.title}
-                  </h4>
+                <div className="space-y-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h4 className="font-serif font-bold text-base text-stone-900 dark:text-stone-100">
+                      {activeVideo.title}
+                    </h4>
+                    {activeVideo.youtubeId && (
+                      <a
+                        href={`https://www.youtube.com/watch?v=${activeVideo.youtubeId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-red-600/10 hover:bg-red-600/20 text-red-600 dark:text-red-400 text-xs font-semibold transition-colors"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Abrir no YouTube</span>
+                      </a>
+                    )}
+                  </div>
                   <p className="text-xs text-amber-700 dark:text-amber-400 font-semibold mt-0.5">
                     Ministração: {activeVideo.speakerOrAuthor} • {activeVideo.duration}
                   </p>
