@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData';
 import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
+import { JornadaSemanalDaFeCard } from '../devotional/JornadaSemanalDaFeCard';
+import { CalendarioCordeiro3D } from '../calendar/CalendarioCordeiro3D';
+import { MulheresVidaDeCristoCard } from '../home/MulheresVidaDeCristoCard';
+import { CentralBibliaEGeminiCard } from '../home/CentralBibliaEGeminiCard';
 import { CentralTeologicaMultimidiaCard } from '../home/CentralTeologicaMultimidiaCard';
 import { CentralPersonagensProfetasHeroisCard } from '../home/CentralPersonagensProfetasHeroisCard';
 import { CentralHistoriaLugaresJesusCard } from '../home/CentralHistoriaLugaresJesusCard';
@@ -8,7 +12,7 @@ import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart
 
 
 interface HomeViewProps {
-  onSelectTab: (tab: string) => void;
+  onSelectTab: (tab: string, subTab?: string) => void;
   onOpenInstallModal?: () => void;
   onStudyWithGemini?: (prompt: string) => void;
 }
@@ -119,6 +123,24 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         </div>
       </section>
 
+      {/* JORNADA SEMANAL DA FÉ (COM ROTAÇÃO DIÁRIA AUTOMÁTICA PELO DIA DA SEMANA) */}
+      <JornadaSemanalDaFeCard
+        onStudyWithGemini={onStudyWithGemini}
+        onNavigateToBible={() => onSelectTab('biblia')}
+      />
+
+      {/* CARD PRINCIPAL DO NOVO GRANDE MÓDULO BÍBLICO: MULHERES VIRTUOSAS & VIDA DE CRISTO */}
+      <MulheresVidaDeCristoCard 
+        onSelectTab={onSelectTab} 
+        onStudyWithGemini={onStudyWithGemini} 
+      />
+
+      {/* CALENDÁRIO EM 3D: O CORDEIRO DE DEUS (AGNUS DEI) */}
+      <CalendarioCordeiro3D
+        onStudyWithGemini={onStudyWithGemini}
+        onNavigateToBible={() => onSelectTab('biblia')}
+      />
+
       {/* Banner de Instalação PWA (iOS e Android) */}
       {onOpenInstallModal && (
         <section 
@@ -223,83 +245,11 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         )}
       </section>
 
-      {/* Banner / Card Destaque: Gemini IA Teológico */}
-      <section
-        onClick={() => onSelectTab('gemini-ia')}
-        className="group cursor-pointer rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 text-white shadow-xl hover:shadow-2xl transition-all relative overflow-hidden"
-      >
-        <div className="absolute right-0 top-0 translate-x-8 -translate-y-8 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[11px] font-bold uppercase tracking-wider text-amber-100 border border-white/20">
-              <Bot className="w-3.5 h-3.5" />
-              <span>Novo Módulo • Inteligência Teológica Pastoral</span>
-            </div>
-            <h2 className="font-serif font-bold text-2xl sm:text-3xl text-white">
-              Estude a Bíblia & Teologia com o Gemini IA
-            </h2>
-            <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed">
-              Tire dúvidas teológicas, analise termos no hebraico e grego, prepare esboços de sermão e compreenda a doutrina da graça wesleyana com auxílio da IA.
-            </p>
-            <div className="flex flex-wrap gap-2 pt-2">
-              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">📜 Exegese & Contexto</span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">🔍 Hebraico & Grego</span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">🔥 Teologia Wesleyana</span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/20 text-[11px] font-medium border border-white/10">📖 Gerador de Sermões</span>
-            </div>
-          </div>
-          <div className="shrink-0 flex items-center">
-            <span className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white text-amber-900 font-bold text-xs sm:text-sm shadow-lg group-hover:scale-105 transition-transform">
-              <span>Abrir Gemini IA</span>
-              <ArrowRight className="w-4 h-4" />
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Portal da Bíblia Sagrada Completa com Bíblia Strong e Leitor Kindle */}
-      <section
-        onClick={() => onSelectTab('biblia')}
-        className="group cursor-pointer rounded-3xl p-6 sm:p-7 bg-gradient-to-r from-amber-800 via-amber-900 to-stone-900 text-white shadow-xl hover:shadow-2xl border border-amber-600/30 transition-all relative overflow-hidden"
-      >
-        <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-56 h-56 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-semibold text-amber-200 border border-white/10">
-              <BookOpen className="w-3.5 h-3.5 text-amber-400" />
-              <span>Cânon Bíblico Completo • 66 Livros</span>
-            </div>
-
-            <h2 className="font-serif font-bold text-2xl sm:text-3xl text-white">
-              Bíblia Sagrada com Concordância Strong & Leitor Cristão
-            </h2>
-
-            <p className="text-xs sm:text-sm text-stone-200 leading-relaxed">
-              Consulte as Escrituras com termos originais em hebraico e grego (Bíblia Strong), compare traduções lado a lado (ARC, ARA, NVI, KJA, ACF, NVT, NAA) e leia no Leitor Cristão sem distrações.
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              <span className="px-2.5 py-1 rounded-lg bg-black/30 text-[11px] font-mono text-amber-300 border border-white/10">
-                ✨ Concordância de Strong Interlinear
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/30 text-[11px] font-mono text-amber-300 border border-white/10">
-                📖 Leitor Cristão (Sépia, Dark, Bookerly)
-              </span>
-              <span className="px-2.5 py-1 rounded-lg bg-black/30 text-[11px] font-mono text-amber-300 border border-white/10">
-                🔍 Comparador de Versões Paralelas
-              </span>
-            </div>
-          </div>
-
-          <div className="shrink-0 flex items-center">
-            <span className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs sm:text-sm shadow-lg group-hover:scale-105 transition-transform">
-              <span>Abrir Bíblia Sagrada</span>
-              <ArrowRight className="w-4 h-4" />
-            </span>
-          </div>
-        </div>
-      </section>
+      {/* CARD UNIFICADO: BÍBLIA SAGRADA, STRONG, LEITOR KINDLE E ESTUDO TEOLÓGICO COM GEMINI IA */}
+      <CentralBibliaEGeminiCard
+        onSelectTab={onSelectTab}
+        onStudyWithGemini={onStudyWithGemini}
+      />
 
       {/* CARD 1 UNIFICADO: LIVROS TEOLÓGICOS, BAIXAR/ENVIAR LIVROS E VÍDEOS, E ESBOÇOS */}
       <CentralTeologicaMultimidiaCard onSelectTab={onSelectTab} />

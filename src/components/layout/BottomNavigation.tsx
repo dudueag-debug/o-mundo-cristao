@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot, Church, Award, MapPin, UserCheck } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart } from 'lucide-react';
 
 interface BottomNavigationProps {
   currentTab: string;
@@ -18,6 +18,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
   ];
 
   const moreTabs = [
+    { id: 'mulheres-vida-de-cristo', label: 'Mulheres & Vida de Cristo', icon: Heart },
     { id: 'denominacoes', label: 'Igrejas & Origens', icon: Church },
     { id: 'herois-da-fe', label: 'Heróis da Fé', icon: Award },
     { id: 'lugares-sagrados', label: 'Lugares Sagrados', icon: MapPin },

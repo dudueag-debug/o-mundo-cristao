@@ -230,7 +230,7 @@ export const MomentoComOPaiCard: React.FC = () => {
             <div className="flex items-center justify-between mb-2">
               <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300/90 flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                Jornada Semanal da Fé (Mudança Automática Diária)
+                Jornada Semanal da Fé
               </span>
               <span className="text-[10px] text-amber-200/60">
                 Toque em qualquer dia para navegar

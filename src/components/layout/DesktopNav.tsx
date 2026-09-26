@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart } from 'lucide-react';
 
 interface DesktopNavProps {
   currentTab: string;
@@ -9,6 +9,7 @@ interface DesktopNavProps {
 export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab }) => {
   const navItems = [
     { id: 'home', label: 'Início', icon: Home },
+    { id: 'mulheres-vida-de-cristo', label: 'Mulheres & Vida de Cristo', icon: Heart },
     { id: 'gemini-ia', label: 'Gemini IA', icon: Bot },
     { id: 'denominacoes', label: 'Igrejas & História', icon: Church },
     { id: 'herois-da-fe', label: 'Heróis da Fé', icon: Award },

@@ -20,6 +20,7 @@ import { HeroesOfFaithView } from './components/views/HeroesOfFaithView';
 import { BiblicalGeographyView } from './components/views/BiblicalGeographyView';
 import { BiblicalCharactersView } from './components/views/BiblicalCharactersView';
 import { GeminiStudyView } from './components/views/GeminiStudyView';
+import { VirtuousWomenAndChristLifeView } from './components/views/VirtuousWomenAndChristLifeView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { ShepherdSplashScreen } from './components/common/ShepherdSplashScreen';
 import { AuthModal } from './components/auth/AuthModal';
@@ -29,6 +30,7 @@ import { authService, UserProfile } from './services/authService';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('home');
+  const [moduleSubTab, setModuleSubTab] = useState<string>('mulheres');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -97,9 +99,21 @@ export const App: React.FC = () => {
         return (
           <HomeView
             key={`home-${sessionVersion}`}
-            onSelectTab={setCurrentTab}
+            onSelectTab={(tab, sub) => {
+              setCurrentTab(tab);
+              if (sub) setModuleSubTab(sub);
+            }}
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
             onStudyWithGemini={handleStudyWithGemini}
+          />
+        );
+      case 'mulheres-vida-de-cristo':
+        return (
+          <VirtuousWomenAndChristLifeView
+            key={`mulheres-vida-${sessionVersion}`}
+            initialSubTab={moduleSubTab}
+            onStudyWithGemini={handleStudyWithGemini}
+            onNavigateToBible={() => setCurrentTab('biblia')}
           />
         );
       case 'gemini-ia':
