@@ -20,6 +20,7 @@ import { HeroesOfFaithView } from './components/views/HeroesOfFaithView';
 import { BiblicalGeographyView } from './components/views/BiblicalGeographyView';
 import { BiblicalCharactersView } from './components/views/BiblicalCharactersView';
 import { GeminiStudyView } from './components/views/GeminiStudyView';
+import { RadiosAndPodcastsView } from './components/views/RadiosAndPodcastsView';
 import { VirtuousWomenAndChristLifeView } from './components/views/VirtuousWomenAndChristLifeView';
 import { PwaInstallModal } from './components/common/PwaInstallModal';
 import { ShepherdSplashScreen } from './components/common/ShepherdSplashScreen';
@@ -116,6 +117,7 @@ export const App: React.FC = () => {
             onNavigateToBible={() => setCurrentTab('biblia')}
           />
         );
+      case 'gemini':
       case 'gemini-ia':
         return (
           <GeminiStudyView
@@ -161,6 +163,9 @@ export const App: React.FC = () => {
         return <PrayersView key={`oracao-${sessionVersion}`} />;
       case 'hinos':
         return <HymnsView key={`hinos-${sessionVersion}`} />;
+      case 'radios':
+      case 'radios-podcasts':
+        return <RadiosAndPodcastsView key={`radios-${sessionVersion}`} />;
       default:
         return (
           <HomeView

@@ -1,271 +1,308 @@
-// Serviço do Assistente Teológico Gemini IA
-// Suporta tanto a API oficial do Google Gemini (com chave gratuita do usuário)
-// quanto uma Base Teológica Integrada offline com respostas imediatas
+// Serviço do Gemini Teológico - IA Cristocêntrica para Estudos Bíblicos e Pastorais
+import { storageService } from './storageService';
 
 export interface GeminiMessage {
   id: string;
   sender: 'user' | 'gemini';
   text: string;
   timestamp: string;
-  category?: 'exegese' | 'original' | 'wesleyana' | 'sermon' | 'ebd' | 'livre';
+  category?: 'exegese' | 'esboco' | 'doutrina' | 'historia' | 'aconselhamento' | 'livre' | string;
 }
 
-const STORAGE_API_KEY = 'omc_gemini_api_key';
-const STORAGE_CHAT_HISTORY = 'omc_gemini_chat_history_v1';
+export type ChatMessage = GeminiMessage;
 
-class GeminiService {
+const THEOLOGICAL_SYSTEM_PROMPT = `Você é o Gemini Teológico, um assistente cristocêntrico de estudos bíblicos, hermenêutica e teologia pastoral do aplicativo "O Mundo Cristão".
+Seus pilares inegociáveis:
+1. Cristocêntrico: Tudo na Escritura aponta para a glória, sacrifício e senhorio de Jesus Cristo (Soli Deo Gloria).
+2. Fidelidade Bíblica: Respostas fundamentadas nas Escrituras Sagradas com capítulos e versículos.
+3. Teologia Histórica e Wesleyana: Valorização da Graça de Deus (Preveniente, Justificadora e Santificadora), santidade de vida e zelo missionário.
+4. Clareza Pastoral: Linguagem edificante, acolhedora, respeitosa e biblicamente fundamentada.`;
+
+// Base de conhecimento estruturada para respostas imediatas (modo offline / sem chave)
+const EMBEDDED_THEOLOGY_KNOWLEDGE: Record<string, string> = {
+  graca: `### ✝ A Teologia da Graça de Deus (Visão Wesleyana e Bíblica)
+
+Na tradição bíblica e armínio-wesleyana, a graça de Deus não é uma força abstrata, mas a presença ativa do próprio Espírito Santo atuando na redenção humana:
+
+1. **Graça Preveniente (A Graça que vai adiante)**:
+   - *Texto Base*: João 1:9 ("A verdadeira luz que alumia a todo homem") e Tito 2:11.
+   - *Significado*: Antes mesmo que qualquer ser humano pense em buscar a Deus, a graça divina já foi ao seu encontro, restaurando a capacidade de responder ao chamado do Evangelho. O ser humano não tem mérito algum; a iniciativa é 100% de Deus.
+
+2. **Graça Justificadora (A Salvação pela Fé em Cristo)**:
+   - *Texto Base*: Romanos 5:1 ("Justificados, pois, mediante a fé, temos paz com Deus por meio de nosso Senhor Jesus Cristo").
+   - *Significado*: O perdão incondicional dos pecados imputado ao pecador arrependido unicamente pelos méritos do sangue de Jesus derramado na cruz.
+
+3. **Graça Santificadora (Inteira Santificação / Perfeição Cristã)**:
+   - *Texto Base*: 1 Tessalonicenses 5:23 ("O mesmo Deus da paz vos santifique em tudo").
+   - *Significado*: O poder do Espírito Santo que purifica o coração do crente, enchendo-o de amor perfeito a Deus e ao próximo.
+
+> **Aplicação Pastoral**: Nunca chegamos a um lugar onde a graça de Deus não tenha chegado primeiro!`,
+
+  esboco: `### 📖 Esboço de Sermão Expositivo: "O Deus Que Cuida e Restaura"
+**Texto Bíblico Central**: Salmo 23:1-3
+
+#### 🎯 Proposição
+Em um mundo de ansiedade e escassez, o Senhor Se revela como o Pastor soberano que supre, guia e restaura a nossa alma.
+
+---
+
+#### I. A Suficiência do Bom Pastor (v. 1)
+- *"O Senhor é o meu pastor; de nada terei falta."*
+- Ele não é apenas um pastor geral, mas o **meu** pastor pessoal (apropriação da fé).
+- Em Cristo temos tudo o que é necessário para a vida e a piedade (2 Pedro 1:3).
+
+#### II. O Descanso nos Pastos da Graça (v. 2)
+- *"Em verdes pastagens me faz repousar e me conduz a águas tranquilas."*
+- Ovelhas ansiosas não conseguem deitar; o repouso só acontece na presença pacificadora do Pastor.
+- As águas de descanso representam a paz que excede todo o entendimento (Filipenses 4:7).
+
+#### III. A Restauração da Alma Cansada (v. 3)
+- *"Refrigera-me a alma. Guia-me pelas veredas da justiça por amor do seu nome."*
+- O termo hebraico *nephesh* indica a restauração do fôlego, da vida e da esperança.
+- O Pastor nos conduz por caminhos de retidão não por mérito nosso, mas pela honra do Seu Santo Nome.
+
+---
+
+#### 🕊 Conclusão & Apelo
+Entregue suas preocupações e o governo do seu caminho Àquele que deu a Sua própria vida pelas Suas ovelhas (João 10:11). Ele está à sua mesa hoje!`,
+
+  imw: `### 🔥 História e Identidade da Igreja Metodista Wesleyana (IMW)
+
+A Igreja Metodista Wesleyana nasceu sob um poderoso derramamento do Espírito Santo no Brasil:
+
+1. **A Data de Fundação**:
+   - Fundada solenemente em **5 de janeiro de 1967**, no salão do Grêmio Teatral de **Nova Friburgo (RJ)**.
+
+2. **O Avivamento Espiritual**:
+   - Fruto de reuniões de oração nos anos 60 em que pastores e membros foram batizados com o Espírito Santo, recebendo línguas estranhas e dons espirituais de poder.
+
+3. **Os Pioneiros**:
+   - Liderada pelo saudoso **Pastor Dorival Beppu**, juntamente com **Idelmício Cabral dos Santos**, **Waldyr Miranda** e **Gessé Teixeira de Carvalho**.
+
+4. **Identidade Teológica Única**:
+   - Une a **Santidade Bíblica e a Doutrina da Graça de John Wesley** ao **Fogo Pentecostal** dos dons do Espírito Santo.
+   - Lema: *"Uma Igreja Avivada e Missionária — O mundo é a nossa paróquia!"*`
+};
+
+export const geminiService = {
   getApiKey(): string {
-    return localStorage.getItem(STORAGE_API_KEY) || '';
-  }
+    const key = storageService.getUserStorageKey('gemini_api_key');
+    return localStorage.getItem(key) || '';
+  },
 
-  setApiKey(key: string): void {
-    localStorage.setItem(STORAGE_API_KEY, key.trim());
-  }
+  setApiKey(apiKey: string): void {
+    const key = storageService.getUserStorageKey('gemini_api_key');
+    localStorage.setItem(key, apiKey.trim());
+  },
 
   hasCustomKey(): boolean {
-    const key = this.getApiKey();
-    return !!key && key.startsWith('AIza') && key.length > 20;
-  }
+    return Boolean(this.getApiKey());
+  },
 
   getChatHistory(): GeminiMessage[] {
     try {
-      const data = localStorage.getItem(STORAGE_CHAT_HISTORY);
-      if (data) return JSON.parse(data);
-    } catch {
-      // fallback
-    }
+      const key = storageService.getUserStorageKey('gemini_chat_history_v1');
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch {}
     return [
       {
-        id: 'msg-welcome',
+        id: 'welcome-msg',
         sender: 'gemini',
-        text: `Olá! Sou o seu **Assistente Teológico Gemini IA** no *O Mundo Cristão*. 
+        text: `### ✝ Bem-vindo ao Gemini Teológico!
+Sou seu assistente cristocêntrico de estudos bíblicos, hermenêutica e teologia pastoral.
 
-Estou preparado para ajudar você a:
-- 📜 Analisar o **contexto histórico, cultural e geográfico** de qualquer texto bíblico.
-- 🔍 Entender termos no **Grego do Novo Testamento** e **Hebraico do Antigo Testamento**.
-- 🔥 Explicar doutrinas sob a luz da **Teologia Wesleyana** (Graça Preveniente, Santificação e o Amor Perfeito).
-- 📖 Estruturar **esboços completos de sermões** para pregação pastoral.
-- 💡 Criar **perguntas práticas para Escola Bíblica Dominical (EBD)** e grupos pequenos.
+**Como posso auxiliá-lo hoje?**
+- 📖 Exegese de passagens bíblicas e contexto histórico
+- 📜 Criação de esboços de pregação expositiva
+- 🏛 Teologia Bíblica e Wesleyana (Doutrina da Graça)
+- 🙏 Respostas pastorais fundamentadas na Palavra de Deus
 
-Você pode escolher um dos botões rápidos abaixo ou digitar qualquer pergunta teológica!`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+*Selecione uma das sugestões acima ou digite sua pergunta:*`,
+        timestamp: 'Agora'
       }
     ];
-  }
+  },
 
   saveChatHistory(history: GeminiMessage[]): void {
-    localStorage.setItem(STORAGE_CHAT_HISTORY, JSON.stringify(history.slice(-30))); // guarda últimas 30
-  }
+    try {
+      const key = storageService.getUserStorageKey('gemini_chat_history_v1');
+      localStorage.setItem(key, JSON.stringify(history));
+    } catch {}
+  },
 
   clearChatHistory(): void {
-    localStorage.removeItem(STORAGE_CHAT_HISTORY);
-  }
+    try {
+      const key = storageService.getUserStorageKey('gemini_chat_history_v1');
+      localStorage.removeItem(key);
+    } catch {}
+  },
 
-  async generateBookSummary(bookTitle: string, excerptOrContent?: string): Promise<string> {
-    const prompt = `Faça uma resenha e resumo teológico completo, estruturado e aprofundado da obra/livro: "${bookTitle}".
-${excerptOrContent ? `Conteúdo/Trecho da obra: ${excerptOrContent.slice(0, 1500)}` : ''}
+  async askGemini(question: string, category?: string): Promise<string> {
+    const contextualPrompt = category && category !== 'livre' 
+      ? `[Categoria: ${category.toUpperCase()}]\n${question}` 
+      : question;
+    return this.askTheologicalGemini(contextualPrompt);
+  },
 
-Por favor, organize a análise com:
-### 📖 Síntese e Tese Central da Obra
-(Explique o propósito teológico do autor e a mensagem central)
-
-#### 🏛️ Principais Capítulos e Argumentos Teológicos
-(Resuma os grandes tópicos e capítulos abordados)
-
-#### 📜 Fundamentos Bíblicos e Doutrinários
-(Mencione as passagens bíblicas centrais)
-
-#### 💡 Aplicações Práticas para a Vida Cristã e Púlpito
-(Como esta obra transforma a vida do discípulo, o ministério e o púlpito)
-
-#### 💬 Citações e Pensamentos Marcantes
-(Frases ou insights de grande impacto)`;
-
-    return this.askGemini(prompt, 'exegese');
-  }
-
-  async askGemini(prompt: string, contextCategory?: GeminiMessage['category']): Promise<string> {
+  async askTheologicalGemini(userQuestion: string): Promise<string> {
     const apiKey = this.getApiKey();
+    const query = userQuestion.toLowerCase().trim();
 
-    // Se o usuário configurou sua chave real do Google Gemini, chama a API oficial
-    if (this.hasCustomKey()) {
+    // Se houver API key configurada, faz chamada oficial ao Gemini 1.5 Flash do Google
+    if (apiKey) {
       try {
-        const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              contents: [
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const body = {
+          contents: [
+            {
+              role: 'user',
+              parts: [
                 {
-                  parts: [
-                    {
-                      text: `Você é um erudito teólogo cristão, pastor evangélico e especialista em Bíblia Sagrada, com profundo respeito pela tradição metodista wesleyana, reforma protestante e fidelidade às Escrituras. Responda em português com clareza pastoral, riqueza bíblica e formatação organizada em Markdown (títulos, marcadores e versículos).\n\nPergunta/Estudo solicitado: ${prompt}`
-                    }
-                  ]
+                  text: `${THEOLOGICAL_SYSTEM_PROMPT}\n\nPergunta do usuário cristão: ${userQuestion}\n\nResponda com profundidade bíblica, citações de versículos e foco em Jesus Cristo:`
                 }
-              ],
-              generationConfig: {
-                temperature: 0.7,
-                maxOutputTokens: 1500
-              }
-            })
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 1200,
           }
-        );
+        };
 
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.error?.message || `Erro HTTP ${response.status}`);
-        }
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
 
-        const data = await response.json();
-        const candidate = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (candidate) {
-          return candidate;
+        if (res.ok) {
+          const data = await res.json();
+          const generated = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (generated) {
+            return generated;
+          }
+        } else {
+          console.warn('Erro ao chamar Google Gemini API, utilizando motor teológico interno.');
         }
-      } catch (err: any) {
-        console.warn('Falha na API externa do Gemini, acionando Base Teológica Integrada:', err);
-        // Fallback gracioso para a base interna embutida
+      } catch (err) {
+        console.warn('Falha na conexão com Google Gemini, recorrendo à base interna offline.', err);
       }
     }
 
-    // Modo Inteligência Teológica Integrada (Instantâneo, rico e pastoral)
-    await new Promise((resolve) => setTimeout(resolve, 800)); // Pequena pausa natural
-    return this.generateTheologicalResponse(prompt, contextCategory);
+    // Modo interno / offline: geração teológica inteligente baseada em palavras-chave bíblicas
+    if (query.includes('graça') || query.includes('preveniente') || query.includes('salvação')) {
+      return EMBEDDED_THEOLOGY_KNOWLEDGE.graca;
+    }
+
+    if (query.includes('esboço') || query.includes('sermão') || query.includes('pregação') || query.includes('salmo 23')) {
+      return EMBEDDED_THEOLOGY_KNOWLEDGE.esboco;
+    }
+
+    if (query.includes('imw') || query.includes('metodista wesleyana') || query.includes('nova friburgo') || query.includes('beppu')) {
+      return EMBEDDED_THEOLOGY_KNOWLEDGE.imw;
+    }
+
+    if (query.includes('justificação') || query.includes('fé') || query.includes('reforma')) {
+      return `### ✝ Justificação Somente Pela Fé (Sola Fide)
+A doutrina da Justificação pela Fé é a resposta bíblica para a maior pergunta humana: *"Como o homem pecador pode estar em paz diante de um Deus infinitamente Santo?"*
+
+- **Fundamento Bíblico**: Romanos 1:17; Romanos 3:24-26; Efésios 2:8-9.
+- **Definição**: Não é tornar o pecador perfeito por suas obras, mas declará-lo judicialmente justo através dos méritos de Jesus Cristo.
+- **A Cruz como Centro**: Cristo tomou nosso lugar e levou sobre Si a condenação que nos cabia. A fé não é a causa da salvação, mas a mão estendida que recebe o presente imerecido da Graça.
+
+> *"Não confio no melhor que há em mim, mas descanso inteiramente nos méritos de Cristo."* — John Wesley`;
+    }
+
+    if (query.includes('oração') || query.includes('orar') || query.includes('clamor')) {
+      return `### 🙏 Teologia da Oração: Intimidade e Poder
+A oração cristã não é uma tentativa de convencer Deus a mudar de ideia, mas o alinhamento do nosso coração com a soberana vontade do Pai:
+
+1. **A Oração ensinada por Jesus (Mateus 6:9-13)**:
+   - Começa com adoração e santificação do Nome de Deus ("Santificado seja o teu nome").
+   - Coloca a vontade de Deus acima dos desejos carnais ("Seja feita a tua vontade").
+   - Reconhece a dependência diária do sustento físico e espiritual ("O pão nosso de cada dia").
+2. **A Intercessão do Espírito Santo (Romanos 8:26)**:
+   - Quando não sabemos como orar como convém, o próprio Espírito intercede por nós com gemidos inexprimíveis.
+3. **A Promessa de Jesus (João 14:13)**:
+   - Tudo quanto pedirdes em Meu Nome, Eu o farei, para que o Pai seja glorificado no Filho.
+
+*Dica prática*: Reserve momentos no seu dia para silenciar o barulho exterior e ouvir a voz mansa do Bom Pastor.`;
+    }
+
+    // Resposta padrão edificante cristocêntrica
+    return `### 📖 Análise Bíblica e Teológica
+
+Com base nas Sagradas Escrituras e na tradição cristã histórica:
+
+**Reflexão sobre "${userQuestion}"**:
+1. **O Fundamento Cristocêntrico**:
+   Toda questão espiritual encontra sua resposta suprema na pessoa e na obra de nosso Senhor Jesus Cristo. Em Colossenses 2:3 está escrito que *"Nele estão escondidos todos os tesouros da sabedoria e do conhecimento"*.
+
+2. **A Autoridade da Palavra (Sola Scriptura)**:
+   *"Toda a Escritura é inspirada por Deus e útil para o ensino, para a repreensão, para a correção, para a educação na justiça"* (2 Timóteo 3:16). Qualquer prática ou doutrina deve ser examinada à luz do texto sagrado.
+
+3. **Aplicação Prática e Vida Diária**:
+   A verdadeira teologia nunca termina na mente; ela desce ao coração e transborda nas mãos em amor a Deus e misericórdia ao próximo.
+
+> 💡 *Dica:* Você também pode cadastrar sua chave gratuita da **Google Gemini API** nas configurações deste card para obter análises exegéticas ilimitadas em tempo real!`;
+  },
+
+  async generateBookSummary(bookTitle: string, bookContent?: string): Promise<string> {
+    const apiKey = this.getApiKey();
+    const prompt = `Gere uma síntese teológica profunda e cristocêntrica da obra/documento: "${bookTitle}".
+${bookContent ? `Trecho ou conteúdo base:\n${bookContent.slice(0, 3000)}\n` : ''}
+
+Estruture a resposta com:
+1. Tese Central & Foco em Cristo (Cristocêntrico)
+2. Estrutura Canônica / Doutrinária
+3. Principais Lições Teológicas
+4. Aplicação Pastoral e Prática para a Igreja e o Lar`;
+
+    if (apiKey) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const body = {
+          contents: [{ role: 'user', parts: [{ text: `${THEOLOGICAL_SYSTEM_PROMPT}\n\n${prompt}` }] }],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 1200 }
+        };
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const generated = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (generated) return generated;
+        }
+      } catch (err) {
+        console.warn('Erro ao chamar Gemini API para resumo, usando síntese inteligente local', err);
+      }
+    }
+
+    return `### 📖 Síntese Teológica da Obra: *${bookTitle}*
+
+#### 1. ✝ Tese Central & Perspectiva Cristocêntrica
+Esta obra fundamenta-se na supremacia da revelação bíblica e na centralidade de Jesus Cristo como Redentor e Senhor. Toda a argumentação converge para a graça salvadora, a suficiência da cruz e a soberania divina operando na redenção humana.
+
+#### 2. 🏛 Estrutura Teológica e Doutrinária
+- **Fundamento Bíblico**: Base sólida nos textos canônicos do Antigo e Novo Testamento.
+- **Ordem da Salvação (*Ordo Salutis*)**: Reconhecimento da incapacidade do homem em salvar-se a si mesmo e da graça preveniente que atrai o pecador.
+- **Santificação & Vida no Espírito**: O chamado irrevogável a uma vida de integridade, oração constante e separação do mal.
+
+#### 3. 🕊 Principais Lições Doutrinárias
+- A autoridade suprema das Sagradas Escrituras como regra de fé e prática.
+- O equilíbrio entre doutrina bíblica sadia e fervor espiritual no Espírito Santo.
+- A responsabilidade missionária e o amor prático ao próximo.
+
+#### 4. 🙏 Aplicação Pastoral e Prática
+- **Para o Pregador e Líder**: Fornece ferramentas sólidas para o ensino bíblico expositivo e a defesa apologética da fé.
+- **Para a Família Cristã**: Conduz o crente a um andar diário de devoção, oração e louvor a Deus.
+
+> *"Para que em tudo Cristo tenha a primazia."* (Colossenses 1:18)`;
   }
+};
 
-  private generateTheologicalResponse(prompt: string, category?: GeminiMessage['category']): string {
-    const lower = prompt.toLowerCase();
-
-    if (category === 'exegese' || lower.includes('exegese') || lower.includes('contexto')) {
-      return `### 📜 Estudo Exegético & Contexto Histórico
-
-**Passagem/Tema:** "${prompt}"
-
-#### 1. Contexto Histórico e Autor
-- **Cenário:** O texto foi escrito em um contexto de aliança e preservação da fé do povo de Deus em meio a desafios culturais e espirituais significativos.
-- **Público Original:** Destinado a crentes chamados a viver em santidade e testemunho prático, contrastando com as práticas pagãs ao redor.
-- **Gênero Literário:** Texto de caráter doutrinário e pastoral, utilizando recursos de paralelismo semítico ou retórica apostólica para fixar a mensagem no coração.
-
-#### 2. Grandes Verdades Centrais
-1. **A Soberania da Revelação:** Deus se comunica de maneira compreensível e progressiva na história.
-2. **A Centralidade da Redenção:** Todo preceito e profecia aponta para a consumação do plano salvífico em Jesus Cristo.
-3. **Chamado à Obediência:** A fé verdadeira manifesta-se através de obras de piedade e amor ao próximo.
-
-#### 3. Aplicação Pastoral Contemporânea
-Hoje, esta passagem nos desafia a não nos conformarmos com as pressões do presente século, mas a renovarmos nossa mente na Palavra eterna de Deus.`;
-    }
-
-    if (category === 'original' || lower.includes('original') || lower.includes('grego') || lower.includes('hebraico')) {
-      return `### 🔍 Análise nos Idiomas Originais (Hebraico & Grego)
-
-**Texto sob Análise:** "${prompt}"
-
-#### Termos Fundamentais e Seus Significados:
-- **No Antigo Testamento (Hebraico):**
-  - **Hesed (חֶסֶד):** Amor leal, fidelidade inabalável da aliança divina. Não é mero sentimento, mas uma decisão de amar e sustentar a promessa.
-  - **Shalom (שָׁלוֹם):** Muito mais que ausência de conflito; plenitude, harmonia, saúde integral e paz que provém da presença de Deus.
-  - **Qadosh (קָדוֹשׁ):** Sagrado, separado, transcendente. O padrão divino que chama o povo à santidade prática.
-
-- **No Novo Testamento (Grego Koiné):**
-  - **Ágape (ἀγάπη):** O amor sacrificial e voluntário de Deus, demonstrado supremamente na Cruz do Calvário (João 3:16; Romanos 5:8).
-  - **Charis (χάρις):** Graça — o favor imerecido e a força capacitadora do Espírito Santo concedida ao ser humano.
-  - **Metanoia (μετάνοια):** Arrependimento genuíno; transformação radical da mente, que resulta em uma nova conduta de vida.
-
-#### Conclusão Linguística:
-As Escrituras no original ressaltam que Deus não apenas perdoa, mas restaura ativamente a comunhão e capacita o homem através da Sua graça.`;
-    }
-
-    if (category === 'wesleyana' || lower.includes('wesley') || lower.includes('graça') || lower.includes('santificação')) {
-      return `### 🔥 Perspectiva da Teologia Wesleyana
-
-**Tema:** "${prompt}"
-
-#### 1. A Tríplice Ordem da Graça (Ordo Salutis Wesleyana)
-- **Graça Preveniente:** A graça que precede qualquer decisão humana. Ela restaura o livre-arbítrio ferido pela queda e capacita o homem a responder ao Evangelho (Tito 2:11).
-- **Graça Justificadora:** O ato soberano de Deus pelo qual Ele perdoa os pecados e aceita o crente mediante a fé unicamente em Cristo Jesus (Romanos 5:1).
-- **Graça Santificadora:** A obra contínua do Espírito Santo que purifica o coração, capacitando o discípulo a crescer no amor e vencer o pecado.
-
-#### 2. O Quadrilátero Wesleyano como Guia:
-1. **Escrituras:** A autoridade primária e infalível para toda regra de fé e prática.
-2. **Tradição:** O testemunho histórico da Igreja fiel através dos séculos.
-3. **Razão:** O dom divino para articular, discernir e comunicar a verdade bíblica.
-4. **Experiência:** A vivência pessoal do testemunho do Espírito Santo no coração ("O coração aquecido").
-
-#### 3. Frase Clássica de John Wesley:
-> *"O Evangelho não conhece religião que não seja social, nem santidade que não seja santidade social."* — John Wesley`;
-    }
-
-    if (category === 'sermon' || lower.includes('sermão') || lower.includes('esboço') || lower.includes('pregação')) {
-      return `### 📖 Esboço Homilético para Pregadores
-
-**Tema:** Vivendo sob a Promessa e a Graça  
-**Texto Base:** "${prompt}"
-
-#### Introdução
-- **Frase de Impacto:** Em tempos de incerteza, o que ancora a nossa alma não são as circunstâncias terrenas, mas a fidelidade imutável de Deus.
-- **Pergunta Reflexiva:** Onde você tem colocado a sua confiança nas horas de tempestade?
-
-#### I. O Reconhecimento da Dependência de Deus
-- Deus é o Criador, Provedor e Mantenedor de todas as coisas.
-- *Aplicação:* Deixar de tentar controlar o futuro com nossas próprias forças e render o fardo no altar da oração.
-
-#### II. A Suficiência da Graça Divina no Deserto
-- As aflições não anulam o cuidado de Deus; elas revelam a Sua fidelidade.
-- *Ilustração:* Assim como o fogo purifica o ouro sem destruí-lo, as provações refinam a nossa fé.
-
-#### III. A Resposta de Fé: Amor Prático e Santidade
-- Fé bíblica genuína transborda em serviço ao próximo e louvor a Deus.
-- O crente é chamado a ser luz no lar, no trabalho e na comunidade.
-
-#### Conclusão & Apelo
-- Reafirme que a Cruz de Cristo nos garante vitória eterna.
-- Convide a congregação a dar um passo de entrega total e renovar sua aliança com o Senhor Jesus.`;
-    }
-
-    if (category === 'ebd' || lower.includes('ebd') || lower.includes('pergunta') || lower.includes('célula')) {
-      return `### 💡 Guia de Discussão para Escola Bíblica & Grupos Pequenos
-
-**Passagem/Assunto:** "${prompt}"
-
-#### Perguntas de Quebra-Gelo & Observação:
-1. O que mais chama a sua atenção neste texto bíblico à primeira leitura?
-2. Quais eram os sentimentos e desafios enfrentados pelos personagens descritos nesta passagem?
-
-#### Perguntas de Interpretação Teológica:
-3. Como este texto revela o caráter e a santidade de Deus?
-4. De que maneira podemos ver a graça de Jesus Cristo operando nesta promessa?
-
-#### Perguntas de Aplicação Prática para a Semana:
-5. Diante desta palavra, que atitude prática nós precisamos mudar no nosso dia a dia?
-6. Quem nesta semana pode ser abençoado se você compartilhar este testemunho e orar com ele?
-
-#### Oração de Encerramento:
-*Senhor nosso Deus, grava esta palavra no mais profundo do nosso coração, para que não apenas a ouçamos, mas a vivamos em amor e verdade. Em nome de Jesus, Amém!*`;
-    }
-
-    // Resposta Teológica Geral
-    return `### 📖 Reflexão Teológica e Pastoral
-
-Sobre a sua pergunta: **"${prompt}"**
-
-#### 1. Fundamento Bíblico
-A Palavra de Deus nos ensina que toda a Escritura é divinamente inspirada e proveitosa para ensinar, redarguir, corrigir e instruir em justiça (2 Timóteo 3:16). Ao olharmos para este assunto, devemos sempre colocá-lo sob a ótica da Redenção em Jesus Cristo.
-
-#### 2. Significado Doutrinário
-- Deus se revela não como um observador distante, mas como um Pai amoroso que busca a reconciliação do ser humano.
-- A teologia cristã clássica e wesleyana enfatiza que a verdade divina transforma o caráter do crente: o amor a Deus é inseparável do amor ao próximo.
-
-#### 3. Direcionamento Prático
-Para aprofundar seu estudo sobre este tema:
-1. **Medite com oração:** Peça a iluminação do Espírito Santo antes de estudar.
-2. **Compare com outras passagens:** A Escritura interpreta a própria Escritura (analogia da fé).
-3. **Aplique na vida diária:** Como esta verdade pode moldar suas atitudes hoje?
-
-*Deseja gerar um esboço de pregação, ver termos no grego/hebraico ou analisar o contexto histórico específico deste tema? Basta tocar em um dos botões rápidos acima!*`;
-  }
-}
-
-export const geminiService = new GeminiService();

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { getCordeiroDevocionalDoDia, CalendarioCordeiroDia } from '../../data/calendarioCordeiroData';
+import { getCordeiroDevocionalDoDia, getVersiculoTemaDoMes, CalendarioCordeiroDia } from '../../data/calendarioCordeiroData';
 import { Sparkles, RotateCw, ZoomIn, ZoomOut, Calendar, BookOpen, Heart, Quote, ArrowRight, Eye } from 'lucide-react';
 
 interface CalendarioCordeiro3DProps {
@@ -24,10 +24,12 @@ export const CalendarioCordeiro3D: React.FC<CalendarioCordeiro3DProps> = ({
   const zoomLevelRef = useRef(zoomLevel);
   zoomLevelRef.current = zoomLevel;
 
-  // Informações do mês atual
+  // Informações do mês atual e tema principal
+  const currentMonthNumber = now.getMonth() + 1;
+  const [selectedMonth, setSelectedMonth] = useState<number>(currentMonthNumber);
   const currentMonthName = now.toLocaleDateString('pt-BR', { month: 'long' });
   const currentYear = now.getFullYear();
-  const daysInCurrentMonth = new Date(currentYear, now.getMonth() + 1, 0).getDate();
+  const temaDoMes = getVersiculoTemaDoMes(selectedMonth);
 
   const devocionalDia: CalendarioCordeiroDia = getCordeiroDevocionalDoDia(selectedDay);
 
@@ -442,6 +444,29 @@ export const CalendarioCordeiro3D: React.FC<CalendarioCordeiro3DProps> = ({
           </div>
         </div>
 
+        {/* Banner Dourado do Versículo Principal do Mês */}
+        <div className="bg-gradient-to-r from-amber-600/25 via-amber-500/15 to-amber-700/25 p-4 sm:p-5 rounded-2xl border border-amber-500/40 space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500 text-stone-950 font-sans shadow-sm">
+                ✨ Versículo Principal do Mês • {temaDoMes.mesNome}
+              </span>
+              <span className="text-xs text-amber-200 font-semibold">
+                {temaDoMes.temaGeral}
+              </span>
+            </div>
+            <span className="text-xs font-bold text-amber-300 font-mono">
+              {temaDoMes.passagemPrincipal}
+            </span>
+          </div>
+          <blockquote className="font-serif italic text-sm sm:text-base text-amber-100 leading-relaxed bg-black/20 p-3 rounded-xl border border-white/5">
+            "{temaDoMes.versiculoPrincipal}"
+          </blockquote>
+          <p className="text-[11px] text-stone-300">
+            {temaDoMes.explicacaoTeologica}
+          </p>
+        </div>
+
         {/* Canvas 3D do Cordeiro de Deus */}
         <div className="relative rounded-2xl overflow-hidden border border-amber-600/30 shadow-inner bg-black/60 group">
           <div
@@ -461,21 +486,21 @@ export const CalendarioCordeiro3D: React.FC<CalendarioCordeiro3DProps> = ({
           </div>
         </div>
 
-        {/* Grade do Calendário Mensal */}
+        {/* Grade do Calendário Mensal com Todos os 31 Dias */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs text-amber-200/80">
             <span className="font-bold uppercase tracking-wider flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5 text-amber-400" />
-              Dias de {currentMonthName}
+              Todos os 31 Dias do Mês • Meditações do Cordeiro
             </span>
             <span className="text-[11px] text-stone-400">
-              Selecione o dia para ler a reflexão messiânica
+              Selecione o dia para ler o versículo e oração messiânica
             </span>
           </div>
 
-          <div className="grid grid-cols-7 sm:grid-cols-10 md:grid-cols-16 gap-1.5">
-            {Array.from({ length: daysInCurrentMonth }, (_, i) => i + 1).map((dia) => {
-              const isCurrentDayToday = dia === now.getDate();
+          <div className="grid grid-cols-7 sm:grid-cols-11 md:grid-cols-16 gap-1.5">
+            {Array.from({ length: 31 }, (_, i) => i + 1).map((dia) => {
+              const isCurrentDayToday = dia === now.getDate() && selectedMonth === currentMonthNumber;
               const isSelected = dia === selectedDay;
               return (
                 <button

@@ -8,7 +8,7 @@ import { CentralBibliaEGeminiCard } from '../home/CentralBibliaEGeminiCard';
 import { CentralTeologicaMultimidiaCard } from '../home/CentralTeologicaMultimidiaCard';
 import { CentralPersonagensProfetasHeroisCard } from '../home/CentralPersonagensProfetasHeroisCard';
 import { CentralHistoriaLugaresJesusCard } from '../home/CentralHistoriaLugaresJesusCard';
-import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Languages, Compass, Shield } from 'lucide-react';
+import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Languages, Compass, Shield, Music, Radio, Headphones, Volume2, HeartHandshake } from 'lucide-react';
 
 
 interface HomeViewProps {
@@ -123,6 +123,137 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         </div>
       </section>
 
+      {/* CARD DA BÍBLIA SAGRADA (66 LIVROS, ÁUDIO E GEMINI IA) */}
+      <CentralBibliaEGeminiCard
+        onSelectTab={onSelectTab}
+        onStudyWithGemini={onStudyWithGemini}
+      />
+
+      {/* GRADE DE ACESSO RÁPIDO: HINÁRIO & HARPA, RÁDIOS & PODCASTS, VIDA DE CRISTO E ORAÇÃO */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {/* Card Hinário Wesleyano & Harpa Cristã */}
+        <div
+          onClick={() => onSelectTab('hinos')}
+          className="group cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-amber-900/15 via-stone-900/10 to-stone-50 dark:from-stone-900 dark:to-amber-950/30 border border-amber-600/30 hover:border-amber-500 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-amber-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Music className="w-5 h-5 text-amber-200" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                Harpa & IMW
+              </span>
+            </div>
+            <div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+                Harpa & Hinário Wesleyano
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5 leading-relaxed line-clamp-2">
+                Hinos oficiais da IMW, poesias sacras de Charles Wesley e clássicos da Harpa Cristã.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs font-semibold text-amber-700 dark:text-amber-400 group-hover:translate-x-1 transition-transform pt-2.5 border-t border-stone-200/50 dark:border-stone-800/50 mt-3">
+            <span>Abrir hinários</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </div>
+        </div>
+
+        {/* Card Rádios & Podcasts Gospel */}
+        <div
+          onClick={() => onSelectTab('radios')}
+          className="group cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-emerald-900/15 via-stone-900/10 to-stone-50 dark:from-stone-900 dark:to-emerald-950/30 border border-emerald-600/30 hover:border-emerald-500 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-emerald-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Radio className="w-5 h-5 text-emerald-200" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-300">
+                Ao Vivo & Sã Doutrina
+              </span>
+            </div>
+            <div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                Rádios & Podcasts Gospel
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5 leading-relaxed line-clamp-2">
+                Melodia FM, Sara Brasil, CPAD e podcasts bíblicos sem heresias focados em Cristo.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs font-semibold text-emerald-700 dark:text-emerald-400 group-hover:translate-x-1 transition-transform pt-2.5 border-t border-stone-200/50 dark:border-stone-800/50 mt-3">
+            <span>Sintonizar e ouvir</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </div>
+        </div>
+
+        {/* Card Mulheres Virtuosas & Vida de Cristo */}
+        <div
+          onClick={() => onSelectTab('mulheres-vida-de-cristo')}
+          className="group cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-rose-900/15 via-stone-900/10 to-stone-50 dark:from-stone-900 dark:to-rose-950/30 border border-rose-500/30 hover:border-rose-500 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-rose-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <Heart className="w-5 h-5 text-rose-200" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-100 text-rose-900 dark:bg-rose-950 dark:text-rose-300">
+                Exegese & 3D
+              </span>
+            </div>
+            <div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 group-hover:text-rose-700 dark:group-hover:text-rose-400 transition-colors">
+                Mulheres & Vida de Cristo
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5 leading-relaxed line-clamp-2">
+                12 mulheres da Bíblia, 35 milagres, 40 parábolas e mapa 3D interativo dos passos de Jesus.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs font-semibold text-rose-700 dark:text-rose-400 group-hover:translate-x-1 transition-transform pt-2.5 border-t border-stone-200/50 dark:border-stone-800/50 mt-3">
+            <span>Explorar módulo</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </div>
+        </div>
+
+        {/* Card Diário de Oração */}
+        <div
+          onClick={() => onSelectTab('oracao')}
+          className="group cursor-pointer p-4 rounded-2xl bg-gradient-to-br from-indigo-900/15 via-stone-900/10 to-stone-50 dark:from-stone-900 dark:to-indigo-950/30 border border-indigo-500/30 hover:border-indigo-500 shadow-sm hover:shadow-lg transition-all flex flex-col justify-between"
+        >
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="w-10 h-10 rounded-xl bg-indigo-700 text-white flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+                <HeartHandshake className="w-5 h-5 text-indigo-200" />
+              </div>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-900 dark:bg-indigo-950 dark:text-indigo-300">
+                Clamor & Fé
+              </span>
+            </div>
+            <div>
+              <h3 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors">
+                Diário de Oração
+              </h3>
+              <p className="text-xs text-stone-600 dark:text-stone-400 mt-0.5 leading-relaxed line-clamp-2">
+                Registre seus motivos de oração, pedidos respondidos e momentos de intercessão com Deus.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs font-semibold text-indigo-700 dark:text-indigo-400 group-hover:translate-x-1 transition-transform pt-2.5 border-t border-stone-200/50 dark:border-stone-800/50 mt-3">
+            <span>Abrir diário</span>
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+          </div>
+        </div>
+      </section>
+
+      {/* CALENDÁRIO EM 3D: O CORDEIRO DE DEUS (AGNUS DEI) */}
+      <CalendarioCordeiro3D
+        onStudyWithGemini={onStudyWithGemini}
+        onNavigateToBible={() => onSelectTab('biblia')}
+      />
+
       {/* JORNADA SEMANAL DA FÉ (COM ROTAÇÃO DIÁRIA AUTOMÁTICA PELO DIA DA SEMANA) */}
       <JornadaSemanalDaFeCard
         onStudyWithGemini={onStudyWithGemini}
@@ -133,12 +264,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
       <MulheresVidaDeCristoCard 
         onSelectTab={onSelectTab} 
         onStudyWithGemini={onStudyWithGemini} 
-      />
-
-      {/* CALENDÁRIO EM 3D: O CORDEIRO DE DEUS (AGNUS DEI) */}
-      <CalendarioCordeiro3D
-        onStudyWithGemini={onStudyWithGemini}
-        onNavigateToBible={() => onSelectTab('biblia')}
       />
 
       {/* Banner de Instalação PWA (iOS e Android) */}
@@ -245,11 +370,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         )}
       </section>
 
-      {/* CARD UNIFICADO: BÍBLIA SAGRADA, STRONG, LEITOR KINDLE E ESTUDO TEOLÓGICO COM GEMINI IA */}
-      <CentralBibliaEGeminiCard
-        onSelectTab={onSelectTab}
-        onStudyWithGemini={onStudyWithGemini}
-      />
 
       {/* CARD 1 UNIFICADO: LIVROS TEOLÓGICOS, BAIXAR/ENVIAR LIVROS E VÍDEOS, E ESBOÇOS */}
       <CentralTeologicaMultimidiaCard onSelectTab={onSelectTab} />
