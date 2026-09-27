@@ -8,6 +8,7 @@ export const RadiosAndPodcastsView: React.FC = () => {
   const [volume, setVolume] = useState<number>(0.8);
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isLoadingAudio, setIsLoadingAudio] = useState<boolean>(false);
+  const [streamError, setStreamError] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeTab, setActiveTab] = useState<'all' | 'radios' | 'podcasts'>('all');
   const [sleepTimerMinutes, setSleepTimerMinutes] = useState<number | null>(null);
@@ -57,18 +58,24 @@ export const RadiosAndPodcastsView: React.FC = () => {
 
   const handleSelectRadio = (radio: GospelRadio) => {
     setActiveRadio(radio);
+    setStreamError(false);
     setIsLoadingAudio(true);
     if (audioRef.current) {
+      audioRef.current.pause();
       audioRef.current.src = radio.streamUrl;
+      audioRef.current.load();
       audioRef.current
         .play()
         .then(() => {
           setIsPlaying(true);
           setIsLoadingAudio(false);
+          setStreamError(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.warn('Erro ao tocar rádio:', err);
           setIsPlaying(false);
           setIsLoadingAudio(false);
+          setStreamError(true);
         });
     }
   };
@@ -80,16 +87,24 @@ export const RadiosAndPodcastsView: React.FC = () => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      setStreamError(false);
       setIsLoadingAudio(true);
+      if (!audioRef.current.src || audioRef.current.src !== activeRadio.streamUrl) {
+        audioRef.current.src = activeRadio.streamUrl;
+        audioRef.current.load();
+      }
       audioRef.current
         .play()
         .then(() => {
           setIsPlaying(true);
           setIsLoadingAudio(false);
+          setStreamError(false);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.warn('Erro ao iniciar áudio:', err);
           setIsPlaying(false);
           setIsLoadingAudio(false);
+          setStreamError(true);
         });
     }
   };
@@ -113,16 +128,18 @@ export const RadiosAndPodcastsView: React.FC = () => {
       {/* Elemento de Áudio HTML5 Nativo em Segundo Plano */}
       <audio
         ref={audioRef}
-        src={activeRadio.streamUrl}
         preload="none"
         onWaiting={() => setIsLoadingAudio(true)}
+        onCanPlay={() => setIsLoadingAudio(false)}
         onPlaying={() => {
           setIsLoadingAudio(false);
           setIsPlaying(true);
+          setStreamError(false);
         }}
         onError={() => {
           setIsLoadingAudio(false);
           setIsPlaying(false);
+          setStreamError(true);
         }}
       />
 
@@ -211,6 +228,23 @@ export const RadiosAndPodcastsView: React.FC = () => {
               <p className="text-xs text-stone-300 mt-0.5 max-w-md line-clamp-1 sm:line-clamp-2">
                 {activeRadio.description}
               </p>
+              <div className="flex items-center gap-2 mt-2">
+                {isLoadingAudio && (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-amber-300 font-semibold animate-pulse bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" /> Sintonizando transmissão ao vivo...
+                  </span>
+                )}
+                {isPlaying && !isLoadingAudio && (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-emerald-300 font-semibold bg-emerald-950/60 px-2.5 py-0.5 rounded-full border border-emerald-500/30">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400" /> Sintonizada e Tocando Ao Vivo
+                  </span>
+                )}
+                {streamError && !isLoadingAudio && (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] text-rose-300 font-semibold bg-rose-950/60 px-2.5 py-0.5 rounded-full border border-rose-500/30">
+                    <span className="w-2 h-2 rounded-full bg-rose-400" /> Sinal indisponível no momento. Escolha outra emissora abaixo.
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

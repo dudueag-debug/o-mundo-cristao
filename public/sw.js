@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mundo-cristao-v2';
+const CACHE_NAME = 'mundo-cristao-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',

@@ -29,63 +29,18 @@ export const GOSPEL_RADIOS: GospelRadio[] = [
     name: 'Rádio Melodia FM',
     location: 'Rio de Janeiro / Nacional',
     frequency: '97.5 FM',
-    streamUrl: 'https://shout25.crossradio.com.br:18002/1',
+    streamUrl: 'https://server01.ouvir.radio.br:8033/stream',
     description: 'A maior emissora evangélica do país com louvores congregacionais, ministração pastoral e adoração 24h.',
     badge: 'Líder em Audiência'
   },
   {
-    id: 'sara-brasil',
-    name: 'Rádio Sara Brasil FM',
-    location: 'Rede Nacional',
-    frequency: '101.3 FM',
-    streamUrl: 'https://shout25.crossradio.com.br:18020/1',
-    description: 'Transmissão contínua de fé, canções inspiradoras e oração para edificar o lar cristão.',
+    id: 'feliz-fm',
+    name: 'Rádio Feliz FM',
+    location: 'São Paulo / Rede Nacional',
+    frequency: '92.9 FM',
+    streamUrl: 'https://cloud1.cdnseguro.com:5520/;stream.mp3',
+    description: 'A rádio que toca o seu coração com louvores contemporâneos, oração ao vivo e mensagens de fé.',
     badge: 'Rede Nacional'
-  },
-  {
-    id: 'boas-novas',
-    name: 'Rádio Boas Novas',
-    location: 'Manaus / Rede Amazônica',
-    frequency: 'Web & FM',
-    streamUrl: 'https://streaming01.zas.media:8000/live',
-    description: 'Evangelho puro, ministrações expositivas da Palavra e hinos sagrados alcançando o Brasil e nações.',
-    badge: 'Missões & Avivamento'
-  },
-  {
-    id: 'cpad-fm',
-    name: 'Rádio CPAD Gospel',
-    location: 'Rio de Janeiro',
-    frequency: 'Web & App',
-    streamUrl: 'https://painel.portalradios.com.br/listen/radiocpad/stream',
-    description: 'A voz da literatura bíblica, lições da Escola Bíblica Dominical e a beleza dos hinos sacros da Harpa.',
-    badge: 'Teologia & Harpa'
-  },
-  {
-    id: 'novas-de-paz',
-    name: 'Rádio Novas de Paz',
-    location: 'Recife / Nordeste',
-    frequency: '107.5 FM',
-    streamUrl: 'https://paineldj5.com.br:10996/stream',
-    description: 'Pregações fervorosas, oração ao vivo e cânticos de adoração que fortalecem a fé cotidiana.',
-    badge: 'Clamor & Palavra'
-  },
-  {
-    id: 'gospel-fm',
-    name: 'Rádio Gospel FM',
-    location: 'São Paulo',
-    frequency: '90.1 FM',
-    streamUrl: 'https://ice.fabricahost.com.br/gospelfm',
-    description: 'Música cristã de edificação, hinos da fé e mensagens pastorais com dinamismo e profundidade bíblica.',
-    badge: 'Louvor & Vida'
-  },
-  {
-    id: 'logos-fm',
-    name: 'Rádio Logos FM',
-    location: 'Fortaleza / Ceará',
-    frequency: '102.3 FM',
-    streamUrl: 'https://shout25.crossradio.com.br:18012/1',
-    description: 'Emissora comprometida com a fidelidade às Escrituras, adoração reverente e edificação espiritual.',
-    badge: 'Edificação Bíblica'
   },
   {
     id: 'radio-93fm',
@@ -93,8 +48,53 @@ export const GOSPEL_RADIOS: GospelRadio[] = [
     location: 'Rio de Janeiro',
     frequency: '93.3 FM',
     streamUrl: 'https://shout25.crossradio.com.br:18006/1',
-    description: 'Canções de celebração cristã, debates doutrinários respeitosos e mensagens abençoadoras.',
+    description: 'Canções de celebração cristã, debates doutrinários respeitosos e mensagens abençoadoras 24 horas.',
     badge: 'Louvor 24 Horas'
+  },
+  {
+    id: 'musical-fm',
+    name: 'Rádio Musical FM',
+    location: 'São Paulo',
+    frequency: '105.7 FM',
+    streamUrl: 'https://9176.brasilstream.com.br/stream',
+    description: 'Música cristã de qualidade, pregações expositivas, debates bíblicos e edificação do povo de Deus.',
+    badge: 'Debates & Louvor'
+  },
+  {
+    id: 'mgt-gospel',
+    name: 'Rádio MGT Gospel',
+    location: 'Brasil / Web',
+    frequency: 'Digital HD',
+    streamUrl: 'https://cast.mgtradio.net/radio/8040/aac',
+    description: 'Louvor congregacional ininterrupto, hinos clássicos da Harpa Cristã e adoração profunda.',
+    badge: 'Adoração Contínua'
+  },
+  {
+    id: 'atos-fm',
+    name: 'Rádio Atos FM',
+    location: 'Rede Cristã',
+    frequency: 'Web & FM',
+    streamUrl: 'https://s.bul.tec.br:8020/128',
+    description: 'Emissora comprometida com a fidelidade bíblica, oração ao vivo e edificação dos lares cristãos.',
+    badge: 'Fidelidade Bíblica'
+  },
+  {
+    id: 'adore-fm',
+    name: 'Rádio Adore FM',
+    location: 'Maceió / Nordeste',
+    frequency: '89.3 FM',
+    streamUrl: 'https://03.painelstreaming.com.br:27014/stream',
+    description: 'Louvores inspiradores, oração pastoral e reflexões bíblicas para transformar o seu dia.',
+    badge: 'Oração & Paz'
+  },
+  {
+    id: 'biblia-audio-web',
+    name: 'Bíblia em Áudio Web',
+    location: 'Nacional',
+    frequency: '24h Bíblia Sagrada',
+    streamUrl: 'https://stm3.voxhd.com.br:8062/stream',
+    description: 'Transmissão contínua da Palavra de Deus narrada capítulo por capítulo, 24 horas por dia para meditação.',
+    badge: 'Bíblia Narrada 24h'
   }
 ];
 

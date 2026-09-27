@@ -2,9 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ALL_BIBLE_BOOKS, BibleBookInfo } from '../../data/fullBibleIndex';
 import { bibleService, BIBLE_VERSIONS, BibleVersionId, VerseItem } from '../../services/bibleService';
 import { bibleHighlightService, HIGHLIGHT_COLORS, HighlightColor, BibleHighlight } from '../../services/bibleHighlightService';
+import { storageService } from '../../services/storageService';
+import { geminiService, SermonOutlineResponse } from '../../services/geminiService';
+import { SermonOutline } from '../../data/sermonOutlines';
 import { findStrongNumberForWord, getStrongEntry, StrongEntry } from '../../data/strongConcordance';
 import { KindleReaderModal } from '../common/KindleReaderModal';
-import { BookOpen, Copy, Check, Type, Bookmark, ChevronDown, Search, ArrowLeft, ArrowRight, Sparkles, Palette, Trash2, X, BookMarked, Volume2, VolumeX, Play, Pause, Square, FastForward } from 'lucide-react';
+import { BookOpen, Copy, Check, Type, Bookmark, ChevronDown, Search, ArrowLeft, ArrowRight, Sparkles, Palette, Trash2, X, BookMarked, Volume2, VolumeX, Play, Pause, Square, FastForward, PenTool, ScrollText, Send, Save, FileText, CheckCircle2, ChevronRight, MessageSquare, Lightbulb, Flame, RefreshCw, Wand2 } from 'lucide-react';
 
 interface BibleViewProps {
   onStudyWithGemini?: (prompt: string) => void;
@@ -43,6 +46,44 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
   const [isBookModalOpen, setIsBookModalOpen] = useState(false);
   const [bookSearchQuery, setBookSearchQuery] = useState('');
   const [testamentFilter, setTestamentFilter] = useState<'ALL' | 'AT' | 'NT'>('ALL');
+
+  // ==========================================
+  // ABA LATERAL: ANOTAÇÕES & ESBOÇO DE PREGAÇÃO COM IA
+  // ==========================================
+  const [isSideDrawerOpen, setIsSideDrawerOpen] = useState<boolean>(false);
+  const [drawerVerse, setDrawerVerse] = useState<{ number: number; text: string } | null>(null);
+  const [drawerTab, setDrawerTab] = useState<'anotacoes' | 'esboco' | 'ia'>('anotacoes');
+
+  // Aba Anotações
+  const [verseNote, setVerseNote] = useState<string>('');
+  const [isSavingNote, setIsSavingNote] = useState<boolean>(false);
+
+  // Aba Esboço de Pregação
+  const [sermonTitle, setSermonTitle] = useState<string>('');
+  const [sermonTheme, setSermonTheme] = useState<string>('');
+  const [sermonScripture, setSermonScripture] = useState<string>('');
+  const [sermonProposition, setSermonProposition] = useState<string>('');
+  const [sermonIntro, setSermonIntro] = useState<string>('');
+  const [sermonP1Title, setSermonP1Title] = useState<string>('');
+  const [sermonP1Exp, setSermonP1Exp] = useState<string>('');
+  const [sermonP1App, setSermonP1App] = useState<string>('');
+  const [sermonP2Title, setSermonP2Title] = useState<string>('');
+  const [sermonP2Exp, setSermonP2Exp] = useState<string>('');
+  const [sermonP2App, setSermonP2App] = useState<string>('');
+  const [sermonP3Title, setSermonP3Title] = useState<string>('');
+  const [sermonP3Exp, setSermonP3Exp] = useState<string>('');
+  const [sermonP3App, setSermonP3App] = useState<string>('');
+  const [sermonPractical, setSermonPractical] = useState<string>('');
+  const [sermonConclusion, setSermonConclusion] = useState<string>('');
+  const [isSermonSaved, setIsSermonSaved] = useState<boolean>(false);
+  const [isSermonCopied, setIsSermonCopied] = useState<boolean>(false);
+
+  // Aba Assistente IA de Pregação
+  const [isAiLoading, setIsAiLoading] = useState<boolean>(false);
+  const [aiResult, setAiResult] = useState<string>('');
+  const [aiParsedOutline, setAiParsedOutline] = useState<SermonOutlineResponse | null>(null);
+  const [aiCustomPrompt, setAiCustomPrompt] = useState<string>('');
+  const [isAiResultCopied, setIsAiResultCopied] = useState<boolean>(false);
 
   // ==========================================
   // ÁUDIO BÍBLIA (NARRADOR POR VOZ NATURAL)
@@ -167,6 +208,185 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
     } finally {
       setIsComparingLoading(false);
     }
+  };
+
+  // ==========================================
+  // METODOS DA ABA LATERAL: ANOTAÇÕES, ESBOÇOS E IA
+  // ==========================================
+  const handleOpenVerseDrawer = (
+    verseNum: number,
+    text: string,
+    defaultTab: 'anotacoes' | 'esboco' | 'ia' = 'anotacoes'
+  ) => {
+    setDrawerVerse({ number: verseNum, text });
+    setDrawerTab(defaultTab);
+    setIsSideDrawerOpen(true);
+    setActiveVerseForMenu(null);
+
+    // Carregar anotações salvas para este versículo
+    const noteKey = `verse_${selectedBook.id}_${selectedChapter}_${verseNum}`;
+    const savedNote = storageService.getUserNotes(noteKey);
+    setVerseNote(savedNote);
+
+    // Inicializar campos de esboço bíblico com o versículo selecionado
+    const verseRef = `${selectedBook.name} ${selectedChapter}:${verseNum}`;
+    setSermonScripture(`${verseRef} (${selectedVersion}) — "${text}"`);
+    if (!sermonTitle || sermonTitle.startsWith('Mensagem em ')) {
+      setSermonTitle(`Mensagem em ${verseRef}`);
+    }
+    if (!sermonTheme) {
+      setSermonTheme(`Exposição Bíblica de ${verseRef}`);
+    }
+  };
+
+  const handleSaveVerseNote = (newText: string) => {
+    setVerseNote(newText);
+    if (!drawerVerse) return;
+    const noteKey = `verse_${selectedBook.id}_${selectedChapter}_${drawerVerse.number}`;
+    storageService.saveUserNotes(noteKey, newText);
+    setIsSavingNote(true);
+    setTimeout(() => setIsSavingNote(false), 1200);
+  };
+
+  const handleSaveSermonToLibrary = () => {
+    if (!drawerVerse || !sermonTitle.trim()) return;
+
+    const pointsList = [];
+    if (sermonP1Title.trim()) {
+      pointsList.push({
+        title: sermonP1Title,
+        explanation: sermonP1Exp,
+        application: sermonP1App
+      });
+    }
+    if (sermonP2Title.trim()) {
+      pointsList.push({
+        title: sermonP2Title,
+        explanation: sermonP2Exp,
+        application: sermonP2App
+      });
+    }
+    if (sermonP3Title.trim()) {
+      pointsList.push({
+        title: sermonP3Title,
+        explanation: sermonP3Exp,
+        application: sermonP3App
+      });
+    }
+
+    const newOutline: SermonOutline = {
+      id: `sermon-verse-${selectedBook.id}-${selectedChapter}-${drawerVerse.number}-${Date.now()}`,
+      title: sermonTitle,
+      category: 'avivamento',
+      theme: sermonTheme || `Exposição de ${selectedBook.name} ${selectedChapter}:${drawerVerse.number}`,
+      scriptureText: sermonScripture || `${selectedBook.name} ${selectedChapter}:${drawerVerse.number}`,
+      bigIdea: sermonProposition,
+      introduction: sermonIntro,
+      points: pointsList.length > 0 ? pointsList : [
+        {
+          title: 'I. A Soberania da Palavra Revelada',
+          explanation: sermonP1Exp || 'Deus fala ao Seu povo através da Sua Palavra viva.',
+          application: sermonP1App || 'Apegue-se às promessas eternas do Senhor.'
+        }
+      ],
+      illustration: sermonPractical || 'Ilustração pastoral para a vida diária.',
+      practicalApplication: sermonPractical,
+      conclusion: sermonConclusion
+    };
+
+    const currentSermons = storageService.getCustomSermons();
+    storageService.saveCustomSermons([newOutline, ...currentSermons]);
+    setIsSermonSaved(true);
+    setTimeout(() => setIsSermonSaved(false), 2500);
+  };
+
+  const handleGenerateAiOutline = async (style: 'expositivo' | 'exegese' | 'ilustracoes' | 'wesleyano') => {
+    if (!drawerVerse) return;
+    setIsAiLoading(true);
+    setAiResult('');
+    setAiParsedOutline(null);
+
+    const ref = `${selectedBook.name} ${selectedChapter}:${drawerVerse.number}`;
+    try {
+      const response = await geminiService.generateSermonForVerse(ref, drawerVerse.text, style);
+      setAiResult(response.fullMarkdown);
+      setAiParsedOutline(response);
+    } catch (err) {
+      console.error('Erro ao gerar esboço homilético:', err);
+      setAiResult('Ocorreu um erro ao consultar a IA. Tente novamente.');
+    } finally {
+      setIsAiLoading(false);
+    }
+  };
+
+  const handleApplyAiToSermon = () => {
+    if (!aiParsedOutline) return;
+    setSermonTitle(aiParsedOutline.title);
+    setSermonTheme(aiParsedOutline.theme);
+    setSermonScripture(aiParsedOutline.scriptureText);
+    setSermonProposition(aiParsedOutline.proposition);
+    setSermonIntro(aiParsedOutline.introduction);
+
+    if (aiParsedOutline.points?.[0]) {
+      setSermonP1Title(aiParsedOutline.points[0].title);
+      setSermonP1Exp(aiParsedOutline.points[0].explanation);
+      setSermonP1App(aiParsedOutline.points[0].application);
+    }
+    if (aiParsedOutline.points?.[1]) {
+      setSermonP2Title(aiParsedOutline.points[1].title);
+      setSermonP2Exp(aiParsedOutline.points[1].explanation);
+      setSermonP2App(aiParsedOutline.points[1].application);
+    }
+    if (aiParsedOutline.points?.[2]) {
+      setSermonP3Title(aiParsedOutline.points[2].title);
+      setSermonP3Exp(aiParsedOutline.points[2].explanation);
+      setSermonP3App(aiParsedOutline.points[2].application);
+    }
+
+    setSermonPractical(aiParsedOutline.practicalApplication);
+    setSermonConclusion(aiParsedOutline.conclusion);
+
+    // Alternar para a aba de esboço com os dados preenchidos
+    setDrawerTab('esboco');
+  };
+
+  const handleCopyFormattedSermon = () => {
+    const text = `📖 ESBOÇO DE PREGAÇÃO
+TÍTULO: ${sermonTitle}
+TEMA: ${sermonTheme}
+TEXTO BÍBLICO: ${sermonScripture}
+
+🎯 PROPOSIÇÃO HOMILÉTICA:
+${sermonProposition || 'Proposição bíblica central'}
+
+🏛 INTRODUÇÃO:
+${sermonIntro || 'Introdução da mensagem'}
+
+📌 TÓPICOS DA MENSAGEM:
+1. ${sermonP1Title || 'I. Primeiro Ponto'}
+   ${sermonP1Exp ? `Explicação: ${sermonP1Exp}` : ''}
+   ${sermonP1App ? `Aplicação: ${sermonP1App}` : ''}
+
+${sermonP2Title ? `2. ${sermonP2Title}
+   ${sermonP2Exp ? `Explicação: ${sermonP2Exp}` : ''}
+   ${sermonP2App ? `Aplicação: ${sermonP2App}` : ''}` : ''}
+
+${sermonP3Title ? `3. ${sermonP3Title}
+   ${sermonP3Exp ? `Explicação: ${sermonP3Exp}` : ''}
+   ${sermonP3App ? `Aplicação: ${sermonP3App}` : ''}` : ''}
+
+💡 APLICAÇÃO PRÁTICA:
+${sermonPractical || 'Como viver esta mensagem na prática'}
+
+🕊 CONCLUSÃO & APELO:
+${sermonConclusion || 'Convite pastoral final'}
+
+---
+O Mundo Cristão | Montador de Pregação & IA Teológica`;
+
+    navigator.clipboard.writeText(text);
+    setIsSermonCopied(true);
+    setTimeout(() => setIsSermonCopied(false), 2000);
   };
 
   // ==========================================
@@ -587,8 +807,19 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
                       {renderVerseWithStrong(v.text)}
                     </p>
 
-                    {/* Botões de Ação do Versículo (Ouvir e Copiar) */}
+                    {/* Botões de Ação do Versículo (Ouvir, Copiar e Anotação/Esboço) */}
                     <div className="opacity-0 group-hover:opacity-100 flex items-center gap-1 shrink-0 transition-opacity">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenVerseDrawer(v.number, v.text, 'esboco');
+                        }}
+                        className="p-1.5 rounded-lg text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/60"
+                        title="Abrir aba lateral para anotações e esboço de pregação"
+                      >
+                        <PenTool className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                      </button>
+
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -653,7 +884,26 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
                         )}
                       </div>
 
-                      <div className="pt-2 border-t border-stone-100 dark:border-stone-700 flex flex-wrap items-center justify-between gap-2">
+                      {/* Botão de Destaque: Abrir Aba Lateral para Anotações e Esboço de Pregação com IA */}
+                      <div className="pt-2 border-t border-stone-100 dark:border-stone-700">
+                        <button
+                          onClick={() => handleOpenVerseDrawer(v.number, v.text, 'esboco')}
+                          className="w-full py-2.5 px-3.5 rounded-xl bg-gradient-to-r from-amber-700 via-amber-800 to-amber-900 hover:from-amber-600 hover:to-amber-800 text-white font-bold text-xs flex items-center justify-between shadow-md transition-all group/btn"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-7 h-7 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-300 shrink-0">
+                              <ScrollText className="w-4 h-4" />
+                            </div>
+                            <div className="text-left">
+                              <div className="text-xs font-bold text-white">Anotações & Montador de Esboço de Pregação</div>
+                              <div className="text-[10px] text-amber-200/80 font-normal">Estruture seu sermão expositivo com assistência da IA</div>
+                            </div>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-amber-300 group-hover/btn:translate-x-1 transition-transform shrink-0" />
+                        </button>
+                      </div>
+
+                      <div className="pt-1 flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handlePlaySingleVerse(v.number, v.text)}
@@ -1131,6 +1381,542 @@ export const BibleView: React.FC<BibleViewProps> = ({ onStudyWithGemini }) => {
             </div>
           </div>
         </KindleReaderModal>
+      )}
+      {/* ABA LATERAL / DRAWER: ANOTAÇÕES & MONTADOR DE ESBOÇO DE PREGAÇÃO COM IA */}
+      {isSideDrawerOpen && drawerVerse && (
+        <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex justify-end animate-fadeIn">
+          <div
+            className="w-full max-w-xl sm:max-w-2xl bg-white dark:bg-stone-900 border-l border-stone-200 dark:border-stone-800 h-full flex flex-col shadow-2xl animate-slideLeft overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header da Aba Lateral */}
+            <div className="p-4 sm:p-5 border-b border-stone-200 dark:border-stone-800 bg-stone-50/90 dark:bg-stone-900/90 backdrop-blur-md space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="p-2 rounded-xl bg-amber-600/15 text-amber-700 dark:text-amber-400 border border-amber-600/30">
+                    <ScrollText className="w-5 h-5" />
+                  </span>
+                  <div>
+                    <h3 className="font-serif font-bold text-base sm:text-lg text-stone-900 dark:text-stone-100">
+                      Anotador & Montador de Esboço
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400 font-semibold">
+                      <span>{selectedBook.name} {selectedChapter}:{drawerVerse.number}</span>
+                      <span>•</span>
+                      <span className="uppercase text-[10px] font-mono">{selectedVersion}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsSideDrawerOpen(false)}
+                  className="p-2 rounded-xl text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-200/60 dark:hover:bg-stone-800 transition-colors"
+                  title="Fechar aba lateral"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Box de Citação do Versículo Selecionado */}
+              <div className="p-3 rounded-2xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 flex items-start justify-between gap-3">
+                <p className="font-serif italic text-xs sm:text-sm text-stone-800 dark:text-amber-100 leading-relaxed">
+                  "{drawerVerse.text}"
+                </p>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`"${drawerVerse.text}" — ${selectedBook.name} ${selectedChapter}:${drawerVerse.number} (${selectedVersion})`);
+                  }}
+                  className="p-1.5 rounded-lg text-stone-400 hover:text-amber-600 dark:hover:text-amber-300 shrink-0"
+                  title="Copiar versículo"
+                >
+                  <Copy className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Navegação de Abas do Drawer */}
+              <div className="flex items-center gap-1.5 bg-stone-200/70 dark:bg-stone-800/70 p-1 rounded-2xl text-xs font-semibold">
+                <button
+                  onClick={() => setDrawerTab('anotacoes')}
+                  className={`flex-1 py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                    drawerTab === 'anotacoes'
+                      ? 'bg-white dark:bg-stone-900 text-amber-800 dark:text-amber-300 shadow-sm font-bold'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                  }`}
+                >
+                  <PenTool className="w-3.5 h-3.5" />
+                  <span>Minhas Anotações</span>
+                </button>
+
+                <button
+                  onClick={() => setDrawerTab('esboco')}
+                  className={`flex-1 py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                    drawerTab === 'esboco'
+                      ? 'bg-white dark:bg-stone-900 text-amber-800 dark:text-amber-300 shadow-sm font-bold'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                  }`}
+                >
+                  <ScrollText className="w-3.5 h-3.5" />
+                  <span>Esboço de Pregação</span>
+                </button>
+
+                <button
+                  onClick={() => setDrawerTab('ia')}
+                  className={`flex-1 py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all ${
+                    drawerTab === 'ia'
+                      ? 'bg-white dark:bg-stone-900 text-amber-800 dark:text-amber-300 shadow-sm font-bold'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Assistente IA</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Conteúdo Rolável da Aba Ativa */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
+              {/* ABA 1: MINHAS ANOTAÇÕES PESSOAIS */}
+              {drawerTab === 'anotacoes' && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-serif font-bold text-sm text-stone-900 dark:text-stone-100">
+                        Notas Pessoais & Revelações
+                      </h4>
+                      <p className="text-xs text-stone-500 dark:text-stone-400">
+                        O que o Espírito Santo ministrou ao seu coração através deste versículo?
+                      </p>
+                    </div>
+
+                    <span className="text-[11px] text-amber-700 dark:text-amber-400 font-mono font-medium">
+                      {isSavingNote ? 'Salvando...' : 'Salvo no dispositivo'}
+                    </span>
+                  </div>
+
+                  <textarea
+                    value={verseNote}
+                    onChange={(e) => handleSaveVerseNote(e.target.value)}
+                    placeholder="Digite suas anotações, percepções teológicas, insights e orações sobre este versículo..."
+                    rows={12}
+                    className="w-full p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm leading-relaxed focus:ring-2 focus:ring-amber-500/50 outline-none resize-none font-sans"
+                  />
+
+                  {/* Atalhos Rápidos para Inserir Tags */}
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold text-stone-400 uppercase tracking-wider">
+                      Ideias de Estudo Rápido:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        '💡 Aplicação Prática:',
+                        '🏛 Contexto Histórico:',
+                        '🙏 Motivo de Oração:',
+                        '✝ Visão Cristocêntrica:',
+                        '🔥 Promessa de Deus:'
+                      ].map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={() => {
+                            const updated = verseNote ? `${verseNote}\n\n${tag} ` : `${tag} `;
+                            handleSaveVerseNote(updated);
+                          }}
+                          className="px-2.5 py-1 rounded-xl text-xs font-semibold bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 border border-stone-200 dark:border-stone-700 hover:bg-amber-100 dark:hover:bg-amber-950/60 hover:text-amber-900 transition-colors"
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-between">
+                    <button
+                      onClick={() => setDrawerTab('esboco')}
+                      className="inline-flex items-center gap-1.5 text-xs text-amber-700 dark:text-amber-400 font-bold hover:underline"
+                    >
+                      <ScrollText className="w-4 h-4" />
+                      <span>Transformar esta meditação em Esboço de Pregação →</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ABA 2: MONTADOR DE ESBOÇO DE PREGAÇÃO */}
+              {drawerTab === 'esboco' && (
+                <div className="space-y-5">
+                  {/* Barra Superior de Ações do Esboço */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30">
+                    <div className="text-xs font-semibold text-amber-900 dark:text-amber-200">
+                      Montador Homilético Estruturado
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={handleCopyFormattedSermon}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-bold transition-all shadow-sm"
+                        title="Copiar esboço formatado para o púlpito"
+                      >
+                        {isSermonCopied ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-500" />
+                            <span className="text-emerald-600 dark:text-emerald-400">Copiado!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Copiar Esboço</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={handleSaveSermonToLibrary}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold transition-all shadow-sm"
+                        title="Salvar nos Meus Esboços de Pregação"
+                      >
+                        {isSermonSaved ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Salvo na Biblioteca!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-3.5 h-3.5" />
+                            <span>Salvar na Biblioteca</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Campos Estruturais do Esboço */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                        Título da Pregação:
+                      </label>
+                      <input
+                        type="text"
+                        value={sermonTitle}
+                        onChange={(e) => setSermonTitle(e.target.value)}
+                        placeholder="Ex: O Deus que Restaura e Alimenta a Alma"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-sm font-serif font-bold focus:ring-2 focus:ring-amber-500/50 outline-none"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                          Tema Central:
+                        </label>
+                        <input
+                          type="text"
+                          value={sermonTheme}
+                          onChange={(e) => setSermonTheme(e.target.value)}
+                          placeholder="Ex: A Fidelidade da Graça Divina"
+                          className="w-full px-3.5 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500/50 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                          Texto Bíblico Base:
+                        </label>
+                        <input
+                          type="text"
+                          value={sermonScripture}
+                          onChange={(e) => setSermonScripture(e.target.value)}
+                          className="w-full px-3.5 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500/50 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                        Proposição Homilética (A Grande Ideia da Mensagem):
+                      </label>
+                      <input
+                        type="text"
+                        value={sermonProposition}
+                        onChange={(e) => setSermonProposition(e.target.value)}
+                        placeholder="Ex: Em meio às tempestades, a presença de Cristo é o nosso porto seguro."
+                        className="w-full px-3.5 py-2 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs focus:ring-2 focus:ring-amber-500/50 outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                        Introdução da Mensagem:
+                      </label>
+                      <textarea
+                        value={sermonIntro}
+                        onChange={(e) => setSermonIntro(e.target.value)}
+                        placeholder="Contexto histórico, ilustração inicial ou pergunta para prender a atenção dos ouvintes..."
+                        rows={3}
+                        className="w-full p-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs leading-relaxed focus:ring-2 focus:ring-amber-500/50 outline-none resize-none font-sans"
+                      />
+                    </div>
+
+                    {/* Tópico 1 */}
+                    <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 space-y-2">
+                      <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                        I. Primeiro Ponto da Mensagem:
+                      </span>
+                      <input
+                        type="text"
+                        value={sermonP1Title}
+                        onChange={(e) => setSermonP1Title(e.target.value)}
+                        placeholder="Título do 1º Ponto (Ex: A Soberania de Deus Revelada)"
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-900 dark:text-stone-100 outline-none"
+                      />
+                      <textarea
+                        value={sermonP1Exp}
+                        onChange={(e) => setSermonP1Exp(e.target.value)}
+                        placeholder="Explicação bíblica e exegese do versículo..."
+                        rows={2}
+                        className="w-full p-2.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 outline-none resize-none"
+                      />
+                      <input
+                        type="text"
+                        value={sermonP1App}
+                        onChange={(e) => setSermonP1App(e.target.value)}
+                        placeholder="Aplicação prática para a congregação..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 outline-none"
+                      />
+                    </div>
+
+                    {/* Tópico 2 */}
+                    <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 space-y-2">
+                      <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                        II. Segundo Ponto da Mensagem:
+                      </span>
+                      <input
+                        type="text"
+                        value={sermonP2Title}
+                        onChange={(e) => setSermonP2Title(e.target.value)}
+                        placeholder="Título do 2º Ponto (Ex: A Suficiência do Sacrifício de Cristo)"
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-900 dark:text-stone-100 outline-none"
+                      />
+                      <textarea
+                        value={sermonP2Exp}
+                        onChange={(e) => setSermonP2Exp(e.target.value)}
+                        placeholder="Explicação bíblica do segundo ponto..."
+                        rows={2}
+                        className="w-full p-2.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 outline-none resize-none"
+                      />
+                      <input
+                        type="text"
+                        value={sermonP2App}
+                        onChange={(e) => setSermonP2App(e.target.value)}
+                        placeholder="Aplicação do segundo ponto..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 outline-none"
+                      />
+                    </div>
+
+                    {/* Tópico 3 */}
+                    <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 space-y-2">
+                      <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                        III. Terceiro Ponto da Mensagem:
+                      </span>
+                      <input
+                        type="text"
+                        value={sermonP3Title}
+                        onChange={(e) => setSermonP3Title(e.target.value)}
+                        placeholder="Título do 3º Ponto (Ex: O Fruto da Santidade e Comunhão)"
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-900 dark:text-stone-100 outline-none"
+                      />
+                      <textarea
+                        value={sermonP3Exp}
+                        onChange={(e) => setSermonP3Exp(e.target.value)}
+                        placeholder="Explicação bíblica do terceiro ponto..."
+                        rows={2}
+                        className="w-full p-2.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-800 dark:text-stone-200 outline-none resize-none"
+                      />
+                      <input
+                        type="text"
+                        value={sermonP3App}
+                        onChange={(e) => setSermonP3App(e.target.value)}
+                        placeholder="Aplicação do terceiro ponto..."
+                        className="w-full px-3 py-1.5 rounded-lg bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs text-stone-700 dark:text-stone-300 outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                        Aplicação Prática e Vida Diária:
+                      </label>
+                      <textarea
+                        value={sermonPractical}
+                        onChange={(e) => setSermonPractical(e.target.value)}
+                        placeholder="Desafios práticos para a congregação viver durante a semana..."
+                        rows={2}
+                        className="w-full p-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs leading-relaxed focus:ring-2 focus:ring-amber-500/50 outline-none resize-none font-sans"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 mb-1">
+                        Conclusão & Apelo Pastoral:
+                      </label>
+                      <textarea
+                        value={sermonConclusion}
+                        onChange={(e) => setSermonConclusion(e.target.value)}
+                        placeholder="Fechamento da mensagem e convite à oração, consagração ou aceitação de Cristo..."
+                        rows={2}
+                        className="w-full p-3 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-stone-100 text-xs leading-relaxed focus:ring-2 focus:ring-amber-500/50 outline-none resize-none font-sans"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Botão de Rodapé para Chamar a IA */}
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        setDrawerTab('ia');
+                        handleGenerateAiOutline('expositivo');
+                      }}
+                      className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-950/40 transition-all hover:scale-[1.01]"
+                    >
+                      <Sparkles className="w-4 h-4 text-amber-200" />
+                      <span>Pedir Ajuda à IA para Montar ou Aprimorar este Esboço</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* ABA 3: ASSISTENTE IA DE PREGAÇÃO (GEMINI HOMILÉTICO) */}
+              {drawerTab === 'ia' && (
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-serif font-bold text-sm text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-amber-600" />
+                      <span>Assistente Homilético & Teológico com IA</span>
+                    </h4>
+                    <p className="text-xs text-stone-500 dark:text-stone-400">
+                      Gere esboços expositivos, análises no grego/hebraico e ilustrações cristocêntricas para pregar com fidelidade bíblica.
+                    </p>
+                  </div>
+
+                  {/* 4 Botões Pré-definidos */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      disabled={isAiLoading}
+                      onClick={() => handleGenerateAiOutline('expositivo')}
+                      className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30 hover:border-amber-500 text-left text-xs font-semibold text-amber-900 dark:text-amber-200 transition-all flex items-center gap-2.5 disabled:opacity-50"
+                    >
+                      <ScrollText className="w-4 h-4 text-amber-600 shrink-0" />
+                      <div>
+                        <div className="font-bold">Esboço Homilético Expositivo</div>
+                        <div className="text-[10px] text-amber-700/80 dark:text-amber-300/80 font-normal">3 pontos, proposição e apelo</div>
+                      </div>
+                    </button>
+
+                    <button
+                      disabled={isAiLoading}
+                      onClick={() => handleGenerateAiOutline('exegese')}
+                      className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 hover:border-amber-500 text-left text-xs font-semibold text-stone-800 dark:text-stone-200 transition-all flex items-center gap-2.5 disabled:opacity-50"
+                    >
+                      <BookOpen className="w-4 h-4 text-stone-600 dark:text-stone-400 shrink-0" />
+                      <div>
+                        <div className="font-bold">Exegese & Contexto Histórico</div>
+                        <div className="text-[10px] text-stone-500 dark:text-stone-400 font-normal">Significado no original e autor</div>
+                      </div>
+                    </button>
+
+                    <button
+                      disabled={isAiLoading}
+                      onClick={() => handleGenerateAiOutline('ilustracoes')}
+                      className="p-3 rounded-xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 hover:border-amber-500 text-left text-xs font-semibold text-stone-800 dark:text-stone-200 transition-all flex items-center gap-2.5 disabled:opacity-50"
+                    >
+                      <Lightbulb className="w-4 h-4 text-amber-500 shrink-0" />
+                      <div>
+                        <div className="font-bold">Ilustrações & Aplicações</div>
+                        <div className="text-[10px] text-stone-500 dark:text-stone-400 font-normal">Exemplos práticos para a igreja</div>
+                      </div>
+                    </button>
+
+                    <button
+                      disabled={isAiLoading}
+                      onClick={() => handleGenerateAiOutline('wesleyano')}
+                      className="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-500/30 hover:border-amber-500 text-left text-xs font-semibold text-amber-900 dark:text-amber-200 transition-all flex items-center gap-2.5 disabled:opacity-50"
+                    >
+                      <Flame className="w-4 h-4 text-rose-500 shrink-0" />
+                      <div>
+                        <div className="font-bold">Foco Cristocêntrico Wesleyano</div>
+                        <div className="text-[10px] text-amber-700/80 dark:text-amber-300/80 font-normal">Doutrina da Graça e Santidade</div>
+                      </div>
+                    </button>
+                  </div>
+
+                  {/* Estado de Carregamento da IA */}
+                  {isAiLoading && (
+                    <div className="p-8 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-500/20 text-center space-y-3 animate-pulse">
+                      <Wand2 className="w-8 h-8 text-amber-600 animate-spin mx-auto" />
+                      <div className="space-y-1">
+                        <div className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                          A IA Teológica está estruturando a mensagem expositiva...
+                        </div>
+                        <p className="text-[11px] text-stone-500 dark:text-stone-400">
+                          Examinando o versículo {selectedBook.name} {selectedChapter}:{drawerVerse.number} sob a sã doutrina e a homilética pastoral.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Resultado Gerado pela IA */}
+                  {aiResult && !isAiLoading && (
+                    <div className="space-y-3 animate-fadeIn">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200 dark:border-stone-700 pb-2">
+                        <span className="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                          Resultado Homilético Gerado:
+                        </span>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={handleApplyAiToSermon}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md transition-all hover:scale-105"
+                            title="Preenche automaticamente a aba de esboço com este conteúdo"
+                          >
+                            <ScrollText className="w-3.5 h-3.5" />
+                            <span>Transferir para o Meu Esboço</span>
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(aiResult);
+                              setIsAiResultCopied(true);
+                              setTimeout(() => setIsAiResultCopied(false), 2000);
+                            }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 text-xs font-semibold hover:bg-stone-200 dark:hover:bg-stone-700"
+                          >
+                            {isAiResultCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                            <span>{isAiResultCopied ? 'Copiado' : 'Copiar'}</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 text-xs sm:text-sm text-stone-800 dark:text-stone-200 leading-relaxed font-sans whitespace-pre-wrap max-h-96 overflow-y-auto">
+                        {aiResult}
+                      </div>
+
+                      {onStudyWithGemini && (
+                        <div className="pt-1">
+                          <button
+                            onClick={() => {
+                              setIsSideDrawerOpen(false);
+                              onStudyWithGemini(`Faça um estudo bíblico expositivo e homilético aprofundado do versículo: "${drawerVerse.text}" (${selectedBook.name} ${selectedChapter}:${drawerVerse.number})`);
+                            }}
+                            className="w-full py-2.5 px-3 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 text-xs font-bold transition-all text-center flex items-center justify-center gap-2"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Continuar Estudo Aprofundado no Gemini IA Principal</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -15,6 +15,7 @@ export interface SermonOutline {
   introduction: string;
   points: SermonPoint[];
   illustration: string;
+  practicalApplication?: string;
   conclusion: string;
   isCustom?: boolean;
 }

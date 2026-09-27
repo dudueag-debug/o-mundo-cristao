@@ -147,12 +147,28 @@ export const bibleService = {
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          const apiVerses: VerseItem[] = data.map((v: any) => ({
-            number: v.verse,
-            text: (v.text || '').replace(/<[^>]*>?/gm, '').trim() // Remove tags HTML se houver
-          })).filter(v => v.text.length > 0);
+          const apiVerses: VerseItem[] = data.map((v: any) => {
+            const rawText = v.text || '';
+            const cleaned = rawText
+              .replace(/<[^>]*>?/gm, '')
+              .replace(/&nbsp;/g, ' ')
+              .replace(/&quot;/g, '"')
+              .replace(/&#39;/g, "'")
+              .replace(/&amp;/g, '&')
+              .replace(/&lt;/g, '<')
+              .replace(/&gt;/g, '>')
+              .replace(/\s+/g, ' ')
+              .trim();
+
+            return {
+              number: Number(v.verse),
+              text: cleaned
+            };
+          }).filter(v => v.text.length > 0);
 
           if (apiVerses.length > 0) {
+            // Ordenar por número do versículo para garantir sequência perfeita de 1 a N
+            apiVerses.sort((a, b) => a.number - b.number);
             try {
               localStorage.setItem(cacheKey, JSON.stringify(apiVerses));
             } catch {}
