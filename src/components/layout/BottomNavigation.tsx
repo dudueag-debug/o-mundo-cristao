@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, MoreHorizontal, Sparkles, Flame, ScrollText, HeartHandshake, Music, X, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart, Radio } from 'lucide-react';
 
 interface BottomNavigationProps {
   currentTab: string;
@@ -18,6 +18,8 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
   ];
 
   const moreTabs = [
+    { id: 'radios', label: 'Rádios & Podcasts Gospel', icon: Radio },
+    { id: 'hinos', label: 'Hinário & Harpa Cristã', icon: Music },
     { id: 'mulheres-vida-de-cristo', label: 'Mulheres & Vida de Cristo', icon: Heart },
     { id: 'denominacoes', label: 'Igrejas & Origens', icon: Church },
     { id: 'herois-da-fe', label: 'Heróis da Fé', icon: Award },
@@ -31,7 +33,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ currentTab, 
     { id: 'historia', label: 'História das Igrejas & IMW', icon: Flame },
     { id: 'sermoes', label: 'Esboços de Pregação', icon: ScrollText },
     { id: 'oracao', label: 'Diário de Oração', icon: HeartHandshake },
-    { id: 'hinos', label: 'Hinário & Harpa', icon: Music },
   ];
 
   const handleSelectMoreTab = (tabId: string) => {

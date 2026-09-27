@@ -497,33 +497,44 @@ export const UploadLibraryView: React.FC = () => {
               {/* Área de Visualização do Documento */}
               {selectedDoc.type === 'application/pdf' || selectedDoc.name.toLowerCase().endsWith('.pdf') ? (
                 selectedDocUrl ? (
-                  <div className="space-y-2">
-                    <div className="rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-700 h-[600px] w-full bg-stone-950">
-                      <object
-                        data={selectedDocUrl}
-                        type="application/pdf"
-                        className="w-full h-full"
-                      >
-                        <div className="p-8 text-center text-stone-300 space-y-4">
-                          <p className="text-sm">
-                            O leitor embutido precisa de permissão de visualização neste navegador.
-                          </p>
-                          <a
-                            href={selectedDocUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-600 text-white text-xs font-bold shadow-md"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                            Toque Aqui para Abrir o Livro no Leitor do Aparelho
-                          </a>
-                        </div>
-                      </object>
+                  <div className="space-y-3">
+                    <div className="bg-stone-100 dark:bg-stone-800 p-3 rounded-2xl flex flex-wrap items-center justify-between gap-2 border border-stone-200 dark:border-stone-700">
+                      <div className="flex items-center gap-2 text-xs text-stone-700 dark:text-stone-300 font-medium">
+                        <FileText className="w-4 h-4 text-rose-500" />
+                        <span>Visualizador do Livro em PDF</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={selectedDocUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-sm transition-all"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          <span>Abrir em Tela Cheia / Zoom ↗</span>
+                        </a>
+                        <a
+                          href={selectedDocUrl}
+                          download={selectedDoc.name}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-700 hover:bg-stone-300 dark:hover:bg-stone-600 text-stone-800 dark:text-stone-200 text-xs font-semibold transition-all"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Baixar</span>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="rounded-2xl overflow-hidden border border-stone-200 dark:border-stone-700 h-[650px] w-full bg-stone-900 shadow-inner">
+                      <iframe
+                        src={`${selectedDocUrl}#toolbar=1&navpanes=0`}
+                        title={selectedDoc.name}
+                        className="w-full h-full border-0"
+                      />
                     </div>
                     <div className="flex items-center justify-between text-[11px] text-stone-500 px-1">
-                      <span>Dica: Use os botões acima para ler em tela cheia no navegador ou celular com zoom.</span>
+                      <span>Para uma experiência de leitura imersiva no celular, toque em "Abrir em Tela Cheia / Zoom".</span>
                       <a href={selectedDocUrl} target="_blank" rel="noreferrer" className="text-amber-700 dark:text-amber-400 font-semibold hover:underline">
-                        Modo Leitura Cheia ↗
+                        Leitor Externo ↗
                       </a>
                     </div>
                   </div>

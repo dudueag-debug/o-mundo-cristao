@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart } from 'lucide-react';
+import { Home, BookOpen, Library, UploadCloud, Video, Sparkles, Flame, ScrollText, HeartHandshake, Music, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Heart, Radio } from 'lucide-react';
 
 interface DesktopNavProps {
   currentTab: string;
@@ -22,11 +22,12 @@ export const DesktopNav: React.FC<DesktopNavProps> = ({ currentTab, onSelectTab 
     { id: 'livros', label: 'E-Reader', icon: Library },
     { id: 'uploads', label: 'Meus PDFs', icon: UploadCloud },
     { id: 'videos', label: 'Vídeos', icon: Video },
+    { id: 'radios', label: 'Rádios & Podcasts', icon: Radio },
+    { id: 'hinos', label: 'Hinário & Harpa', icon: Music },
     { id: 'teologia', label: 'Teologia Wesleyana', icon: Sparkles },
     { id: 'historia', label: 'História & IMW', icon: Flame },
     { id: 'sermoes', label: 'Esboços', icon: ScrollText },
     { id: 'oracao', label: 'Oração', icon: HeartHandshake },
-    { id: 'hinos', label: 'Hinário', icon: Music },
   ];
 
   return (
