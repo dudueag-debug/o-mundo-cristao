@@ -5,8 +5,7 @@ import { JornadaSemanalDaFeCard } from '../devotional/JornadaSemanalDaFeCard';
 import { CalendarioCordeiro3D } from '../calendar/CalendarioCordeiro3D';
 import { MulheresVidaDeCristoCard } from '../home/MulheresVidaDeCristoCard';
 import { CentralBibliaEGeminiCard } from '../home/CentralBibliaEGeminiCard';
-import { CentralTeologicaMultimidiaCard } from '../home/CentralTeologicaMultimidiaCard';
-import { CentralPersonagensProfetasHeroisCard } from '../home/CentralPersonagensProfetasHeroisCard';
+import { CentralAcervoCristaoCard } from '../home/CentralAcervoCristaoCard';
 import { CentralHistoriaLugaresJesusCard } from '../home/CentralHistoriaLugaresJesusCard';
 import { Sparkles, Flame, ScrollText, BookOpen, Share2, Check, ArrowRight, Heart, HeartCrack, BatteryCharging, ShieldAlert, Sun, Quote, BookMarked, Download, Smartphone, Apple, Users, Cross, Scroll, Bot, Church, Award, MapPin, UserCheck, Languages, Compass, Shield, Music, Radio, Headphones, Volume2, HeartHandshake } from 'lucide-react';
 
@@ -371,11 +370,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
       </section>
 
 
-      {/* CARD 1 UNIFICADO: LIVROS TEOLÓGICOS, BAIXAR/ENVIAR LIVROS E VÍDEOS, E ESBOÇOS */}
-      <CentralTeologicaMultimidiaCard onSelectTab={onSelectTab} />
-
-      {/* CARD 2 UNIFICADO: HERÓIS DA FÉ, PERSONAGENS BÍBLICOS E PROFETAS MAIORES E MENORES */}
-      <CentralPersonagensProfetasHeroisCard 
+      {/* CARD UNIFICADO DO SABER CRISTÃO: HERÓIS DA FÉ, PERSONAGENS, PROFETAS, BIBLIOTECA, MÍDIA E ESBOÇOS */}
+      <CentralAcervoCristaoCard 
         onSelectTab={onSelectTab} 
         onStudyWithGemini={onStudyWithGemini} 
       />

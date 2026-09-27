@@ -10,6 +10,16 @@ export interface GospelRadio {
   badge: string;
 }
 
+export interface PodcastEpisode {
+  id: string;
+  title: string;
+  duration: string;
+  date: string;
+  summary: string;
+  verseRef?: string;
+  audioText: string;
+}
+
 export interface ChristianPodcast {
   id: string;
   title: string;
@@ -21,6 +31,7 @@ export interface ChristianPodcast {
   durationAvg: string;
   coverEmoji: string;
   badge: string;
+  episodes: PodcastEpisode[];
 }
 
 export const GOSPEL_RADIOS: GospelRadio[] = [
@@ -106,10 +117,30 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     description: 'Reflexões matinais de intimidade, cura emocional e comunhão genuína com o Pai celestial para iniciar o dia centrado na graça divina.',
     theologicalFocus: 'Devocional e Intimidade com Deus',
     topics: ['Devocional Diário', 'Oração Matinal', 'Paternidade de Deus', 'Paz Interior'],
-    spotifyOrWebUrl: 'https://open.spotify.com/show/0qGzH0vK8s8Y9V0X0x0x0x',
+    spotifyOrWebUrl: 'https://open.spotify.com/search/Cafe%20com%20Deus%20Pai%20Junior%20Rostirola',
     durationAvg: '15 – 20 min',
     coverEmoji: '☕',
-    badge: 'Devocional Diário'
+    badge: 'Devocional Diário',
+    episodes: [
+      {
+        id: 'cafe-ep-1',
+        title: 'Começando o Dia no Altar da Graça',
+        duration: '14 min',
+        date: 'Hoje',
+        verseRef: 'Lamentações 3:22-23',
+        summary: 'As misericórdias do Senhor são a causa de não sermos consumidos, porque as Suas misericórdias não têm fim; renovam-se a cada manhã.',
+        audioText: 'Bem-vindo ao Café com Deus Pai. Hoje iniciamos o dia lembrando que as misericórdias do Senhor se renovam a cada manhã. Não importa o que você enfrentou ontem, a graça de Deus é suficiente para hoje. Respire fundo, entregue sua ansiedade nas mãos do Pai e caminhe debaixo do favor celestial.'
+      },
+      {
+        id: 'cafe-ep-2',
+        title: 'Cura Emocional e a Paternidade de Deus',
+        duration: '18 min',
+        date: 'Ontem',
+        verseRef: 'Salmo 27:10',
+        summary: 'Ainda que meu pai e minha mãe me desamparem, o Senhor me acolherá nos Seus braços de eterno amor.',
+        audioText: 'Neste episódio meditamos sobre a cura que só a paternidade perfeita de Deus pode trazer. Muitas feridas foram abertas pelo desamparo humano, mas o Senhor nunca te abandona. Ele te conhece pelo nome e cuida de cada detalhe da sua história.'
+      }
+    ]
   },
   {
     id: 'pod-dois-dedos',
@@ -118,10 +149,30 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     description: 'Teologia bíblica explicada com clareza, fidelidade textual e sem desvios teológicos. Exegese, apologética, ética cristã e sã doutrina para a Igreja.',
     theologicalFocus: 'Exegese Bíblica e Apologética Cristã',
     topics: ['Exegese Bíblica', 'Cosmovisão Bíblica', 'Sã Doutrina', 'História da Igreja'],
-    spotifyOrWebUrl: 'https://open.spotify.com/show/doisdedosdeteologia',
+    spotifyOrWebUrl: 'https://open.spotify.com/search/Dois%20Dedos%20de%20Teologia',
     durationAvg: '45 – 60 min',
     coverEmoji: '📖',
-    badge: 'Sã Doutrina'
+    badge: 'Sã Doutrina',
+    episodes: [
+      {
+        id: 'dd-ep-1',
+        title: 'Como Ler a Bíblia Sem Cometer Heresias',
+        duration: '48 min',
+        date: 'Recente',
+        verseRef: '2 Timóteo 2:15',
+        summary: 'Princípios fundamentais de hermenêutica bíblica: contexto histórico, gênero literário e a analogia da fé.',
+        audioText: 'Neste episódio do Dois Dedos de Teologia, analisamos por que o texto fora do contexto é pretexto para heresia. Aprenda a examinar as Escrituras à luz do seu autor, destinatários originais e a harmonia de todo o conselho de Deus em Cristo Jesus.'
+      },
+      {
+        id: 'dd-ep-2',
+        title: 'Apologética Cristã: Defendendo a Fé com Mansidão',
+        duration: '52 min',
+        date: 'Destaque',
+        verseRef: '1 Pedro 3:15',
+        summary: 'Respostas fundamentadas para os questionamentos contemporâneos da cultura à fé cristã.',
+        audioText: 'Como responder aos céticos e defender a veracidade das Escrituras sem perder a graça e a mansidão cristã? Exploramos argumentos históricos sobre a ressurreição corporal de Jesus Cristo e a inerrância bíblica.'
+      }
+    ]
   },
   {
     id: 'pod-voltemos',
@@ -133,7 +184,18 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     spotifyOrWebUrl: 'https://voltemosaoevangelho.com',
     durationAvg: '35 – 50 min',
     coverEmoji: '✝',
-    badge: 'Cristocêntrico'
+    badge: 'Cristocêntrico',
+    episodes: [
+      {
+        id: 've-ep-1',
+        title: 'A Cruz de Cristo Como Centro de Toda a Teologia',
+        duration: '42 min',
+        date: 'Recente',
+        verseRef: '1 Coríntios 2:2',
+        summary: 'Porque decidi nada saber entre vós, senão a Jesus Cristo e este crucificado.',
+        audioText: 'Uma mensagem expositiva profunda sobre a substituição vicária de Jesus no Calvário. Quando a cruz é o centro, a vaidade humana desmorona e o amor soberano de Deus triunfa sobre todo pecado e culpa.'
+      }
+    ]
   },
   {
     id: 'pod-imw-voz',
@@ -145,7 +207,18 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     spotifyOrWebUrl: 'https://imw.com.br',
     durationAvg: '30 – 45 min',
     coverEmoji: '🔥',
-    badge: 'Oficial IMW'
+    badge: 'Oficial IMW',
+    episodes: [
+      {
+        id: 'imw-ep-1',
+        title: 'O Fogo de Nova Friburgo: As Raízes da IMW em 1967',
+        duration: '38 min',
+        date: 'Histórico',
+        verseRef: 'Habacuque 3:2',
+        summary: 'A história emocionante de como o Espírito Santo desceu com dons de poder e línguas estranhas nos pioneiros da IMW.',
+        audioText: 'Ouça o relato oficial dos dias de oração em Nova Friburgo em janeiro de 1967. O pastor Dorival Beppu e os irmãos pioneiros foram batizados com o Espírito Santo, acendendo uma chama pentecostal de santidade e missões que se espalhou pelo Brasil e pelas nações.'
+      }
+    ]
   },
   {
     id: 'pod-teologia-vida',
@@ -154,10 +227,21 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     description: 'Como aplicar os princípios inerrantes da Palavra de Deus nos dilemas práticos da família, casamento, finanças, luto, ansiedade e perseverança na santidade.',
     theologicalFocus: 'Aconselhamento Bíblico Pastoral',
     topics: ['Família Cristã', 'Crescimento Espiritual', 'Aconselhamento', 'Cura da Alma'],
-    spotifyOrWebUrl: 'https://open.spotify.com',
+    spotifyOrWebUrl: 'https://open.spotify.com/search/Teologia%20para%20a%20Vida%20pastoral',
     durationAvg: '25 – 35 min',
     coverEmoji: '🕊',
-    badge: 'Vida Cristã'
+    badge: 'Vida Cristã',
+    episodes: [
+      {
+        id: 'tv-ep-1',
+        title: 'Paz no Casamento e no Lar à Luz de Efésios 5',
+        duration: '32 min',
+        date: 'Recente',
+        verseRef: 'Efésios 5:21-25',
+        summary: 'A mutualidade, o respeito e a imitação do amor sacrificial de Cristo na edificação do lar cristão.',
+        audioText: 'Como construir uma família sólida em tempos de desconstrução moral? Meditamos na exortação paulina sobre o amor sacrificial dos esposos e o respeito mútuo, refletindo a união de Cristo com a Sua noiva, a Igreja.'
+      }
+    ]
   },
   {
     id: 'pod-bibotalk',
@@ -169,7 +253,18 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     spotifyOrWebUrl: 'https://bibotalk.com',
     durationAvg: '50 – 70 min',
     coverEmoji: '🎙',
-    badge: 'Cosmovisão'
+    badge: 'Cosmovisão',
+    episodes: [
+      {
+        id: 'bt-ep-1',
+        title: 'O Cristão e o Trabalho: Santificando a Segunda-Feira',
+        duration: '55 min',
+        date: 'Recente',
+        verseRef: 'Colossenses 3:23-24',
+        summary: 'A dignidade do trabalho e como exercer sua vocação profissional como culto racional a Deus.',
+        audioText: 'Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor e não aos homens. Exploramos o conceito de vocação cristã e sacerdócio universal de todos os crentes na sociedade contemporânea.'
+      }
+    ]
   },
   {
     id: 'pod-desiring-god',
@@ -181,7 +276,18 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     spotifyOrWebUrl: 'https://www.desiringgod.org',
     durationAvg: '20 – 30 min',
     coverEmoji: '✨',
-    badge: 'Supremacia de Cristo'
+    badge: 'Supremacia de Cristo',
+    episodes: [
+      {
+        id: 'dg-ep-1',
+        title: 'A Maior Alegria da Alma é Conhecer a Deus',
+        duration: '22 min',
+        date: 'Destaque',
+        verseRef: 'Filipenses 3:8',
+        summary: 'Considero tudo como perda, pela excelência do conhecimento de Cristo Jesus, meu Senhor.',
+        audioText: 'Descubra a liberdade de encontrar a maior satisfação da sua vida em Deus. Quando Cristo é o nosso maior tesouro, o pecado perde o seu encanto enganoso e nossa adoração torna-se autêntica e inabalável.'
+      }
+    ]
   },
   {
     id: 'pod-santidade-sproul',
@@ -193,6 +299,17 @@ export const CHRISTIAN_PODCASTS: ChristianPodcast[] = [
     spotifyOrWebUrl: 'https://ministeriofiel.com.br',
     durationAvg: '30 – 40 min',
     coverEmoji: '👑',
-    badge: 'Clássico da Fé'
+    badge: 'Clássico da Fé',
+    episodes: [
+      {
+        id: 'sd-ep-1',
+        title: 'Santo, Santo, Santo: A Visão de Isaías no Templo',
+        duration: '36 min',
+        date: 'Clássico',
+        verseRef: 'Isaías 6:1-8',
+        summary: 'O encontro transformador de Isaías com a majestade transcendente do Senhor assentado sobre um alto e sublime trono.',
+        audioText: 'Ao contemplarmos a santidade divina, nossa resposta imediata é o reconhecimento da nossa fragilidade. Mas Deus provê a brasa viva do altar da expiação para purificar os nossos lábios e nos enviar à Sua seara.'
+      }
+    ]
   }
 ];

@@ -1,6 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { GOSPEL_RADIOS, CHRISTIAN_PODCASTS, GospelRadio, ChristianPodcast } from '../../data/radiosAndPodcasts';
-import { Radio, Play, Pause, Volume2, VolumeX, Mic, ExternalLink, Sparkles, Heart, Signal, Headphones, Share2, Check, Clock, ShieldCheck, Flame, BookOpen } from 'lucide-react';
+import { GOSPEL_RADIOS, CHRISTIAN_PODCASTS, GospelRadio, ChristianPodcast, PodcastEpisode } from '../../data/radiosAndPodcasts';
+import {
+  Radio,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  ExternalLink,
+  Sparkles,
+  Heart,
+  Signal,
+  Headphones,
+  Share2,
+  Check,
+  Clock,
+  ShieldCheck,
+  Flame,
+  BookOpen,
+  X,
+  Square,
+  ChevronRight,
+  BookmarkCheck,
+  RadioTower
+} from 'lucide-react';
 
 export const RadiosAndPodcastsView: React.FC = () => {
   const [activeRadio, setActiveRadio] = useState<GospelRadio>(GOSPEL_RADIOS[0]);
@@ -14,6 +36,11 @@ export const RadiosAndPodcastsView: React.FC = () => {
   const [sleepTimerMinutes, setSleepTimerMinutes] = useState<number | null>(null);
   const [sleepTimerRemaining, setSleepTimerRemaining] = useState<number | null>(null);
 
+  // Estado para o Modal / Hub de Episódios de Podcasts
+  const [selectedPodcast, setSelectedPodcast] = useState<ChristianPodcast | null>(null);
+  const [activeEpisode, setActiveEpisode] = useState<PodcastEpisode | null>(null);
+  const [isPlayingEpisodeAudio, setIsPlayingEpisodeAudio] = useState<boolean>(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const sleepTimerRef = useRef<any>(null);
 
@@ -22,6 +49,27 @@ export const RadiosAndPodcastsView: React.FC = () => {
       audioRef.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
+
+  // Cancelar narração de voz ao desmontar ou fechar
+  useEffect(() => {
+    return () => {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      if (sleepTimerRef.current) clearInterval(sleepTimerRef.current);
+    };
+  }, []);
+
+  // Fechar modal com a tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedPodcast) {
+        handleClosePodcastModal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPodcast]);
 
   // Gerenciamento do Sleep Timer
   useEffect(() => {
@@ -57,6 +105,9 @@ export const RadiosAndPodcastsView: React.FC = () => {
   }, [sleepTimerMinutes]);
 
   const handleSelectRadio = (radio: GospelRadio) => {
+    // Parar áudio de podcast se estiver tocando
+    stopEpisodeAudio();
+
     setActiveRadio(radio);
     setStreamError(false);
     setIsLoadingAudio(true);
@@ -87,6 +138,9 @@ export const RadiosAndPodcastsView: React.FC = () => {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
+      // Se estava narrando podcast, parar
+      stopEpisodeAudio();
+
       setStreamError(false);
       setIsLoadingAudio(true);
       if (!audioRef.current.src || audioRef.current.src !== activeRadio.streamUrl) {
@@ -107,6 +161,60 @@ export const RadiosAndPodcastsView: React.FC = () => {
           setStreamError(true);
         });
     }
+  };
+
+  const stopEpisodeAudio = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsPlayingEpisodeAudio(false);
+    setActiveEpisode(null);
+  };
+
+  const handlePlayEpisodeAudio = (episode: PodcastEpisode) => {
+    if (!('speechSynthesis' in window)) {
+      alert('Síntese de voz não suportada neste dispositivo.');
+      return;
+    }
+
+    // Se já estiver tocando este mesmo episódio, pausar/parar
+    if (isPlayingEpisodeAudio && activeEpisode?.id === episode.id) {
+      stopEpisodeAudio();
+      return;
+    }
+
+    // Pausar rádio ao vivo para focar no episódio
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+
+    stopEpisodeAudio();
+    setActiveEpisode(episode);
+    setIsPlayingEpisodeAudio(true);
+
+    const fullNarration = `${episode.title}. ${episode.summary}. Mensagem e reflexão: ${episode.audioText}`;
+    const utterance = new SpeechSynthesisUtterance(fullNarration);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 0.95;
+
+    const voices = window.speechSynthesis.getVoices();
+    const ptVoice = voices.find((v) => v.lang === 'pt-BR' || v.lang.startsWith('pt'));
+    if (ptVoice) utterance.voice = ptVoice;
+
+    utterance.onend = () => {
+      setIsPlayingEpisodeAudio(false);
+    };
+    utterance.onerror = () => {
+      setIsPlayingEpisodeAudio(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const handleClosePodcastModal = () => {
+    stopEpisodeAudio();
+    setSelectedPodcast(null);
   };
 
   const handleShareApp = () => {
@@ -241,7 +349,7 @@ export const RadiosAndPodcastsView: React.FC = () => {
                 )}
                 {streamError && !isLoadingAudio && (
                   <span className="inline-flex items-center gap-1.5 text-[11px] text-rose-300 font-semibold bg-rose-950/60 px-2.5 py-0.5 rounded-full border border-rose-500/30">
-                    <span className="w-2 h-2 rounded-full bg-rose-400" /> Sinal indisponível no momento. Escolha outra emissora abaixo.
+                    <span className="w-2 h-2 rounded-full bg-rose-400" /> Sinal temporariamente oscilante. Escolha outra emissora abaixo.
                   </span>
                 )}
               </div>
@@ -261,7 +369,7 @@ export const RadiosAndPodcastsView: React.FC = () => {
               ) : isPlaying ? (
                 <>
                   <Pause className="w-4 h-4 fill-white" />
-                  <span>Pausar</span>
+                  <span>Pausar Rádio</span>
                 </>
               ) : (
                 <>
@@ -350,7 +458,7 @@ export const RadiosAndPodcastsView: React.FC = () => {
         <div className="relative z-10 flex flex-wrap items-center justify-between text-[11px] text-amber-200/80 pt-2.5 border-t border-white/10 gap-2">
           <span className="flex items-center gap-1.5">
             <Signal className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-            Transmissão contínua em segundo plano enquanto você estuda a Palavra.
+            Transmissão contínua em segundo plano enquanto você lê ou ora.
           </span>
           <span className="text-white/60 flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
@@ -427,18 +535,25 @@ export const RadiosAndPodcastsView: React.FC = () => {
                 Podcasts Cristocêntricos & Sã Doutrina (Sem Heresias)
               </h2>
             </div>
-            <span className="text-xs text-stone-500">{CHRISTIAN_PODCASTS.length} programas</span>
+            <span className="text-xs text-stone-500">{CHRISTIAN_PODCASTS.length} programas disponíveis</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <p className="text-xs text-stone-500 dark:text-stone-400">
+            Clique em qualquer podcast para abrir seus episódios, ler as referências bíblicas e escutar no player integrado sem erros.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {CHRISTIAN_PODCASTS.map((podcast) => (
               <div
                 key={podcast.id}
-                className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-400 transition-all flex flex-col justify-between group"
+                onClick={() => setSelectedPodcast(podcast)}
+                className="p-4 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 hover:border-amber-500 hover:shadow-lg transition-all flex flex-col justify-between group cursor-pointer"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl">{podcast.coverEmoji}</span>
+                    <span className="text-3xl p-1.5 bg-stone-100 dark:bg-stone-800/80 rounded-2xl group-hover:scale-110 transition-transform">
+                      {podcast.coverEmoji}
+                    </span>
                     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
                       {podcast.badge}
                     </span>
@@ -448,12 +563,12 @@ export const RadiosAndPodcastsView: React.FC = () => {
                     <h3 className="font-serif font-bold text-sm text-stone-900 dark:text-stone-100 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
                       {podcast.title}
                     </h3>
-                    <p className="text-[11px] text-amber-700 dark:text-amber-400 font-medium">
+                    <p className="text-[11px] text-amber-700 dark:text-amber-400 font-semibold mt-0.5">
                       {podcast.hostOrMinistry}
                     </p>
                   </div>
 
-                  <p className="text-xs text-stone-500 dark:text-stone-400 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-stone-500 dark:text-stone-400 line-clamp-2 leading-relaxed">
                     {podcast.description}
                   </p>
 
@@ -470,19 +585,173 @@ export const RadiosAndPodcastsView: React.FC = () => {
                 </div>
 
                 <div className="pt-3 mt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between">
-                  <span className="text-[10px] text-stone-400">{podcast.durationAvg}</span>
-                  <a
-                    href={podcast.spotifyOrWebUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 dark:text-amber-400 hover:underline"
-                  >
-                    <span>Ouvir Episódios</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                  <span className="text-[10px] text-stone-400 font-medium">
+                    {podcast.episodes.length} episódios • {podcast.durationAvg}
+                  </span>
+                  <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 dark:text-amber-400 group-hover:translate-x-0.5 transition-transform">
+                    <span>Abrir Podcast</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL IN-APP: REPRODUTOR E VISUALIZADOR DE EPISÓDIOS DO PODCAST (SEM ERROS) */}
+      {selectedPodcast && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/70 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-scaleUp">
+            {/* Topo do Modal */}
+            <div className="p-5 sm:p-6 bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent border-b border-stone-200 dark:border-stone-800 flex items-start justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <span className="text-4xl sm:text-5xl p-2 rounded-2xl bg-amber-100 dark:bg-amber-950/80 shadow-md">
+                  {selectedPodcast.coverEmoji}
+                </span>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                      {selectedPodcast.badge}
+                    </span>
+                    <span className="text-[11px] text-stone-500 dark:text-stone-400">
+                      {selectedPodcast.durationAvg}
+                    </span>
+                  </div>
+                  <h3 className="font-serif font-bold text-lg sm:text-xl text-stone-900 dark:text-stone-100">
+                    {selectedPodcast.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-amber-700 dark:text-amber-400 font-semibold">
+                    {selectedPodcast.hostOrMinistry}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleClosePodcastModal}
+                className="p-2 rounded-xl text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors shrink-0"
+                title="Fechar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Conteúdo com Rolagem */}
+            <div className="p-5 sm:p-6 overflow-y-auto space-y-5 scrollbar-thin">
+              {/* Descrição & Foco Teológico */}
+              <div className="bg-stone-50 dark:bg-stone-800/40 p-4 rounded-2xl border border-stone-100 dark:border-stone-800 space-y-2">
+                <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                  {selectedPodcast.description}
+                </p>
+                <div className="flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300 font-medium pt-1">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Foco Doutrinário: {selectedPodcast.theologicalFocus}</span>
+                </div>
+              </div>
+
+              {/* Lista de Episódios Disponíveis */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100 flex items-center gap-1.5">
+                    <Headphones className="w-4 h-4 text-amber-600" />
+                    <span>Episódios & Ministrações em Áudio</span>
+                  </h4>
+                  <span className="text-xs text-stone-400 font-mono">
+                    {selectedPodcast.episodes.length} episódios
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {selectedPodcast.episodes.map((ep) => {
+                    const isCurrentlyPlaying = isPlayingEpisodeAudio && activeEpisode?.id === ep.id;
+                    return (
+                      <div
+                        key={ep.id}
+                        className={`p-4 rounded-2xl border transition-all space-y-3 ${
+                          isCurrentlyPlaying
+                            ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 shadow-sm ring-2 ring-amber-500/20'
+                            : 'bg-white dark:bg-stone-800/60 border-stone-200 dark:border-stone-700/60 hover:border-amber-400'
+                        }`}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400">
+                              {ep.duration}
+                            </span>
+                            <span className="text-stone-400">•</span>
+                            <span className="text-xs text-stone-500">{ep.date}</span>
+                          </div>
+
+                          {ep.verseRef && (
+                            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950 px-2 py-0.5 rounded-lg self-start sm:self-auto border border-amber-300/40">
+                              <BookOpen className="w-3 h-3" />
+                              {ep.verseRef}
+                            </span>
+                          )}
+                        </div>
+
+                        <div>
+                          <h5 className="font-serif font-bold text-sm sm:text-base text-stone-900 dark:text-stone-100">
+                            {ep.title}
+                          </h5>
+                          <p className="text-xs text-stone-600 dark:text-stone-300 mt-1 leading-relaxed">
+                            {ep.summary}
+                          </p>
+                        </div>
+
+                        {/* Player de Narração do Episódio */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-stone-100 dark:border-stone-700/40">
+                          <button
+                            onClick={() => handlePlayEpisodeAudio(ep)}
+                            className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all shadow-sm ${
+                              isCurrentlyPlaying
+                                ? 'bg-amber-600 text-white animate-pulse'
+                                : 'bg-amber-50 dark:bg-amber-950/60 text-amber-900 dark:text-amber-300 hover:bg-amber-100 border border-amber-300 dark:border-amber-800'
+                            }`}
+                          >
+                            {isCurrentlyPlaying ? (
+                              <>
+                                <Square className="w-3.5 h-3.5 fill-white" />
+                                <span>Parar Narração</span>
+                              </>
+                            ) : (
+                              <>
+                                <Play className="w-3.5 h-3.5 fill-current" />
+                                <span>Ouvir Mensagem no App</span>
+                              </>
+                            )}
+                          </button>
+
+                          <a
+                            href={selectedPodcast.spotifyOrWebUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-stone-600 dark:text-stone-400 hover:text-amber-700 dark:hover:text-amber-300 hover:underline"
+                          >
+                            <span>Abrir no Canal Oficial / Spotify</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Rodapé do Modal */}
+            <div className="p-4 bg-stone-50 dark:bg-stone-800/80 border-t border-stone-200 dark:border-stone-800 flex items-center justify-between">
+              <span className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1.5">
+                <BookmarkCheck className="w-3.5 h-3.5 text-emerald-500" />
+                Conteúdo doutrinariamente verificado sem heresias
+              </span>
+              <button
+                onClick={handleClosePodcastModal}
+                className="px-4 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-700 hover:bg-stone-300 dark:hover:bg-stone-600 text-xs font-semibold text-stone-800 dark:text-stone-100 transition-colors"
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         </div>
       )}

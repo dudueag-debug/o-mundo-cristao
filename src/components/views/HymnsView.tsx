@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { COMPLETE_HYMNAL, DetailedHymn } from '../../data/hymnalData';
-import { Music, Search, Volume2, Square, Copy, Check, Type, Flame, Sparkles } from 'lucide-react';
+import { Music, Search, Volume2, Square, Copy, Check, Type, Flame, Sparkles, Hash, ArrowRight } from 'lucide-react';
 
 export const HymnsView: React.FC = () => {
   const [selectedHymn, setSelectedHymn] = useState<DetailedHymn>(COMPLETE_HYMNAL[0]);
@@ -9,6 +9,7 @@ export const HymnsView: React.FC = () => {
   const [fontSize, setFontSize] = useState<'sm' | 'md' | 'lg'>('md');
   const [copiedHymn, setCopiedHymn] = useState(false);
   const [isSpeakingHymn, setIsSpeakingHymn] = useState<boolean>(false);
+  const [jumpNumber, setJumpNumber] = useState<string>('');
 
   useEffect(() => {
     return () => {
@@ -58,23 +59,67 @@ export const HymnsView: React.FC = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  const filteredHymns = COMPLETE_HYMNAL.filter((h) => {
-    const matchesCategory =
-      selectedCategory === 'all' ||
-      (selectedCategory === 'harpa' && h.category === 'harpa') ||
-      (selectedCategory === 'wesleyano' && (h.category === 'wesleyano' || h.category === 'imw-oficial')) ||
-      (selectedCategory === 'classico' && h.category === 'classico');
+  const handleJumpToNumber = (e: React.FormEvent) => {
+    e.preventDefault();
+    const num = parseInt(jumpNumber.trim(), 10);
+    if (!num) return;
 
-    const query = searchQuery.toLowerCase().trim();
-    const matchesQuery =
-      h.title.toLowerCase().includes(query) ||
-      h.number.toString().includes(query) ||
-      h.author.toLowerCase().includes(query) ||
-      h.biblicalTheme.toLowerCase().includes(query) ||
-      h.lyrics.some(v => v.toLowerCase().includes(query));
+    // Buscar hino pelo número exato
+    const found = COMPLETE_HYMNAL.find(h => {
+      if (selectedCategory === 'wesleyano' || selectedCategory === 'imw-oficial') {
+        return h.number === num && (h.category === 'wesleyano' || h.category === 'imw-oficial');
+      }
+      return h.number === num && h.category === 'harpa';
+    }) || COMPLETE_HYMNAL.find(h => h.number === num);
 
-    return matchesCategory && matchesQuery;
-  });
+    if (found) {
+      handleStopHymnAudio();
+      setSelectedHymn(found);
+      setJumpNumber('');
+    }
+  };
+
+  const filteredHymns = useMemo(() => {
+    return COMPLETE_HYMNAL.filter((h) => {
+      let matchesCategory = true;
+      if (selectedCategory === 'all') {
+        matchesCategory = true;
+      } else if (selectedCategory === 'harpa-all') {
+        matchesCategory = h.category === 'harpa';
+      } else if (selectedCategory === 'r-1-100') {
+        matchesCategory = h.category === 'harpa' && h.number >= 1 && h.number <= 100;
+      } else if (selectedCategory === 'r-101-200') {
+        matchesCategory = h.category === 'harpa' && h.number >= 101 && h.number <= 200;
+      } else if (selectedCategory === 'r-201-300') {
+        matchesCategory = h.category === 'harpa' && h.number >= 201 && h.number <= 300;
+      } else if (selectedCategory === 'r-301-400') {
+        matchesCategory = h.category === 'harpa' && h.number >= 301 && h.number <= 400;
+      } else if (selectedCategory === 'r-401-500') {
+        matchesCategory = h.category === 'harpa' && h.number >= 401 && h.number <= 500;
+      } else if (selectedCategory === 'r-501-640') {
+        matchesCategory = h.category === 'harpa' && h.number >= 501 && h.number <= 640;
+      } else if (selectedCategory === 'wesleyano') {
+        matchesCategory = h.category === 'wesleyano' || h.category === 'imw-oficial';
+      } else if (selectedCategory === 'classico') {
+        matchesCategory = h.category === 'classico';
+      }
+
+      if (!matchesCategory) return false;
+
+      const query = searchQuery.toLowerCase().trim();
+      if (!query) return true;
+
+      return (
+        h.title.toLowerCase().includes(query) ||
+        h.number.toString() === query ||
+        h.number.toString().includes(query) ||
+        h.author.toLowerCase().includes(query) ||
+        h.biblicalTheme.toLowerCase().includes(query) ||
+        h.lyrics.some(v => v.toLowerCase().includes(query)) ||
+        (h.chorus && h.chorus.toLowerCase().includes(query))
+      );
+    });
+  }, [selectedCategory, searchQuery]);
 
   const handleCopyLyrics = () => {
     let text = `🎶 ${selectedHymn.title} (Nº ${selectedHymn.number})\n`;
@@ -112,13 +157,16 @@ export const HymnsView: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-4">
         <div>
           <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-semibold text-xs uppercase tracking-widest mb-1">
-            <Music className="w-4 h-4" /> Cânticos Sagrados & Hinologia Histórica
+            <Music className="w-4 h-4" /> Cânticos Sagrados & Hinologia Completa
           </div>
-          <h1 className="font-serif font-bold text-2xl sm:text-3xl text-stone-900 dark:text-stone-100">
-            Harpa Cristã & Hinário da Wesleyana
+          <h1 className="font-serif font-bold text-2xl sm:text-3xl text-stone-900 dark:text-stone-100 flex items-center gap-2.5">
+            <span>Harpa Cristã (640 Hinos) & Hinário Wesleyano</span>
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 font-mono font-bold">
+              {COMPLETE_HYMNAL.length} Hinos
+            </span>
           </h1>
           <p className="text-xs sm:text-sm text-stone-600 dark:text-stone-400 mt-1 max-w-2xl">
-            Letras completas dos hinos oficiais da IMW, composições de Charles Wesley e hinos clássicos da Harpa Cristã.
+            Todos os 640 hinos da Harpa Cristã com estrofes e refrões completos, hinos oficiais da IMW e poemas sacros de Charles Wesley.
           </p>
         </div>
 
@@ -154,48 +202,85 @@ export const HymnsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Busca e Filtros de Categoria Fluidos */}
-      <div className="space-y-3">
-        <div className="relative">
+      {/* Barra de Busca e Atalho Rápido de Número */}
+      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+        {/* Campo de Pesquisa Geral */}
+        <div className="sm:col-span-8 relative">
           <Search className="w-4 h-4 absolute left-3.5 top-3 text-stone-400" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Pesquisar por número (ex: 1, 15, 107, 291), título ou autor (Wesley, Harpa)..."
+            placeholder="Pesquisar por título, letra ou autor (ex: Chuvas de Graça, Wesley, Cruz)..."
             className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 focus:outline-none focus:ring-2 focus:ring-amber-500/50 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 transition-colors shadow-sm"
           />
         </div>
 
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none text-xs">
-          {[
-            { id: 'all', label: `Todos os Hinos (${COMPLETE_HYMNAL.length})` },
-            { id: 'harpa', label: 'Harpa Cristã (Oficial)' },
-            { id: 'wesleyano', label: 'Hinário Wesleyano & IMW' },
-            { id: 'classico', label: 'Clássicos da Fé' },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3.5 py-1.5 rounded-xl font-semibold whitespace-nowrap transition-colors ${
-                selectedCategory === cat.id
-                  ? 'bg-amber-800 text-white dark:bg-amber-700 shadow-sm'
-                  : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+        {/* Atalho "Ir direto para o Hino nº..." */}
+        <form onSubmit={handleJumpToNumber} className="sm:col-span-4 flex items-center gap-1.5">
+          <div className="relative flex-1">
+            <Hash className="w-4 h-4 absolute left-3 top-3 text-amber-600" />
+            <input
+              type="number"
+              min="1"
+              max="640"
+              value={jumpNumber}
+              onChange={(e) => setJumpNumber(e.target.value)}
+              placeholder="Ir p/ Hino nº (1-640)..."
+              className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm rounded-2xl bg-white dark:bg-stone-900 border border-amber-300 dark:border-amber-800/80 focus:outline-none focus:ring-2 focus:ring-amber-500 text-stone-900 dark:text-stone-100 placeholder:text-stone-400 shadow-sm"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-3.5 py-2.5 rounded-2xl bg-amber-700 hover:bg-amber-800 text-white font-semibold text-xs flex items-center gap-1 shrink-0 transition-all shadow-sm"
+            title="Ir para o hino"
+          >
+            <span>Ir</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </form>
+      </div>
+
+      {/* Filtros de Categoria e Faixas da Harpa Cristã (1 a 640) */}
+      <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
+        {[
+          { id: 'all', label: `Todos (${COMPLETE_HYMNAL.length})` },
+          { id: 'harpa-all', label: 'Harpa Completa (640)' },
+          { id: 'r-1-100', label: 'Hinos 1 – 100' },
+          { id: 'r-101-200', label: 'Hinos 101 – 200' },
+          { id: 'r-201-300', label: 'Hinos 201 – 300' },
+          { id: 'r-301-400', label: 'Hinos 301 – 400' },
+          { id: 'r-401-500', label: 'Hinos 401 – 500' },
+          { id: 'r-501-640', label: 'Hinos 501 – 640' },
+          { id: 'wesleyano', label: 'Wesleyano & IMW' },
+          { id: 'classico', label: 'Clássicos da Fé' },
+        ].map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setSelectedCategory(cat.id)}
+            className={`px-3 py-1.5 rounded-xl font-semibold whitespace-nowrap transition-colors ${
+              selectedCategory === cat.id
+                ? 'bg-amber-800 text-white dark:bg-amber-700 shadow-sm'
+                : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
       </div>
 
       {/* Grid Principal Fluido */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Lista Lateral de Hinos */}
-        <div className="lg:col-span-5 space-y-2 max-h-[620px] overflow-y-auto pr-1 scrollbar-thin">
+        <div className="lg:col-span-5 space-y-2 max-h-[640px] overflow-y-auto pr-1 scrollbar-thin">
+          <div className="text-[11px] text-stone-400 font-medium px-1 flex items-center justify-between">
+            <span>Listando {filteredHymns.length} hinos</span>
+            <span className="font-mono">Total no app: {COMPLETE_HYMNAL.length}</span>
+          </div>
+
           {filteredHymns.length === 0 ? (
             <div className="p-8 text-center bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 text-xs text-stone-500">
-              Nenhum hino encontrado para os filtros selecionados.
+              Nenhum hino encontrado para os filtros selecionados. Tente buscar pelo número ou título.
             </div>
           ) : (
             filteredHymns.map((hymn) => {
@@ -226,7 +311,7 @@ export const HymnsView: React.FC = () => {
                     {hymn.title}
                   </h3>
                   <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5 line-clamp-1">
-                    {hymn.author}
+                    {hymn.author} • {hymn.biblicalTheme}
                   </p>
                 </div>
               );
@@ -241,6 +326,9 @@ export const HymnsView: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
                   {selectedHymn.categoryLabel} • Nº {selectedHymn.number}
+                </span>
+                <span className="text-xs text-stone-400 font-mono">
+                  {selectedHymn.lyrics.length} estrofes {selectedHymn.chorus ? '+ refrão' : ''}
                 </span>
               </div>
               <h2 className="font-serif font-bold text-xl sm:text-2xl text-stone-900 dark:text-stone-100 mt-1">
