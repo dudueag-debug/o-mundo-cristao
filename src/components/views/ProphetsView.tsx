@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BIBLICAL_PROPHETS, BiblicalProphet } from '../../data/biblicalProphets';
-import { Scroll, Search, BookOpen, Sparkles, ChevronRight, X, Copy, Check, ShieldAlert, HeartHandshake, Flame, Calendar, Award } from 'lucide-react';
+import { Scroll, Search, BookOpen, Sparkles, ChevronRight, X, Copy, Check, ShieldAlert, HeartHandshake, Flame, Calendar, Award, Landmark } from 'lucide-react';
 
 export const ProphetsView: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<'all' | 'maior' | 'menor'>('all');
@@ -279,6 +279,30 @@ export const ProphetsView: React.FC = () => {
                   {activeProphet.centralMessage}
                 </p>
               </div>
+
+              {/* Ênfase Teológica e Atributos Divinos */}
+              {activeProphet.theologicalEmphasis && (
+                <div className="space-y-2">
+                  <h4 className="font-serif font-bold text-sm uppercase tracking-wider text-indigo-900 dark:text-indigo-400 flex items-center gap-2">
+                    <Landmark className="w-4 h-4 text-indigo-600" /> Ênfase Teológica & Doutrina de Deus
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed bg-indigo-50/60 dark:bg-indigo-950/30 p-4 rounded-2xl border border-indigo-200 dark:border-indigo-900/40">
+                    {activeProphet.theologicalEmphasis}
+                  </p>
+                </div>
+              )}
+
+              {/* Tipologia Cristológica e Novo Testamento */}
+              {activeProphet.typologicalChristology && (
+                <div className="space-y-2">
+                  <h4 className="font-serif font-bold text-sm uppercase tracking-wider text-amber-800 dark:text-amber-400 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-600" /> Tipologia Cristológica & Cumprimento no Novo Testamento
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed bg-amber-50/70 dark:bg-stone-800/80 p-4 rounded-2xl border border-amber-300/60 dark:border-stone-700">
+                    {activeProphet.typologicalChristology}
+                  </p>
+                </div>
+              )}
 
               {/* 4. Como Aponta para Jesus Cristo (Profecias Messiânicas) */}
               <div className="space-y-2">

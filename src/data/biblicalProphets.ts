@@ -16,6 +16,8 @@ export interface BiblicalProphet {
   centralMessage: string;
   messianicProphecies: string[];
   keyThemes: string[];
+  theologicalEmphasis?: string;
+  typologicalChristology?: string;
   goldenVerse: {
     reference: string;
     text: string;
@@ -46,6 +48,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O Servo Sofredor que levou sobre Si as nossas enfermidades e foi traspassado pelas nossas iniquidades (Is 53).',
       'A unção do Messias para pregar boas-novas aos mansos (Is 61:1-2, lido por Jesus na sinagoga de Nazaré em Lucas 4).'
     ],
+    theologicalEmphasis: 'Teologia da Glória e Santidade Transcendental (Qadosh Israel): Isaías apresenta a mais sublime visão da soberania de Deus no Antigo Testamento. A santidade divina consome o pecado e purifica o remanescente fiel, unindo majestade e misericórdia.',
+    typologicalChristology: 'O Evangelho no Antigo Testamento: o Cântico do Servo Sofredor (Is 52:13-53:12) é o ápice da profecia da expiação penal substitutiva, cumprida integralmente no Gólgota por Jesus Cristo.',
     keyThemes: ['Santidade de Deus', 'Graça Redentora', 'O Messias Sofredor e Glorioso', 'Novo Céu e Nova Terra'],
     goldenVerse: {
       reference: 'Isaías 53:5',
@@ -69,6 +73,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A Nova Aliança gravada no coração humano: "Porei a minha lei no seu interior, e a escreverei no seu coração; e eu serei o seu Deus e eles serão o meu povo" (Jr 31:31-34, cumprida na Santa Ceia e na cruz por Jesus).',
       'O Renovo Justo de Davi que reinará com sabedoria e cujo nome será "O Senhor, Justiça Nossa" (Jr 23:5-6).'
     ],
+    theologicalEmphasis: 'Pactologia e Soberania na Providência: o Deus que quebra e refaz o vaso no torno do oleiro. A decadência moral da religião exteriorizada conduz à necessidade insubstituível da regeneração interior.',
+    typologicalChristology: 'A Nova Aliança (Jeremias 31:31-34): Jesus institui formalmente esta Nova Aliança no cenáculo ao consagrar o cálice da Ceia do Senhor ("Este cálice é a Nova Aliança no Meu sangue").',
     keyThemes: ['Arrependimento Interior', 'O Vaso de Barro', 'A Nova Aliança', 'Soberania de Deus nos Sofrimentos'],
     goldenVerse: {
       reference: 'Jeremias 29:11',
@@ -92,6 +98,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'Aponta para Cristo como o Homem de Dores que chorou sobre Jerusalém (Lc 19:41) e que assumiu o cálice da ira divina em favor do Seu povo.',
       'A renovação diária da graça que culmina na salvação eterna proporcionada pela cruz.'
     ],
+    theologicalEmphasis: 'Teologia da Teodiceia e Fidelidade Soberana: o justo julgamento de Deus sobre o pecado não anula a Sua compaixão pactual. Em meio aos escombros, "as misericórdias do Senhor não têm fim".',
+    typologicalChristology: 'O Homem de Dores que chora sobre Jerusalém: Jesus repete a dor de Jeremias ao chorar sobre a cidade que rejeitou a paz (Lucas 19:41-44), suportando a destruição vicariamente na cruz.',
     keyThemes: ['Lamento Santo', 'Fidelidade de Deus', 'Misericórdias Inesgotáveis', 'Esperança nas Ruínas'],
     goldenVerse: {
       reference: 'Lamentações 3:22-23',
@@ -116,6 +124,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A promessa do Novo Espírito e Novo Coração: "Dar-vos-ei coração novo e porei dentro de vós espírito novo; tirarei de vós o coração de pedra e vos darei coração de carne" (Ez 36:26).',
       'O Rio de Águas Vivas que sara tudo por onde passa (Ez 47, João 7:38 e Apocalipse 22).'
     ],
+    theologicalEmphasis: 'A Glória Divina (Kavod Yahweh) e Pneumatologia do Novo Nascimento: a saída e o retorno da glória do Senhor ao Templo, culminando na promessa da troca do coração de pedra por um coração de carne pelo Espírito.',
+    typologicalChristology: 'O Bom Pastor Soberano (Ezequiel 34): Yahweh pessoalmente apascentará Suas ovelhas e suscitará o Seu servo Davi como Pastor Supremo, cumprido em Jesus em João 10.',
     keyThemes: ['Visão da Glória', 'O Atalaia Espiritual', 'Ressurreição Nacional (Ossos Secos)', 'Coração Novo', 'Restauração'],
     goldenVerse: {
       reference: 'Ezequiel 36:26',
@@ -140,6 +150,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A Pedra cortada sem auxílio de mãos que esmiúça as estátuas dos impérios humanos e se torna uma grande montanha que enche toda a terra (Dn 2:34-45).',
       'A profecia cronológica exata das 70 Semanas e a morte expiatória do Ungido (Messias) para dar fim ao pecado (Dn 9:24-26).'
     ],
+    theologicalEmphasis: 'Escatologia Cósmica e Teocracia Universal: o Altíssimo tem domínio sobre o reino dos homens e o dá a quem quer. Nenhum império mundano prevalecerá contra o Reino eterno de Deus.',
+    typologicalChristology: 'O Filho do Homem e a Pedra Não Cortada por Mãos: a visão gloriosa de Daniel 7:13-14 de Cristo recebendo autoridade e adoração perpétua de todos os povos, línguas e nações.',
     keyThemes: ['Fidelidade Inabalável', 'Soberania nos Impérios', 'O Filho do Homem', 'A Cova dos Leões', 'Apocalipse Bíblico'],
     goldenVerse: {
       reference: 'Daniel 7:14',
@@ -168,6 +180,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A redenção na ressurreição ao terceiro dia: "Depois de dois dias nos ressuscitará; ao terceiro dia nos levantará, e viveremos diante dele" (Os 6:2).',
       'A vitória sobre o poder da morte e da sepultura: "Onde estão, ó morte, as tuas pragas? Onde está, ó sepultura, a tua perdição?" (Os 13:14 e 1 Co 15:55).'
     ],
+    theologicalEmphasis: 'O Amor Incondicional Pactual (Hesed): o casamento trágico de Oseias com Gômer ilustra o adultério espiritual de Israel e o ciúme santo de Deus que resgata Sua noiva pelo preço do sangue.',
+    typologicalChristology: 'Cristo, o Noivo Fiel da Igreja: que comprou a Sua noiva pecadora e a purificou com o Seu próprio sangue, transformando o "Não-Meu-Povo" (Lo-Ami) em Filhos do Deus Vivo.',
     keyThemes: ['Amor Leal de Deus', 'Perdão e Restauração', 'Conhecer a Deus', 'O Resgate da Noiva Infiel'],
     goldenVerse: {
       reference: 'Oseias 6:3',
@@ -191,6 +205,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O derramamento do Espírito Santo no Pentecostes: "E há de ser que, depois, derramarei o meu Espírito sobre toda a carne; vossos filhos e vossas filhas profetizarão..." (Jl 2:28-32, citado por Pedro na inauguração da Igreja em Atos 2:16-21).',
       'A salvação universal invocando o Nome Santo: "Todo aquele que invocar o nome do Senhor será salvo" (Jl 2:32 e Rm 10:13).'
     ],
+    theologicalEmphasis: 'A Doutrina do "Dia do Senhor" (Yom Yahweh) e a Promessa Pentecostal: o arrependimento com rasgar do coração e o derramamento universal do Espírito Santo sobre toda carne.',
+    typologicalChristology: 'O Doador do Espírito Santo: profecia de Joel 2 cumprida em Atos 2 em Pentecostes, onde todo aquele que invocar o Nome do Senhor será salvo.',
     keyThemes: ['O Dia do Senhor', 'Arrependimento de Coração', 'Restituição Divina', 'O Avivamento do Espírito'],
     goldenVerse: {
       reference: 'Joel 2:28',
@@ -214,6 +230,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A restauração da Tenda Caída de Davi: "Naquele dia tornarei a levantar o tabernáculo caído de Davi... e o reedificarei como nos dias antigos" (Am 9:11, aplicado em Tiago e nos Apóstolos em Atos 15:16-17 para a inclusão de gentios e de toda a humanidade em Cristo).',
       'O Senhor como leão que ruge trazendo restauração messiânica final.'
     ],
+    theologicalEmphasis: 'Justiça Social e Ortodoxia Ética: a condenação veemente do culto hipócrita e ritualista desprovido de compaixão e retidão prática ("Corra a justiça como as águas").',
+    typologicalChristology: 'A Restauração do Tabernáculo Caído de Davi (Amós 9:11): aplicado pelo Concílio de Jerusalém em Atos 15:16-17 à inclusão dos gentios no corpo de Cristo.',
     keyThemes: ['Justiça Social', 'Fidelidade Ética', 'A Tenda de Davi Restaurada', 'Rugido do Leão'],
     goldenVerse: {
       reference: 'Amós 5:24',
@@ -236,6 +254,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
     messianicProphecies: [
       'A soberania absoluta do Reino de Deus: "E o reino será do Senhor" (Ob 1:21), antevendo a vitória definitiva do Messias sobre todos os inimigos espirituais e materiais de Seu povo.'
     ],
+    theologicalEmphasis: 'A Queda do Orgulho Carnal e a Justiça Retributiva: o julgamento de Edom por sua violência contra Jacó prova que o orgulho humano antecede a ruína total.',
+    typologicalChristology: 'O Triunfo de Sião e o Reino do Senhor: a vitória final em Cristo sobre os adversários espirituais, inaugurando o Reino Messiânico eterno.',
     keyThemes: ['Queda da Soberba', 'Juízo da Traição', 'Solidariedade com o Aflito', 'O Triunfo do Reino do Senhor'],
     goldenVerse: {
       reference: 'Obadias 1:21',
@@ -259,6 +279,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O Sinal de Jonas: Os três dias e três noites no ventre do peixe foram explicitamente destacados por Jesus como o grande sinal profético de Sua própria morte, sepultamento e gloriosa ressurreição ao terceiro dia (Mateus 12:39-40).',
       'Jesus como Alguém maior do que Jonas que prega o amor salvador às nações.'
     ],
+    theologicalEmphasis: 'A Universalidade Soberana da Graça e da Misericórdia: Deus ama e tem compaixão inclusive dos inimigos mais cruéis de Israel (Nínive) quando há arrependimento.',
+    typologicalChristology: 'O Sinal de Jonas: três dias e três noites no ventre do grande peixe como tipo profético explícito da Morte e Ressurreição de Jesus ao terceiro dia (Mateus 12:40).',
     keyThemes: ['Soberania Divina', 'Fuga da Vocação', 'O Arrependimento de Nínive', 'A Compaixão que Abraça o Mundo'],
     goldenVerse: {
       reference: 'Jonas 2:9',
@@ -282,6 +304,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A profecia exata da cidade natal do Messias: "E tu, Belém Efrata, posto que pequena entre os milhares de Judá, de ti me sairá o que há de reinar em Israel, e cujas saídas são desde os tempos antigos, desde os dias da eternidade" (Mq 5:2, citado pelos magos e sacerdotes em Mateus 2:6).',
       'O perdão gracioso que lança todos os pecados nas profundezas dos mares (Mq 7:19).'
     ],
+    theologicalEmphasis: 'Humildade, Justiça e Perdão Incomparável: "Quem é Deus semelhante a Ti, que perdoa a iniquidade e lança os pecados no fundo do mar?".',
+    typologicalChristology: 'O Nascimento em Belém de Éfrata (Miqueias 5:2): profecia exata de que o Governador de Israel, cujas origens são desde os dias da eternidade, nasceria na humilde Belém.',
     keyThemes: ['Prática da Justiça', 'Humildade Diante de Deus', 'O Nascimento em Belém', 'Pecados no Fundo do Mar'],
     goldenVerse: {
       reference: 'Miqueias 6:8',
@@ -304,6 +328,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
     messianicProphecies: [
       'A proclamação das boas-novas de paz: "Eis sobre os montes os pés do que traz boas-novas, do que anuncia a paz!" (Na 1:15, ecoado em Romanos 10:15 e aplicado aos mensageiros do Evangelho de Cristo).'
     ],
+    theologicalEmphasis: 'A Soberania da Ira Santa de Deus Contra a Crueldade Tirânica: Deus é tardio em irar-se, mas não inocenta o culpado persistente.',
+    typologicalChristology: 'O Evangelho das Boas-Novas de Paz: "Eis sobre os montes os pés do que traz boas-novas, do que anuncia a paz!" (Naum 1:15), prenunciando a proclamação redentora de Cristo.',
     keyThemes: ['Soberania Divina', 'Fim da Tirania', 'Refúgio no Dia da Angústia', 'As Boas-Novas de Paz'],
     goldenVerse: {
       reference: 'Naum 1:7',
@@ -327,6 +353,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'A doutrina da justificação pela fé em Cristo Jesus: "O justo viverá pela sua fé" (Hc 2:4; Rm 1:17; Gl 3:11; Hb 10:38).',
       'A terra cheia do conhecimento da glória do Senhor como as águas cobrem o mar (Hc 2:14).'
     ],
+    theologicalEmphasis: 'A Teodiceia e a Fé Triunfante: o diálogo perplexo do profeta diante do mistério do mal, culminando no pilar da fé: "O justo viverá pela sua fé" (Habacuque 2:4).',
+    typologicalChristology: 'O Fundamento da Justificação Neotestamentária: o verso de ouro de Habacuque 2:4 citado três vezes no NT (Romanos 1:17; Gálatas 3:11; Hebreus 10:38) alicerça a justificação pela fé em Cristo.',
     keyThemes: ['A Torre de Vigia', 'O Justo Vive pela Fé', 'A Soberania nos Mistérios', 'Alegria Incondicional em Deus'],
     goldenVerse: {
       reference: 'Habacuque 3:17-18',
@@ -350,6 +378,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'Deus no meio do Seu povo como Salvador Poderoso que Se alegra com júbilo (Sf 3:17), imagem viva da encarnação de Jesus e do amor esponsal de Cristo por Sua Igreja.',
       'A reunião dos dispersos e coxos sarados pelo Messias (Sf 3:19).'
     ],
+    theologicalEmphasis: 'O Juízo Depurador e o Remanescente Fiel: a ira santa que consome a idolatria para suscitar um povo manso e humilde que confia no nome de Yahweh.',
+    typologicalChristology: 'O Senhor que Se Alegra com Júbilo em Seu Povo (Sofonias 3:17): Cristo, o Rei presente no meio da Sua Igreja, silenciando o medo com o Seu eterno amor.',
     keyThemes: ['O Dia do Senhor', 'Purificação do Remanescente', 'O Cântico de Amor de Deus', 'Paz em Sião'],
     goldenVerse: {
       reference: 'Sofonias 3:17',
@@ -373,6 +403,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O Desejado de Todas as Nações e a Glória do Segundo Templo: "E farei tremer todas as nações, e virá o Desejado de todas as nações, e encherei esta casa de glória... A glória desta última casa será maior do que a da primeira" (Ag 2:7,9, cumprido quando o próprio Senhor Jesus Cristo entrou fisicamente naquele Segundo Templo trazendo a paz eterna).',
       'Zorobabel estabelecido como anel de selar messiânico (Ag 2:23).'
     ],
+    theologicalEmphasis: 'As Prioridades do Reino de Deus: o chamado solene para reconstruir o Templo do Senhor antes de edificar palácios egoístas ("Buscai primeiro o Reino").',
+    typologicalChristology: 'A Glória da Segunda Casa (Ageu 2:9): a maior glória do Templo reconstruído não foi o ouro, mas a presença física do próprio Deus Encarnado, Jesus Cristo, ensinando em seus átrios.',
     keyThemes: ['Prioridade do Reino', 'Reconstrução Espiritual', 'A Glória da Segunda Casa', 'O Desejado das Nações'],
     goldenVerse: {
       reference: 'Ageu 2:9',
@@ -399,6 +431,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O Pastor ferido e a dispersão das ovelhas (Zc 13:7; Mt 26:31).',
       'A Fonte aberta para purificação do pecado e da imundícia (Zc 13:1).'
     ],
+    theologicalEmphasis: 'Cristologia Messiânica e a Ação do Espírito: "Não por força nem por violência, mas pelo Meu Espírito, diz o Senhor dos Exércitos".',
+    typologicalChristology: 'As Profecias Mais Ricas do Messias: a entrada triunfal em Jerusalém montado num jumentinho (Zc 9:9), as trinta moedas de prata (Zc 11:12-13) e "olharão para Aquele a quem traspassaram" (Zc 12:10).',
     keyThemes: ['Pelo Meu Espírito', 'O Renovo Real e Sacerdotal', 'O Rei no Jumentinho', 'As 30 Moedas', 'O Traspassado'],
     goldenVerse: {
       reference: 'Zacarias 4:6',
@@ -423,6 +457,8 @@ export const BIBLICAL_PROPHETS: BiblicalProphet[] = [
       'O Anjo da Aliança que virá subitamente ao Seu Templo (Ml 3:1).',
       'O Sol da Justiça que traz salvação e cura em Suas asas: "Mas para vós, os que temeis o meu nome, nascerá o sol da justiça, e cura trará nas suas asas" (Ml 4:2, Jesus Cristo a Luz do Mundo).'
     ],
+    theologicalEmphasis: 'Fidelidade Pactual, Santidade do Dízimo e o Altar do Matrimônio: o confronto da sonolência e cinismo religioso com a majestade do Deus que não muda.',
+    typologicalChristology: 'O Sol da Justiça que Traz Cura nas Suas Asas (Malaquias 4:2): o encerramento do cânon profético anunciando o envio do mensageiro (João Batista) e a aurora gloriosa de Jesus Cristo.',
     keyThemes: ['Aliança de Honra', 'Dízimos e Provisão', 'O Fogo do Ourives', 'O Sol da Justiça', 'Fechamento do AT'],
     goldenVerse: {
       reference: 'Malaquias 4:2',

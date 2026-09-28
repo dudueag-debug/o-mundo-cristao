@@ -3,7 +3,6 @@ import { DAILY_DEVOTIONALS, EMOTIONAL_CHECKINS } from '../../data/devotionalData
 import { MomentoComOPaiCard } from '../devotional/MomentoComOPaiCard';
 import { JornadaSemanalDaFeCard } from '../devotional/JornadaSemanalDaFeCard';
 import { CalendarioCordeiro3D } from '../calendar/CalendarioCordeiro3D';
-import { MulheresVidaDeCristoCard } from '../home/MulheresVidaDeCristoCard';
 import { CentralBibliaEGeminiCard } from '../home/CentralBibliaEGeminiCard';
 import { CentralAcervoCristaoCard } from '../home/CentralAcervoCristaoCard';
 import { CentralHistoriaLugaresJesusCard } from '../home/CentralHistoriaLugaresJesusCard';
@@ -259,11 +258,6 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectTab, onOpenInstallMo
         onNavigateToBible={() => onSelectTab('biblia')}
       />
 
-      {/* CARD PRINCIPAL DO NOVO GRANDE MÓDULO BÍBLICO: MULHERES VIRTUOSAS & VIDA DE CRISTO */}
-      <MulheresVidaDeCristoCard 
-        onSelectTab={onSelectTab} 
-        onStudyWithGemini={onStudyWithGemini} 
-      />
 
       {/* Banner de Instalação PWA (iOS e Android) */}
       {onOpenInstallModal && (

@@ -12,6 +12,9 @@ export interface SermonOutline {
   theme: string;
   scriptureText: string;
   bigIdea: string;
+  theologicalProposition?: string;
+  hermeneuticalContext?: string;
+  theologicalImplications?: string;
   introduction: string;
   points: SermonPoint[];
   illustration: string;
@@ -28,6 +31,9 @@ export const INITIAL_SERMON_OUTLINES: SermonOutline[] = [
     theme: 'Avivamento Pessoal e Transformação',
     scriptureText: 'Lucas 24:32; Romanos 8:14-16',
     bigIdea: 'A verdadeira religião não é mero ritualismo, mas a certeza viva da graça de Deus incendiando o nosso íntimo.',
+    theologicalProposition: 'A regeneração e o testemunho interior do Espírito Santo constituem a base insubstituível da vida cristã, superando o legalismo moralista pela habitação do amor divino derramado em nossos corações.',
+    hermeneuticalContext: 'O relato dos discípulos de Emaús em Lucas 24 expõe o poder das Escrituras expostas cristocentricamente ("Não ardia o nosso coração?"). Em Romanos 8:15-16, Paulo utiliza o termo aramaico "Aba" indicando intimidade filial sob a adoção espiritual.',
+    theologicalImplications: 'A segurança da salvação repousa no testemunho conjunto do Espírito de Deus com o nosso espírito (Testimonium Spiritus Sancti Internum), livrando o crente da neurose da dúvida e capacitando-o para o discipulado santo.',
     introduction: 'Muitos cristãos vivem na penumbra da dúvida e do cansaço espiritual. Eles frequentam a igreja, mas sentem que a fé virou um fardo moral. Foi exatamente isso que John Wesley viveu até maio de 1738, quando experimentou o poder de um "coração estranhamente aquecido". Como Deus faz essa chama arder em nós?',
     points: [
       {
@@ -59,6 +65,9 @@ export const INITIAL_SERMON_OUTLINES: SermonOutline[] = [
     theme: 'Família, Altar no Lar e Valores Eternos',
     scriptureText: 'Josué 24:14-15; Mateus 7:24-27',
     bigIdea: 'Uma família abençoada não nasce por acaso; ela é construída intencionalmente sobre os princípios inegociáveis da Palavra de Deus.',
+    theologicalProposition: 'A família da aliança é a célula primeira do Reino de Deus na terra, chamada a ser um santuário de adoração e discipulado intergeracional contra a apostasia cultural contemporânea.',
+    hermeneuticalContext: 'Josué 24 registra a renovação da Aliança em Siquém antes da morte de Josué. O verbo hebraico "avad" (servir/adorar) implica culto litúrgico exclusivo e obediência pactual incondicional.',
+    theologicalImplications: 'O sacerdócio universal dos crentes inicia-se dentro do lar: os pais são os primeiros pastores espirituais comissionados por Deus para discipular seus filhos nas Sagradas Escrituras.',
     introduction: 'Vivemos numa época de tempestades culturais e relacionais. As pressões do mundo tentam moldar nossos lares pelo molde do individualismo e do entretenimento vazio. Como podemos proteger nossa família e torná-la um refúgio de paz e honra a Deus?',
     points: [
       {
@@ -90,6 +99,9 @@ export const INITIAL_SERMON_OUTLINES: SermonOutline[] = [
     theme: 'Salvação, Misericórdia e Amor Incondicional',
     scriptureText: 'Lucas 15:20-24; Efésios 2:4-5',
     bigIdea: 'Deus não espera o pecador se limpar para acolhê-lo; Ele corre ao seu encontro, abraça e restaura a sua dignidade de filho.',
+    theologicalProposition: 'A justificação e a reconciliação operadas pela graça soberana revelam que o amor de Deus é preveniente, imerecido e infinitamente superior à culpa e à degradação do pecado humano.',
+    hermeneuticalContext: 'Lucas 15 é a trilogia da graça redentora (a ovelha perdida, a dracma perdida e o filho pródigo). O beijo do pai (kataphileo) expressa afeição afetuosa e restauração de plenos direitos filiais.',
+    theologicalImplications: 'Doutrina da Graça Preveniente e Adoção Divina: o pecador não regenera a si mesmo; é o Espírito que o desperta para voltar ao Pai que já o aguardava de braços abertos na colina da redenção.',
     introduction: 'A parábola do Filho Pródigo é o coração do Evangelho. Revela que o Pai celestial não é um juiz distante que se alegra na punição, mas um Pai amoroso que anseia pelo retorno de cada filho que se perdeu nos caminhos do engano.',
     points: [
       {
@@ -121,6 +133,9 @@ export const INITIAL_SERMON_OUTLINES: SermonOutline[] = [
     theme: 'Poder do Espírito Santo e Oração Fervorosa',
     scriptureText: 'Atos 1:8; Atos 2:1-4; 1 Reis 18:38',
     bigIdea: 'A Igreja não vence pela força de sua estrutura humana, mas pelo poder avivador e transformador do Espírito Santo.',
+    theologicalProposition: 'O fogo do avivamento celestial é o resultado soberano da oração incessante, da restauração do altar destruído e da exclusividade inegociável da adoração devida unicamente a Yahweh.',
+    hermeneuticalContext: '1 Reis 18 no Monte Carmelo contrasta o silêncio estarrecedor dos deuses cananeus da fertilidade (Baal) com a resposta imediata pelo fogo do Deus vivo de Israel.',
+    theologicalImplications: 'Pneumatologia da Unção e Avivamento: Deus não envia fogo sobre altares vazios ou divididos; o avivamento autêntico exige arrependimento, unidade do corpo e sacrifício vivo.',
     introduction: 'A história da Igreja Metodista Wesleyana e de todos os grandes avivamentos começou com reuniões de oração simples, onde homens e mulheres clamaram: "Senhor, envia o Teu fogo!". O que acontece quando o Espírito Santo é derramado?',
     points: [
       {

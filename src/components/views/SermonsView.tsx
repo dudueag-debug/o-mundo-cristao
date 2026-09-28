@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { INITIAL_SERMON_OUTLINES, SermonOutline } from '../../data/sermonOutlines';
 import { storageService } from '../../services/storageService';
-import { ScrollText, Search, Plus, Copy, Check, BookOpen, Lightbulb, Flame, Trash2, X } from 'lucide-react';
+import { ScrollText, Search, Plus, Copy, Check, BookOpen, Lightbulb, Flame, Trash2, X, Landmark, Shield, Scroll } from 'lucide-react';
 
 export const SermonsView: React.FC = () => {
   const [sermons, setSermons] = useState<SermonOutline[]>([]);
@@ -288,10 +288,46 @@ export const SermonsView: React.FC = () => {
             {selectedSermon.bigIdea && (
               <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40">
                 <span className="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider block mb-1">
-                  Proposição Central do Sermão:
+                  Ideia Central do Sermão:
                 </span>
                 <p className="font-serif italic text-sm text-stone-800 dark:text-stone-200">
                   "{selectedSermon.bigIdea}"
+                </p>
+              </div>
+            )}
+
+            {/* Proposição Teológica (Homilética Expositiva) */}
+            {selectedSermon.theologicalProposition && (
+              <div className="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/40 space-y-1">
+                <span className="text-xs font-bold text-indigo-900 dark:text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Landmark className="w-4 h-4 text-indigo-600" /> Proposição Teológica Expositiva:
+                </span>
+                <p className="text-xs sm:text-sm text-stone-800 dark:text-stone-200 leading-relaxed">
+                  {selectedSermon.theologicalProposition}
+                </p>
+              </div>
+            )}
+
+            {/* Contexto Hermenêutico e Exegese */}
+            {selectedSermon.hermeneuticalContext && (
+              <div className="p-4 rounded-2xl bg-amber-50/50 dark:bg-stone-800/60 border border-amber-200/60 dark:border-stone-700 space-y-1">
+                <span className="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Scroll className="w-4 h-4 text-amber-600" /> Contexto Histórico, Cultural & Gramatical:
+                </span>
+                <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                  {selectedSermon.hermeneuticalContext}
+                </p>
+              </div>
+            )}
+
+            {/* Implicações Dogmáticas para a Igreja */}
+            {selectedSermon.theologicalImplications && (
+              <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-stone-800/60 border border-emerald-200 dark:border-stone-700 space-y-1">
+                <span className="text-xs font-bold text-emerald-900 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                  <Shield className="w-4 h-4 text-emerald-600" /> Implicações Doutrinárias & Vida Cristã:
+                </span>
+                <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                  {selectedSermon.theologicalImplications}
                 </p>
               </div>
             )}

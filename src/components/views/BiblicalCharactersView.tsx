@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BIBLICAL_CHARACTERS, BiblicalCharacter } from '../../data/biblicalCharacters';
-import { Users, Search, BookOpen, Sparkles, ChevronRight, X, Copy, Check, Shield, Globe, Languages } from 'lucide-react';
+import { Users, Search, BookOpen, Sparkles, ChevronRight, X, Copy, Check, Shield, Globe, Languages, Scroll, Landmark } from 'lucide-react';
 
 export const BiblicalCharactersView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -196,6 +196,42 @@ export const BiblicalCharactersView: React.FC = () => {
                   {selectedCharacter.completeBiography}
                 </div>
               </div>
+
+              {/* Aliança Bíblica no Plano Redentor */}
+              {selectedCharacter.covenantConnection && (
+                <div className="space-y-1.5 p-4 rounded-2xl bg-amber-50/70 dark:bg-stone-800/80 border border-amber-300 dark:border-stone-700">
+                  <h4 className="font-serif font-bold text-xs uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
+                    <Scroll className="w-4 h-4 text-amber-600" /> Aliança Bíblica & Plano Redentor
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                    {selectedCharacter.covenantConnection}
+                  </p>
+                </div>
+              )}
+
+              {/* Significado Teológico Dogmático Profundo */}
+              {selectedCharacter.theologicalSignificance && (
+                <div className="space-y-1.5 p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-900/40">
+                  <h4 className="font-serif font-bold text-xs uppercase tracking-wider text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
+                    <Landmark className="w-4 h-4 text-indigo-600" /> Teologia Sistemática & Dogmática Bíblica
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                    {selectedCharacter.theologicalSignificance}
+                  </p>
+                </div>
+              )}
+
+              {/* Aplicação Hermenêutica Contemporânea */}
+              {selectedCharacter.hermeneuticalApplication && (
+                <div className="space-y-1.5 p-4 rounded-2xl bg-emerald-50/60 dark:bg-stone-800/80 border border-emerald-200 dark:border-stone-700">
+                  <h4 className="font-serif font-bold text-xs uppercase tracking-wider text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
+                    <Shield className="w-4 h-4 text-emerald-600" /> Aplicação Hermenêutica para a Vida Cristã
+                  </h4>
+                  <p className="text-xs sm:text-sm text-stone-700 dark:text-stone-300 leading-relaxed">
+                    {selectedCharacter.hermeneuticalApplication}
+                  </p>
+                </div>
+              )}
 
               {/* Legado Espiritual e Conexão Messiânica */}
               <div className="space-y-1.5 p-4 rounded-2xl bg-amber-50/60 dark:bg-stone-800/80 border border-amber-200 dark:border-stone-700">
