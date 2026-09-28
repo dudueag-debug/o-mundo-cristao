@@ -12,7 +12,7 @@ export const WesleyanTheologyView: React.FC = () => {
     { id: 'graca', label: 'A Ordem da Graça' },
     { id: 'pilares', label: 'Quadrilátero Wesleyano' },
     { id: 'santificacao', label: 'Santificação & Perfeição' },
-    { id: 'vida-wesley', label: 'Vida de John Wesley' },
+    { id: 'vida-wesley', label: 'Vida de Wesley & IMW 1967' },
   ];
 
   const filteredTopics = WESLEYAN_THEOLOGY_TOPICS.filter((topic) => {

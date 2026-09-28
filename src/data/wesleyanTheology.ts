@@ -115,5 +115,39 @@ export const WESLEYAN_THEOLOGY_TOPICS: TheologicalTopic[] = [
     ],
     wesleyQuote: 'O mundo é a minha paróquia! Onde quer que eu esteja, considero próprio, justo e meu santo dever declarar a todos a boa notícia da salvação.',
     practicalApplication: 'A religiosidade fria e as regras não salvam ninguém. Apenas o encontro pessoal com a graça de Cristo pode aquecer a nossa alma e nos inflamar com paixão pelas vidas perdidas.'
+  },
+  {
+    id: 'avivamento-imw-1967',
+    category: 'vida-wesley',
+    title: 'O Avivamento de 1967 & Fundação da IMW',
+    subtitle: 'O sopro carismático em Nova Friburgo com a fidelidade wesleyana',
+    summary: 'A história do nascimento da Igreja Metodista Wesleyana em 5 de janeiro de 1967: a união indissolúvel entre a sã doutrina da santidade e o poder do Espírito Santo.',
+    scriptures: ['Atos 2:1-4', '1 Coríntios 12:4-11', 'Joel 2:28-29', 'Romanos 12:1-2'],
+    keyConcept: 'Uma igreja gerada pelo Espírito Santo de joelhos dobrados na madrugada, que preserva a herança de Wesley e crê nos dons espirituais contemporâneos.',
+    content: [
+      'Na década de 1960, um vigoroso movimento de avivamento espiritual começou a varrer o Brasil. Pastores e leigos buscavam o batismo no Espírito Santo com fervor inabalável.',
+      'Em 5 de janeiro de 1967, no salão do Grêmio Teatral de Nova Friburgo (RJ), pastores e irmãos reuniram-se e fundaram a Igreja Metodista Wesleyana.',
+      'Os pioneiros — incluindo Pr. Dorival Beppu, Pr. Idelmício Cabral dos Santos, Pr. Waldyr Miranda e Pr. Gessé Carvalho — mantiveram as 25 Regras de Fé e as bases bíblicas de John Wesley, unindo-as à contemporaneidade dos dons espirituais.',
+      'A denominação cresceu sobre alicerces bíblicos inabaláveis: oração fervorosa, santificação de vida, missões transculturais aceleradas e amor sacrificial ao próximo.'
+    ],
+    wesleyQuote: 'Dai-me cem homens que nada temam senão o pecado e nada desejem senão a Deus, e abalaremos as portas do inferno.',
+    practicalApplication: 'O verdadeiro avivamento não produz soberba nem desordem, mas quebrantamento, amor pela Palavra de Deus, pureza moral e ardente paixão pela evangelização dos perdidos.'
+  },
+  {
+    id: 'arminianismo-wesleyano',
+    category: 'graca',
+    title: 'Arminianismo Wesleyano & Redenção Universal',
+    subtitle: 'A oferta sincera e universal da salvação a todo ser humano',
+    summary: 'A expiação vicária de Cristo na cruz tem valor infinito e abrange cada ser humano, garantindo que todo aquele que crer não pereça, mas tenha a vida eterna.',
+    scriptures: ['1 Timóteo 2:3-6', 'Hebreus 2:9', '2 Pedro 3:9', 'João 3:16-17'],
+    keyConcept: 'Cristo morreu por todos os seres humanos sem acepção de pessoas. A graça é oferecida livremente a todos, sem reprovação arbitrária.',
+    content: [
+      'A teologia armínio-wesleyana proclama que a morte de Cristo é suficiente para a redenção de todo o gênero humano e eficaz para todos os que respondem com fé salvadora.',
+      'Deus não decretou a perdição eterna de ninguém de antemão: Ele deseja sinceramente que todos venham ao arrependimento e ao pleno conhecimento da verdade (1 Tm 2:4).',
+      'A eleição bíblica é em Cristo e baseada na presciência divina (1 Pe 1:2): Deus escolheu salvar todos os que, habilitados pela Graça Preveniente, acolhem a Jesus como Senhor e Salvador.',
+      'Essa certeza bíblica sustenta a urgência missionária mundial: podemos fitar os olhos de qualquer pessoa em qualquer nação e declarar com júbilo: "Jesus morreu por você!".'
+    ],
+    wesleyQuote: 'Como o sol brilha sobre o mundo inteiro, assim a graça de Deus se manifesta trazendo salvação a todos os homens.',
+    practicalApplication: 'Nunca considere ninguém perdido demais ou fora do alcance da graça de Deus. Pregue com ousadia e compaixão a todos, pois o sacrifício de Jesus tem poder para resgatar qualquer vida.'
   }
 ];

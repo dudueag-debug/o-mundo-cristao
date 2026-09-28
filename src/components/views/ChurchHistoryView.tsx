@@ -3,8 +3,12 @@ import { IMW_HISTORY_EVENTS, IMW_PIONEERS, IMW_DISTINCTIVES } from '../../data/i
 import { CHURCH_HISTORY_PERIODS, ChurchHistoryPeriod } from '../../data/churchHistory';
 import { Flame, BookMarked, Calendar, MapPin, Users, Award, ShieldCheck, ChevronRight } from 'lucide-react';
 
-export const ChurchHistoryView: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<'imw' | 'geral'>('imw');
+interface ChurchHistoryViewProps {
+  initialSection?: 'imw' | 'geral';
+}
+
+export const ChurchHistoryView: React.FC<ChurchHistoryViewProps> = ({ initialSection = 'imw' }) => {
+  const [activeSection, setActiveSection] = useState<'imw' | 'geral'>(initialSection);
   const [selectedPeriod, setSelectedPeriod] = useState<ChurchHistoryPeriod>(CHURCH_HISTORY_PERIODS[0]);
 
   return (

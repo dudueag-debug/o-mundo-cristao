@@ -156,7 +156,12 @@ export const App: React.FC = () => {
       case 'teologia':
         return <WesleyanTheologyView key={`teologia-${sessionVersion}`} />;
       case 'historia':
-        return <ChurchHistoryView key={`historia-${sessionVersion}`} />;
+        return (
+          <ChurchHistoryView
+            key={`historia-${sessionVersion}-${moduleSubTab}`}
+            initialSection={moduleSubTab === 'geral' ? 'geral' : 'imw'}
+          />
+        );
       case 'sermoes':
         return <SermonsView key={`sermoes-${sessionVersion}`} />;
       case 'oracao':
@@ -170,8 +175,12 @@ export const App: React.FC = () => {
         return (
           <HomeView
             key={`home-def-${sessionVersion}`}
-            onSelectTab={setCurrentTab}
+            onSelectTab={(tab, sub) => {
+              setCurrentTab(tab);
+              if (sub) setModuleSubTab(sub);
+            }}
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
+            onStudyWithGemini={handleStudyWithGemini}
           />
         );
     }
